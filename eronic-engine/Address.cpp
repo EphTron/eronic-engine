@@ -9,7 +9,7 @@ Address::Address() :
 {
 	_socket_address.sin_family = AF_INET;
 	_socket_address.sin_port = htons(_port);
-	InetPton(AF_INET, _ip.c_str(), &_socket_address.sin_addr.S_un.S_addr);
+	_socket_address.sin_addr.S_un.S_addr = inet_pton(AF_INET, _ip.c_str(), &_socket_address.sin_addr.S_un.S_addr);
 }
 
 Address::Address(std::string &ip, int port) :
@@ -19,10 +19,10 @@ Address::Address(std::string &ip, int port) :
 	_socket_address.sin_family = AF_INET;
 	_socket_address.sin_port = htons(_port);
 	if (_ip == "ANY") {
-		_socket_address.sin_addr.s_addr = INADDR_ANY;
+		_socket_address.sin_addr.s_addr = htonl( INADDR_ANY );
 	}
 	else {
-		InetPton(AF_INET, _ip.c_str(), &_socket_address.sin_addr.S_un.S_addr);
+		_socket_address.sin_addr.S_un.S_addr = inet_pton(AF_INET, _ip.c_str(), &_socket_address.sin_addr.S_un.S_addr);
 	}
 }
 
