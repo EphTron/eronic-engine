@@ -17,8 +17,8 @@
 #include "Explosion.h"
 #include "Asteroid.h"
 #include "ScoreDisplay.h"
-#include "ListeningServer.h"
-#include "TransferClient.h"
+#include "TCPListener.h"
+#include "TCPClient.h"
 
 // Forward declarations
 
@@ -45,8 +45,8 @@ public:
 private:
 
 	// Networking
-	eronic::ListeningServer _listener;
-	eronic::TransferClient  _sender;
+	eronic::TCPListener _listener;
+	eronic::TCPClient  _sender;
 
 
 	// Matrices

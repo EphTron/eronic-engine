@@ -10,6 +10,7 @@ class Address
 public:
 	Address();
 	Address(std::string &ip, int port);
+	//Address(struct sockaddr *);
 	//Address(Address& address) = delete;
 	~Address();
 

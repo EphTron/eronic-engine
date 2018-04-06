@@ -3,8 +3,8 @@
 namespace eronic {
 
 	Socket_WIN::Socket_WIN() :
-		_wsa_data(),
-		_address()
+		_address(),
+		_wsa_data()
 	{
 		// Create version identifier
 		WORD w_version_requested = MAKEWORD(2, 0);
@@ -17,8 +17,8 @@ namespace eronic {
 
 	Socket_WIN::Socket_WIN(int socket_handle) :
 		Socket(socket_handle),
-		_wsa_data(),
-		_address()
+		_address(),
+		_wsa_data()
 	{
 		WORD w_version_requested = MAKEWORD(2, 0);
 
@@ -33,61 +33,83 @@ namespace eronic {
 		WSACleanup();
 	}
 
-	bool Socket_WIN::connect_to(std::string& ip, int port)
+	int Socket_WIN::connect_to(int type, std::string& ip, int port)
 	{
 		_address = Address(ip, port);
-		_socket_handle = socket(AF_INET, SOCK_STREAM, 0);
+		_socket_handle = socket(AF_INET, type, 0);
 		if (_socket_handle == INVALID_SOCKET) {
 			std::cerr << "Create socket failed" << std::endl;
-			return false;
+			return WSAGetLastError();
 		}
 		else if (connect(_socket_handle, (sockaddr *)_address.get_socket_address(), sizeof(*_address.get_socket_address())) == SOCKET_ERROR) {
-			std::cerr << "Connect to peer failed with " << WSAGetLastError() << std::endl;
-			return false;
+			std::cerr << "SOCKET_WIN.cpp: Connect to peer failed with " << WSAGetLastError() << std::endl;
+			return WSAGetLastError();
 		}
 		else {
-			return true;
+
+			return 0;
 		}
 	}
 
-	bool Socket_WIN::bind_to(std::string & ip, int port, int max_connections)
+	int Socket_WIN::bind_to(int type, std::string & ip, int port)
 	{
 		_address = Address(ip, port);
-		_socket_handle = socket(AF_INET, SOCK_STREAM, 0);
+		std::cout << "new port ?" <<_address.get_port() << std::endl;
+		_socket_handle = socket(AF_INET, type, 0);
 		if (_socket_handle == INVALID_SOCKET) {
 			std::cerr << "Create socket failed" << std::endl;
-			return false;
+			return WSAGetLastError();
 		}
-		else if (bind(_socket_handle, (sockaddr *)_address.get_socket_address(), sizeof(*_address.get_socket_address())) == SOCKET_ERROR) {
-			std::cerr << "Bind failed with " << WSAGetLastError() << std::endl;
-			return false;
+
+		// check whether TCP OR UDP
+		if (type == SOCK_DGRAM) {
+			if (bind(_socket_handle, (sockaddr *)_address.get_socket_address(), sizeof(*_address.get_socket_address())) == SOCKET_ERROR) {
+				std::cerr << "SOCKET_WIN.cpp: UDP Bind failed at " << _address.get_port() << " with "  << WSAGetLastError() << std::endl;
+				return WSAGetLastError();
+			}
 		}
-		else if (listen(_socket_handle, max_connections) == SOCKET_ERROR) {
+		else if (type == SOCK_STREAM) {
+			if (bind(_socket_handle, (sockaddr *)_address.get_socket_address(), sizeof(*_address.get_socket_address())) == SOCKET_ERROR) {
+				std::cerr << "SOCKET_WIN.cpp: TCP Bind failed at " << _address.get_port() << " with " << WSAGetLastError() << std::endl;
+				return WSAGetLastError();
+			}
+		}
+		std::cout << "BIND to port:  " << _address.get_port() << std::endl;
+		return 0;
+	}
+
+	int Socket_WIN::start_listening(int max_connections) {
+		if (listen(_socket_handle, max_connections) == SOCKET_ERROR) {
 			std::cerr << "Listen failed with " << WSAGetLastError() << std::endl;
-			return false;
+			return WSAGetLastError();
 		}
 		else {
-			return true;
+			return 0;
 		}
 	}
 
-	bool Socket_WIN::send_data(const void* data, size_t data_size)
+	Address const* Socket_WIN::get_address() const
+	{
+		return &_address;
+	}
+
+	int Socket_WIN::send_data(const void* data, size_t data_size)
 	{
 		if (send(_socket_handle, (char*)data, data_size, 0) == SOCKET_ERROR) {
-			return false;
+			return WSAGetLastError();
 		}
 		else {
-			return true;
+			return 0;
 		}
 	}
 
-	bool Socket_WIN::receive_data(void* data, size_t data_size)
+	int Socket_WIN::receive_data(void* data, size_t data_size)
 	{
 		if (recv(_socket_handle, (char*)data, data_size, 0) == SOCKET_ERROR) {
-			return false;
+			return WSAGetLastError();
 		}
 		else {
-			return true;
+			return 0;
 		}
 	}
 
@@ -98,9 +120,10 @@ namespace eronic {
 		fd_set mySet;
 		FD_ZERO(&mySet);
 		FD_SET(_socket_handle, &mySet);
-		timeval zero = { 0, 0 };
+		timeval zero = { 5, 0};
+		// std::cout << "Socket starts select" << std::endl;
 		int sel = select(0, &mySet, NULL, NULL, &zero);
-		std::cout << "Selecting connections" << std::endl;
+		std::cout << "select" << sel << std::endl;
 		if (FD_ISSET(_socket_handle, &mySet)) {
 			std::cout << "Acception attempt" << std::endl;
 			int new_socket_handle = accept(_socket_handle, NULL, NULL);
@@ -108,9 +131,19 @@ namespace eronic {
 			return connected_socket;
 		}
 		else {
-			std::cout << "No connection attempt" << std::endl;
+			std::cout << "No connection " <<WSAGetLastError() << std::endl;
 			return nullptr;
 		}
+	}
+
+	int Socket_WIN::close()
+	{
+		return closesocket(_socket_handle);
+	}
+
+	int Socket_WIN::stop(int how) 
+	{
+		return shutdown(_socket_handle, how);
 	}
 
 } // namespace eronic
