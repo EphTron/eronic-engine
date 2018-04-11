@@ -15,6 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "work-bench", "work-bench\wo
 		{44BA8412-FD69-4082-9E4C-F083B143B4BC} = {44BA8412-FD69-4082-9E4C-F083B143B4BC}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "work-bench-2", "work-bench-2\work-bench-2.vcxproj", "{DDD35221-507E-4007-BEF1-48686B3725B1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44BA8412-FD69-4082-9E4C-F083B143B4BC} = {44BA8412-FD69-4082-9E4C-F083B143B4BC}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug - DirectX|x64 = Debug - DirectX|x64
@@ -69,6 +74,19 @@ Global
 		{D8D7E700-CEF1-4773-A8B1-E9A70BCFF3B6}.Release - OpenGL|x64.ActiveCfg = Release - OpenGL|Win32
 		{D8D7E700-CEF1-4773-A8B1-E9A70BCFF3B6}.Release - OpenGL|x86.ActiveCfg = Release - OpenGL|Win32
 		{D8D7E700-CEF1-4773-A8B1-E9A70BCFF3B6}.Release - OpenGL|x86.Build.0 = Release - OpenGL|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Debug - DirectX|x64.ActiveCfg = Debug - DirectX|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Debug - DirectX|x86.ActiveCfg = Debug - DirectX|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Debug - DirectX|x86.Build.0 = Debug - DirectX|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Debug - OpenGL|x64.ActiveCfg = Debug - OpenGL|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Debug - OpenGL|x64.Build.0 = Debug - OpenGL|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Debug - OpenGL|x86.ActiveCfg = Debug - OpenGL|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Debug - OpenGL|x86.Build.0 = Debug - OpenGL|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Release - DirectX|x64.ActiveCfg = Release - DirectX|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Release - DirectX|x86.ActiveCfg = Release - DirectX|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Release - DirectX|x86.Build.0 = Release - DirectX|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Release - OpenGL|x64.ActiveCfg = Release - OpenGL|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Release - OpenGL|x86.ActiveCfg = Release - OpenGL|Win32
+		{DDD35221-507E-4007-BEF1-48686B3725B1}.Release - OpenGL|x86.Build.0 = Release - OpenGL|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

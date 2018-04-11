@@ -142,8 +142,11 @@
   <ItemGroup>
     <ClCompile Include="Address.cpp" />
     <ClCompile Include="Colour.cpp" />
+    <ClCompile Include="DataPackage.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="PeerNode.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="TCPClient.cpp" />
     <ClCompile Include="TCPListener.cpp" />
@@ -158,6 +161,7 @@
     <ClCompile Include="Socket_WIN.cpp" />
     <ClCompile Include="ThreadWorker.cpp" />
     <ClCompile Include="UDPClient.cpp" />
+    <ClCompile Include="UDPListener.cpp" />
     <ClCompile Include="VBO.cpp" />
     <ClCompile Include="VBO_DX.cpp" />
     <ClCompile Include="VBO_GL.cpp" />
@@ -169,8 +173,11 @@
   <ItemGroup>
     <ClInclude Include="Address.h" />
     <ClInclude Include="Colour.h" />
+    <ClInclude Include="DataPackage.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="PeerNode.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="TCPClient.h" />
     <ClInclude Include="TCPListener.h" />
@@ -186,6 +193,7 @@
     <ClInclude Include="Socket_WIN.h" />
     <ClInclude Include="ThreadWorker.h" />
     <ClInclude Include="UDPClient.h" />
+    <ClInclude Include="UDPListener.h" />
     <ClInclude Include="VBO.h" />
     <ClInclude Include="VBO_DX.h" />
     <ClInclude Include="VBO_GL.h" />
