@@ -17,6 +17,6 @@ namespace eronic {
 
 	void serialize(Package * package, char *serialized_data);
 	void deserialize(char *serialized_data, Package* package);
-	void print_package(Package* p)
+	void print_package(Package* p);
 
 } // namespace eronic

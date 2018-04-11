@@ -2,13 +2,6 @@
 
 namespace eronic {
 
-	void print_package(Package * p)
-	{
-		std::cout << p->type << std::endl;
-		std::cout << p->sender << std::endl;
-		std::cout << p->message << std::endl;
-	}
-
 	void serialize(Package * package, char *serialized_data)
 	{
 		int *q = (int*)serialized_data;
@@ -25,6 +18,10 @@ namespace eronic {
 			p++;
 			i++;
 		}
+		q = nullptr;
+		delete q;
+		p = nullptr;
+		delete p;
 	}
 
 	void deserialize(char *serialized_data, Package* package)
@@ -43,5 +40,17 @@ namespace eronic {
 			p++;
 			i++;
 		}
+		q = nullptr;
+		delete q;
+		p = nullptr;
+		delete p;
 	}
+
+	void print_package(Package * p)
+	{
+		std::cout << p->type << std::endl;
+		std::cout << p->sender << std::endl;
+		std::cout << p->message << std::endl;
+	}
+
 } // namespace eronic
