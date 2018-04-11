@@ -18,6 +18,9 @@ namespace eronic {
 
 		int send(const void* data, size_t data_size);
 		bool receive(void* data, size_t data_size);
+
+		int stop(int how);
+		int close();
 	private:
 		Socket * _socket;
 		bool _is_connected;

@@ -17,6 +17,7 @@ namespace eronic {
 
 	TCPListener::~TCPListener()
 	{
+		_listening_socket->close();
 	}
 
 	int TCPListener::bind(std::string & ip, int port)
@@ -25,11 +26,16 @@ namespace eronic {
 		int bind_result = _listening_socket->bind_to(TCP, ip, port);
 		if (bind_result == 0) {
 			_is_bound = true;
+			_is_listening = true;
 			return bind_result;
 		}
 		else {
 			return bind_result;
 		}
+		//u_long iMode = 0;
+		//WSAAsyncSelect(_listening_socket, nullptr, MY_MESSAGE_NOTIFICATION, FD_READ | FD_CONNECT | FD_CLOSE | FD_ACCEPT); //Set
+		//int result = ioctlsocket(_listening_socket, FIONBIO, &iMode);
+		
 	}
 
 	int TCPListener::start(int max_connections)
@@ -59,7 +65,15 @@ namespace eronic {
 
 	int TCPListener::close()
 	{
-		return 0;
+		int result = _listening_socket->close();
+		if (result == 0) {
+			_is_bound = false;
+			_is_listening = false;
+			return result;
+		}
+		else {
+			return result;
+		}
 	}
 
 	TCPClient * TCPListener::accept()
