@@ -1,9 +1,12 @@
 #pragma once
 
 #include <WinSock2.h>
+#include <sstream>
+#include <locale>
 
 #include "Address.h"
 #include "Socket.h"
+
 
 namespace eronic {
 
@@ -34,4 +37,5 @@ namespace eronic {
 		WSADATA _wsa_data;
 	};
 
+	char * get_external_ip(std::string &url);
 } // namespace eronic

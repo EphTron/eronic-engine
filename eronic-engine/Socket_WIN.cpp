@@ -33,6 +33,7 @@ namespace eronic {
 		WSACleanup();
 	}
 
+
 	int Socket_WIN::connect_to(int type, std::string& ip, int port)
 	{
 		_address = Address(ip, port);
@@ -46,15 +47,18 @@ namespace eronic {
 			return WSAGetLastError();
 		}
 		else {
-
+			std::cout << "Connected to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
 			return 0;
+		}
+		u_long NonBlock = 1;
+		if (ioctlsocket(_socket_handle, FIONBIO, &NonBlock) == SOCKET_ERROR) {
+			std::cout << "Setting non blocking failed";
 		}
 	}
 
 	int Socket_WIN::bind_to(int type, std::string & ip, int port)
 	{
 		_address = Address(ip, port);
-		std::cout << "new port ?" <<_address.get_port() << std::endl;
 		_socket_handle = socket(AF_INET, type, 0);
 		if (_socket_handle == INVALID_SOCKET) {
 			std::cerr << "Create socket failed" << std::endl;
@@ -74,7 +78,11 @@ namespace eronic {
 				return WSAGetLastError();
 			}
 		}
-		std::cout << "BIND to port:  " << _address.get_port() << std::endl;
+		u_long NonBlock = 1;
+		if (ioctlsocket(_socket_handle, FIONBIO, &NonBlock) == SOCKET_ERROR) {
+			std::cout << "Setting non blocking failed";
+		}
+		std::cout << "BIND to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
 		return 0;
 	}
 
@@ -144,6 +152,87 @@ namespace eronic {
 	int Socket_WIN::stop(int how) 
 	{
 		return shutdown(_socket_handle, how);
+	}
+
+	char * get_external_ip(std::string &url)
+	{
+		// url: "api.ipify.org"
+		
+		WSADATA wsaData;		
+		std::string get_http = "GET / HTTP/1.1\r\nHost: " + url + "\r\nConnection: close\r\n\r\n";
+
+		if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+			std::cout << "WSAStartup failed.\n";
+			return "";
+		}
+
+		SOCKET Socket;
+		
+		Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+		struct addrinfo hints, *res;
+		memset(&hints, 0, sizeof(hints));
+		hints.ai_family = AF_UNSPEC;
+		hints.ai_socktype = SOCK_DGRAM;
+		getaddrinfo(url.c_str(), "80", &hints, &res);
+		struct sockaddr_in *addr = (struct sockaddr_in *)res->ai_addr;
+		addr = (struct sockaddr_in *)res->ai_addr;
+		char address_ip[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &addr->sin_addr, address_ip, INET_ADDRSTRLEN);
+
+		SOCKADDR_IN SockAddr;
+		SockAddr.sin_port = htons(80);
+		SockAddr.sin_family = AF_INET;
+		inet_pton(AF_INET, address_ip, &(SockAddr.sin_addr));
+
+		if (connect(Socket, (SOCKADDR*)(&SockAddr), sizeof(SockAddr)) != 0) {
+			std::cout << "Could not connect";
+			return "";
+		}
+		send(Socket, get_http.c_str(), strlen(get_http.c_str()), 0);
+
+		std::string website_HTML;
+		std::locale local;
+		char lineBuffer[200][80] = { ' ' };
+		char buffer[10000];
+		int i = 0, bufLen = 0, j = 0, lineCount = 0;
+		int lineIndex = 0, posIndex = 0;
+		int nDataLength;
+		while ((nDataLength = recv(Socket, buffer, 10000, 0)) > 0) {
+			int i = 0;
+			while (buffer[i] >= 32 || buffer[i] == '\n' || buffer[i] == '\r') {
+				website_HTML += buffer[i];
+				i += 1;
+			}
+		}
+
+		closesocket(Socket);
+		WSACleanup();
+
+		for (size_t i = 0; i<website_HTML.length(); ++i) website_HTML[i] = tolower(website_HTML[i], local);
+
+		std::istringstream ss(website_HTML);
+		std::string stoken;
+		char ip_address[INET_ADDRSTRLEN];
+
+		while (getline(ss, stoken, '\n')) {
+
+			strcpy_s(lineBuffer[lineIndex], stoken.c_str());
+			int dot = 0;
+			for (int ii = 0; ii< strlen(lineBuffer[lineIndex]); ii++) {
+
+				if (lineBuffer[lineIndex][ii] == '.') dot++;
+				if (dot >= 3) {
+					dot = 0;
+					strcpy_s(ip_address, lineBuffer[lineIndex]);
+				}
+			}
+
+			lineIndex++;
+		}
+		std::cout << "Your IP Address is  " << ip_address << " \n\n";
+
+		return ip_address;
 	}
 
 } // namespace eronic
