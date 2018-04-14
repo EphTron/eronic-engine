@@ -18,7 +18,7 @@ namespace eronic {
 		DataPackage(char* serialized_data);
 		~DataPackage();
 
-		char * serialize();
+		void serialize(char * out_data);
 		void set_ip(std::string & ip);
 		void set_msg(std::string & msg);
 

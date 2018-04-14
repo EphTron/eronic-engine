@@ -98,10 +98,9 @@ namespace eronic {
 	{
 	}
 
-	char * DataPackage::serialize()
+	void DataPackage::serialize(char* out_data)
 	{
-		char serialized_data[DATA_PACK_SIZE];
-		int *q = (int*)serialized_data;
+		int *q = (int*)out_data;
 		*q = type; q++;
 		*q = sender_id; q++;
 		*q = sender_port; q++;
@@ -130,11 +129,10 @@ namespace eronic {
 			p++; i++;
 		}
 
-		q = nullptr;
-		delete q;
-		p = nullptr;
-		delete p;
-		return serialized_data;
+		//q = nullptr;
+		//delete q;
+		//p = nullptr;
+		//delete p;
 	}
 
 	void DataPackage::set_ip(std::string & ip)

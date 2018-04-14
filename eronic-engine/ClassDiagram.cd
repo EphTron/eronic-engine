@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CollisionComponent" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CwYAAFAEACAAAAAAAEAABACAAQAAAAggAACAAgAAAAA=</HashCode>
+      <FileName>CollisionComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameObjectComponent" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAACCCAAAAAAAAAAARAQAAAAAAAAigAAAAAAQ=</HashCode>
+      <FileName>GameObjectComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LifeTimerComponent" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIYAAAAAACAAEAACACAAEACGASAAAAAAAACAAAAAACA=</HashCode>
+      <FileName>LifeTimerComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysicsComponent" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAEgAEACIAAAAAAAAAAAAAAAAAAEAEAACAAAAAAAA=</HashCode>
+      <FileName>PhysicsComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RenderComponent" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAYCAAAAACABEAAAAAAAAAAAgRARgAAAIACAAAAAgAA=</HashCode>
+      <FileName>RenderComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UserInputComponent" Collapsed="true">
+    <Position X="9.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAcAAAAAACAAAAAAAAAAAAAAAAAAAAAAAACAAIAAAAA=</HashCode>
+      <FileName>UserInputComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Renderer_DX" Collapsed="true">
+    <Position X="0.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAEAEAAAIABwAQCAAAAAAAAIDAgCgAAGAIAAIAKAA=</HashCode>
+      <FileName>Renderer_DX.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VBO_DX" Collapsed="true">
+    <Position X="7.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAgAAABEAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>VBO_DX.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Window_DX" Collapsed="true">
+    <Position X="2.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAgAAAAEAAAAAAAAAAABAAAAIAAAA=</HashCode>
+      <FileName>Window_DX.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Renderer_GL" Collapsed="true">
+    <Position X="2.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAwARAAAAAAAAAABIAAAAACAIAAAUIIA=</HashCode>
+      <FileName>Renderer_GL.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShaderObject_GL" Collapsed="true">
+    <Position X="14" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQCAAAAAAAgACAAAAAAgABAiARAAAgA=</HashCode>
+      <FileName>ShaderObject_GL.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShaderProgram_GL" Collapsed="true">
+    <Position X="15.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAIAAAAACAAAAAAAAAAAhAAAQABAIgBAABEkA=</HashCode>
+      <FileName>ShaderProgram_GL.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VBO_GL" Collapsed="true">
+    <Position X="5.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAgAAAAAQAAACAAAEAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>VBO_GL.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Window_GL" Collapsed="true">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAIQAAAAAAAACAAgBAAAAAAAAAAACA=</HashCode>
+      <FileName>Window_GL.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mesh" Collapsed="true">
+    <Position X="15.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQgAAAEAAAEEBAAAABQAAAAAAAIAACAAAQ4AAABAEAA=</HashCode>
+      <FileName>Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Renderer" Collapsed="true">
+    <Position X="1.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAwAQAAAAAAAAAABAAAAAEECABAAAIAA=</HashCode>
+      <FileName>Renderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shader" Collapsed="true">
+    <Position X="12.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAgAAAAAAA=</HashCode>
+      <FileName>Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VBO" Collapsed="true">
+    <Position X="6.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAggAAAAAAAAAAAAEAEAAAAAAAAAEAAA=</HashCode>
+      <FileName>VBO.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Window" Collapsed="true">
+    <Position X="1.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAACAAQAAAAAAAAAAERAAACAAAAAACIAAAAQ=</HashCode>
+      <FileName>Window.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CollisionMessage" Collapsed="true">
+    <Position X="0.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAUAAAAAAAAAACIAAEAAAA=</HashCode>
+      <FileName>CollisionMessage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KeyPressMessage" Collapsed="true">
+    <Position X="3" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAECAAAQAAAAAAAABAACAAAAAAAA=</HashCode>
+      <FileName>KeyPressMessage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeadObjectMessage" Collapsed="true">
+    <Position X="5.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAgAAAAAAABAAAAAAAAgAAAAA=</HashCode>
+      <FileName>DeadObjectMessage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Message" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAACAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Message.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThrustMessage" Collapsed="true">
+    <Position X="7.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAEEQAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ThrustMessage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Colour" Collapsed="true">
+    <Position X="5.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGAABAAAAAAgAAAQAAAAAABAAAAAAAAAIgADAAAAA=</HashCode>
+      <FileName>Colour.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Game" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABAAACAIgABAUAAAAAAEAAAGQiAACACQDQAAAAEACI=</HashCode>
+      <FileName>Game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameObject" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wZ4EACAAACAIpAQAAAAABAAABAAAAgEEIACgggcACCA=</HashCode>
+      <FileName>GameObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Vector4" Collapsed="true">
+    <Position X="5.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAEEABAEJEAAAAEAAFwYQYAQCwUIAIAoBexhAQgCAiM=</HashCode>
+      <FileName>Vector4.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="UniformBuffer" Collapsed="true">
+    <Position X="12.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAABAAAAA=</HashCode>
+      <FileName>Renderer_DX.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Vertex" Collapsed="true">
+    <Position X="14" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAQBhAQAAAAA=</HashCode>
+      <FileName>Vertex.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="UniformIterator" Collapsed="true">
+    <Position X="14" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ShaderProgram_GL.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MeshMap" Collapsed="true">
+    <Position X="12.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MeshMapIterator" Collapsed="true">
+    <Position X="14" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ComponentMap" Collapsed="true">
+    <Position X="14" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObject.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ComponentMapIterator" Collapsed="true">
+    <Position X="15.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObject.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MessageListenerMap" Collapsed="true">
+    <Position X="15.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObject.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MessageListenerMapIterator" Collapsed="true">
+    <Position X="12.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObject.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ComponentListIterator" Collapsed="true">
+    <Position X="12.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObject.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

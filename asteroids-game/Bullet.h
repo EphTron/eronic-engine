@@ -1,6 +1,10 @@
 #pragma once
 #include "GameObject.h"
 
+
+class Mesh;
+
+
 class Bullet :
 	public GameObject
 {
@@ -11,19 +15,32 @@ private:
 
 	// Data
 private:
-	float _life;
+
 
 	// Structors
 public:
-	Bullet();
+	Bullet(Mesh* mesh);
 	virtual ~Bullet();
+
 
 	// Gets/sets
 public:
 
+
 	// Functions
 public:
-	void Reset(const Vector4& pos, float angle);
+	// Main update function (called every frame)
 	virtual void Update(double deltaTime);
+
+	// Message handler (called when message occurs)
+	virtual void OnMessage(Message* msg);
+	
+	// Reset to start state
+	virtual void Reset();
+
+
+	// Extra Functions
+public:
+	void Spawn(const Vector4& pos, float angle);
 };
 

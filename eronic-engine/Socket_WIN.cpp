@@ -37,6 +37,7 @@ namespace eronic {
 	int Socket_WIN::connect_to(int type, std::string& ip, int port)
 	{
 		_address = Address(ip, port);
+
 		_socket_handle = socket(AF_INET, type, 0);
 		if (_socket_handle == INVALID_SOCKET) {
 			std::cerr << "Create socket failed" << std::endl;
@@ -50,10 +51,7 @@ namespace eronic {
 			std::cout << "Connected to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
 			return 0;
 		}
-		u_long NonBlock = 1;
-		if (ioctlsocket(_socket_handle, FIONBIO, &NonBlock) == SOCKET_ERROR) {
-			std::cout << "Setting non blocking failed";
-		}
+		
 	}
 
 	int Socket_WIN::bind_to(int type, std::string & ip, int port)
@@ -78,10 +76,6 @@ namespace eronic {
 				return WSAGetLastError();
 			}
 		}
-		u_long NonBlock = 1;
-		if (ioctlsocket(_socket_handle, FIONBIO, &NonBlock) == SOCKET_ERROR) {
-			std::cout << "Setting non blocking failed";
-		}
 		std::cout << "BIND to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
 		return 0;
 	}
@@ -96,6 +90,28 @@ namespace eronic {
 		}
 	}
 
+	int Socket_WIN::set_blocking(bool flag) {
+		u_long NonBlock;
+		if (flag) {
+			NonBlock = 0;
+		}
+		else {
+			NonBlock = 1;
+		}
+
+		int set_result = ioctlsocket(_socket_handle, FIONBIO, &NonBlock);
+		if (set_result == SOCKET_ERROR) {
+			std::cout << "Setting blocking/non-blocking failed";
+			return set_result;
+		}
+		else
+		{
+			_blocking = flag;
+			std::cout << "Set socket blocking = " << flag << " socket now =" << _blocking<<std::endl;
+			return set_result;
+		}
+	}
+
 	Address const* Socket_WIN::get_address() const
 	{
 		return &_address;
@@ -103,21 +119,112 @@ namespace eronic {
 
 	int Socket_WIN::send_data(const void* data, size_t data_size)
 	{
-		if (send(_socket_handle, (char*)data, data_size, 0) == SOCKET_ERROR) {
-			return WSAGetLastError();
+		if (!_blocking) {
+			std::cout << "non blocking send" << _blocking << std::endl;
+			int send_result = send(_socket_handle, (char*)data, data_size, 0);
+			if (send_result == SOCKET_ERROR) {
+				return WSAGetLastError();
+			}
+			else {
+				return send_result;
+			}
 		}
 		else {
-			return 0;
+			std::cout << "blocking send" << _blocking << std::endl;
+			fd_set mySet;
+			FD_ZERO(&mySet);
+			FD_SET(_socket_handle, &mySet);
+			timeval zero = { 1, 0 };
+			int sel = select(0, NULL, &mySet, NULL, &zero);
+			if (FD_ISSET(_socket_handle, &mySet)) {
+				int send_result = send(_socket_handle, (char*)data, data_size, 0);
+				if ( send_result == SOCKET_ERROR) {
+					return WSAGetLastError();
+				}
+				else {
+					return send_result;
+				}
+			}
+			else {
+				std::cout << "Timed out" << std::endl;
+				return -1;
+			}
 		}
+		
 	}
 
 	int Socket_WIN::receive_data(void* data, size_t data_size)
 	{
-		if (recv(_socket_handle, (char*)data, data_size, 0) == SOCKET_ERROR) {
-			return WSAGetLastError();
+		if (!_blocking) {
+			int recv_result = recv(_socket_handle, (char*)data, data_size, 0);
+			if (recv_result == SOCKET_ERROR) {
+				return WSAGetLastError();
+			}
+			else {
+				return recv_result;
+			}
 		}
 		else {
-			return 0;
+			fd_set mySet;
+			FD_ZERO(&mySet);
+			FD_SET(_socket_handle, &mySet);
+			timeval zero = { 1, 0 };
+			int sel = select(0, &mySet, NULL, NULL, &zero);
+			if (FD_ISSET(_socket_handle, &mySet)) {
+				int recv_result = recv(_socket_handle, (char*)data, data_size, 0);
+				if (recv_result == SOCKET_ERROR) {
+					return WSAGetLastError();
+				}
+				else {
+					return recv_result;
+				}
+			}
+			else {
+				std::cout << "Timed out" << std::endl;
+				return -1;
+			}
+		}
+	}
+
+	int Socket_WIN::receive_data_from(void * data, size_t data_size, char *sender_ip)
+	{
+		if (!_blocking) {
+			sockaddr_in client; // Use to hold the client information (port / ip address)
+			int clientLength = sizeof(client);
+			int recv_result = recvfrom(_socket_handle, (char*)data, data_size, 0, (sockaddr*)&client, &clientLength);
+			if (recv_result == SOCKET_ERROR) {
+				return WSAGetLastError();
+			}
+			else {
+				ZeroMemory(sender_ip, INET_ADDRSTRLEN); // to string of characters
+				inet_ntop(AF_INET, &client.sin_addr, sender_ip, INET_ADDRSTRLEN);// Convert from byte array to chars
+				return recv_result;
+			}
+		}
+		else {
+			fd_set mySet;
+			FD_ZERO(&mySet);
+			FD_SET(_socket_handle, &mySet);
+			timeval zero = { 1, 0 };
+			int sel = select(0, &mySet, NULL, NULL, &zero);
+			if (FD_ISSET(_socket_handle, &mySet)) {
+				sockaddr_in client; // Use to hold the client information (port / ip address)
+				int clientLength = sizeof(client);
+				int recv_result = recvfrom(_socket_handle, (char*)data, data_size, 0, (sockaddr*)&client, &clientLength);
+				if (recv_result == SOCKET_ERROR) {
+					return WSAGetLastError();
+				}
+				else {
+					ZeroMemory(sender_ip, 256); // to string of characters
+					// Convert from byte array to chars
+					inet_ntop(AF_INET, &client.sin_addr, sender_ip, 256);
+					return recv_result;
+				}
+			}
+			else {
+				std::cout << "Timed out" << std::endl;
+				return -1;
+			}
 		}
 	}
 
@@ -128,7 +235,7 @@ namespace eronic {
 		fd_set mySet;
 		FD_ZERO(&mySet);
 		FD_SET(_socket_handle, &mySet);
-		timeval zero = { 5, 0};
+		timeval zero = { 1, 0};
 		// std::cout << "Socket starts select" << std::endl;
 		int sel = select(0, &mySet, NULL, NULL, &zero);
 		std::cout << "select" << sel << std::endl;
@@ -139,7 +246,7 @@ namespace eronic {
 			return connected_socket;
 		}
 		else {
-			std::cout << "No connection " <<WSAGetLastError() << std::endl;
+			std::cout << "No connection " << WSAGetLastError() << std::endl;
 			return nullptr;
 		}
 	}
@@ -154,7 +261,7 @@ namespace eronic {
 		return shutdown(_socket_handle, how);
 	}
 
-	char * get_external_ip(std::string &url)
+	std::string get_external_ip(std::string &url)
 	{
 		// url: "api.ipify.org"
 		

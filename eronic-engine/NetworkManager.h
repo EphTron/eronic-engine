@@ -19,7 +19,7 @@ namespace eronic {
 
 	private:
 		PeerNode * _peer;
-		std::vector<DataPackage*> _data_buffer;
+		//std::vector<DataPackage*> _data_buffer;
 
 		void collect_network_data();
 	};

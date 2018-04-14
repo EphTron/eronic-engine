@@ -173,6 +173,9 @@ public:
 
 	// Normalise this vector (make length = 1)
 	void normalise();
+
+	// Bearing (angle in degrees) to a given position, relative to the current vector position
+	float bearingTo(const Vector4& position);
 	
 	////////////////////////////////
 	// Operators
@@ -345,4 +348,41 @@ inline void Vector4::normalise()
 {
 	float l = length();
 	if (l != 0) divide(l);
+}
+
+// NB: Assumes +Y is up
+inline float Vector4::bearingTo(const Vector4& position)
+{
+	float ydiff = position.y() - y();
+	float xdiff = position.x() - x();
+
+	if (xdiff == 0 && ydiff > 0)
+	{
+		return 0;
+	}
+	else if (xdiff == 0 && ydiff < 0)
+	{
+		return 180;
+	}
+
+	float a = (float)toDeg(atan2f(ydiff, xdiff));
+
+	if (ydiff > 0 && xdiff > 0) // 0-90 deg
+	{
+		a = 90 - a;
+	}
+	else if (ydiff <= 0 && xdiff > 0) //  90-180 deg
+	{
+		a = 90 - a;
+	}
+	else if (ydiff <= 0 && xdiff < 0) // 180-270 deg
+	{
+		a = 90 + -a;
+	}
+	else if (ydiff > 0 && xdiff < 0) // 270-360 deg
+	{
+		a = 450 - a;
+	}
+
+	return a;
 }

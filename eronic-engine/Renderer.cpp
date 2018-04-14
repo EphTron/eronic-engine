@@ -1,5 +1,5 @@
 #include "Renderer.h"
-#include "GameObject.h"
+#include "RenderComponent.h"
 
 /******************************************************************************************************************/
 
@@ -16,13 +16,19 @@ Renderer::~Renderer()
 
 /******************************************************************************************************************/
 
-void Renderer::Draw(GameObject* gob, glm::mat4 MVM)
+void Renderer::Draw(RenderComponent* rc, glm::mat4 MVM)
 {
-	MVM = glm::translate(MVM, glm::vec3(gob->GetPosition().x(), gob->GetPosition().y(), 0));
-	MVM = glm::rotate(MVM, -gob->GetAngle(), glm::vec3(0, 0, 1)); // Rotates anti-clockwise
-	MVM = glm::scale(MVM, glm::vec3(gob->GetScale(), gob->GetScale(), 1));
+	if (rc->ShouldDraw())
+	{
+		MVM = glm::translate(MVM, glm::vec3(rc->GetPosition().x(), rc->GetPosition().y(), 0));
+		MVM = glm::rotate(MVM, -rc->GetAngle(), glm::vec3(0, 0, 1)); // Rotates anti-clockwise
+		MVM = glm::scale(MVM, glm::vec3(rc->GetScale(), rc->GetScale(), 1));
 
-	Draw(gob->GetMesh(), MVM, gob->GetColour());
+		if (rc->GetMesh())
+		{
+			Draw(rc->GetMesh(), MVM, rc->GetColour());
+		}
+	}
 }
 
 /******************************************************************************************************************/

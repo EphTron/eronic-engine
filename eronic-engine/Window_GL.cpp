@@ -24,9 +24,11 @@ void Window_GL::Initialise()
 	SetSize(512, 512);
 	SetDepthBits(24);
 	SetTitle("Asteroids GL");
-//	wglSwapIntervalEXT(0); // Turn off frame rate
 
-	// Initialise DirectX
+	// wglSwapIntervalEXT(0); // Turn off frame rate
+	
+
+	// Initialise OpenGL
 	_renderer = new Renderer_GL();
 	_renderer->Initialise(_width, _height);
 
@@ -49,9 +51,9 @@ void Window_GL::OnDisplay()
 {
 	_game->Run();
 
-	if (!_game->IsRunning())
+	if (_game->GetQuitFlag())
 	{
-		this->Close();
+		Close();
 	}
 
 	SwapBuffers();

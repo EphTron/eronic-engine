@@ -1,9 +1,6 @@
-
 #include "AsteroidsGame.h"
-#pragma comment (lib, "eronic-engine.lib")
 
-
-static const int		SCREEN_WIDTH = 512;
+static const int		SCREEN_WIDTH  = 512;
 static const int		SCREEN_HEIGHT = 512;
 
 
@@ -28,7 +25,7 @@ static const int		SCREEN_HEIGHT = 512;
 #pragma comment (lib, "d3dx10.lib")
 
 // a struct to define a single vertex
-struct VERTEX { FLOAT X, Y, Z; D3DXCOLOR Color; };
+struct VERTEX{ FLOAT X, Y, Z; D3DXCOLOR Color; };
 
 // the entry point for any Windows program
 int WINAPI WinMain(HINSTANCE hInstance,
@@ -57,13 +54,13 @@ class AsteroidsApp
 {
 private:
 	Window_GL win;
-	AsteroidsGame* game;
+	Game* game;
 
 public:
 	AsteroidsApp()
 		: win(new AsteroidsGame(), SCREEN_WIDTH, SCREEN_HEIGHT)
 	{
-		game = (AsteroidsGame*)(win.GetGame());
+		game = win.GetGame();
 	}
 
 	~AsteroidsApp()

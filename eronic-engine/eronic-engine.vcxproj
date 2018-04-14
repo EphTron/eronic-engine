@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{44BA8412-FD69-4082-9E4C-F083B143B4BC}</ProjectGuid>
+    <ProjectGuid>{29972CCA-EEAC-48E5-AB22-93B6C302027B}</ProjectGuid>
     <RootNamespace>eronic-engine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <ProjectName>eronic-engine</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'" Label="Configuration">
@@ -68,20 +68,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'">
-    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\asteroids-game;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - DirectX|Win32'">
-    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\asteroids-game;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\DirectX SDK\Lib;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - DirectX|Win32'">
-    <IncludePath>..\Asteroids;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - OpenGL|Win32'">
-    <IncludePath>..\Asteroids;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'">
     <ClCompile>
@@ -141,27 +141,43 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Address.cpp" />
+    <ClCompile Include="CollisionComponent.cpp" />
+    <ClCompile Include="CollisionMessage.cpp" />
+    <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="DataPackage.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="NetworkManager.cpp" />
-    <ClCompile Include="PeerNode.cpp" />
-    <ClCompile Include="Serializer.cpp" />
-    <ClCompile Include="TCPClient.cpp" />
-    <ClCompile Include="TCPListener.cpp" />
+    <ClCompile Include="GameObjectComponent.cpp" />
+    <ClCompile Include="KeyPressMessage.cpp" />
+    <ClCompile Include="DeadObjectMessage.cpp" />
+    <ClCompile Include="LifeTimerComponent.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Message.cpp" />
+    <ClCompile Include="MultiMesh.cpp" />
+    <ClCompile Include="ObserverSubject.cpp" />
+    <ClCompile Include="PeerNode.cpp" />
+    <ClCompile Include="PhysicsComponent.cpp" />
+    <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Renderer_DX.cpp" />
     <ClCompile Include="Renderer_GL.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderObject_GL.cpp" />
     <ClCompile Include="ShaderProgram_GL.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="Socket_WIN.cpp" />
-    <ClCompile Include="ThreadWorker.cpp" />
+    <ClCompile Include="System.cpp" />
+    <ClCompile Include="TCPClient.cpp" />
+    <ClCompile Include="TCPListener.cpp" />
+    <ClCompile Include="ThrustMessage.cpp" />
     <ClCompile Include="UDPClient.cpp" />
     <ClCompile Include="UDPListener.cpp" />
+    <ClCompile Include="UserInputComponent.cpp" />
     <ClCompile Include="VBO.cpp" />
     <ClCompile Include="VBO_DX.cpp" />
     <ClCompile Include="VBO_GL.cpp" />
@@ -172,28 +188,45 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Address.h" />
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="CollisionMessage.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="DataPackage.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="NetworkManager.h" />
-    <ClInclude Include="PeerNode.h" />
-    <ClInclude Include="Serializer.h" />
-    <ClInclude Include="TCPClient.h" />
-    <ClInclude Include="TCPListener.h" />
+    <ClInclude Include="GameObjectComponent.h" />
+    <ClInclude Include="KeyPressMessage.h" />
+    <ClInclude Include="DeadObjectMessage.h" />
+    <ClInclude Include="LifeTimerComponent.h" />
     <ClInclude Include="MathsHelper.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="MultiMesh.h" />
+    <ClInclude Include="Observer.h" />
+    <ClInclude Include="ObserverSubject.h" />
+    <ClInclude Include="PeerNode.h" />
+    <ClInclude Include="PhysicsComponent.h" />
+    <ClInclude Include="PhysicsSystem.h" />
+    <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Renderer_DX.h" />
     <ClInclude Include="Renderer_GL.h" />
+    <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderObject_GL.h" />
     <ClInclude Include="ShaderProgram_GL.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="Socket_WIN.h" />
-    <ClInclude Include="ThreadWorker.h" />
+    <ClInclude Include="System.h" />
+    <ClInclude Include="TCPClient.h" />
+    <ClInclude Include="TCPListener.h" />
+    <ClInclude Include="ThrustMessage.h" />
     <ClInclude Include="UDPClient.h" />
     <ClInclude Include="UDPListener.h" />
+    <ClInclude Include="UserInputComponent.h" />
     <ClInclude Include="VBO.h" />
     <ClInclude Include="VBO_DX.h" />
     <ClInclude Include="VBO_GL.h" />
@@ -202,6 +235,9 @@
     <ClInclude Include="Window.h" />
     <ClInclude Include="Window_DX.h" />
     <ClInclude Include="Window_GL.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,58 +1,94 @@
 #pragma once
-#include "Mesh.h"
+#include <map>
+#include <vector>
 #include "Vector4.h"
-#include "Colour.h"
 #include "MathsHelper.h"
+#include "ObserverSubject.h"
 
-class GameObject
+// Forward references
+class GameObjectComponent;
+class Message;
+
+
+// Typedefs
+typedef std::map<std::string, GameObjectComponent*> ComponentMap;
+typedef std::map<std::string, GameObjectComponent*>::iterator ComponentMapIterator;
+typedef std::vector<GameObjectComponent*>::iterator ComponentListIterator;
+
+
+// Now new and improved to use a component-based architecture
+class GameObject 
+	: public ObserverSubject
 {
 	// Constants
 public:
 
+
 	// Data
 protected:
-	float	_angle;		// Angle of object in degrees
-	float	_scale;		// Scale of the object (1 = normal)
-	Mesh*	_mesh;		// Vertex info
-	Colour	_colour;	// Colour of object
-	Vector4 _position;	// Position of object's origin
-	Vector4 _velocity;	// Velocity of object
-	bool	_alive;
+	std::string			_type;			// Type of the object
+	float				_angle;			// Angle of object in degrees
+	float				_scale;			// Scale of the object (1 = normal)
+	Vector4				_position;		// Position of object's origin
+	bool				_alive;			// Alive flag; when false, is not updated
+	bool				_deleteFlag;	// Set when you want this game object to be deleted by the game
+
+	// Components
+	ComponentMap		_components;
+
 
 	// Constructors
 public:
-	GameObject();
+	GameObject(std::string type);
 	virtual ~GameObject();
 
+	// Disable copy constructor + assignment operator
+private:
 	GameObject(const GameObject&);
 	GameObject& operator=(const GameObject&);
 
+
 	// Gets/sets
 public:
-	Mesh* GetMesh()			const	{ return _mesh;  }
-	void SetMesh(Mesh* m)			{ _mesh = m; }
+	float GetAngle()													const	{ return _angle; }
+	void SetAngle(float v)														{ _angle = v;  }
 
-	float GetAngle()		const	{ return _angle; }
-	void SetAngle(float v)			{ _angle = v;  }
+	float GetScale()													const	{ return _scale; }
+	void SetScale(float v)														{ _scale = v; }
 
-	float GetScale()		const	{ return _scale; }
-	void SetScale(float v)			{ _scale = v; }
+	Vector4 GetPosition()												const	{ return _position; }
+	void SetPosition(Vector4 v)													{ _position = v; }
 
-	Colour GetColour()		const	{ return _colour; }
-	void SetColour(Colour c)		{ _colour = c; }
+	bool IsAlive()														const	{ return _alive; }
+	void SetAlive(bool v)														{ _alive = v; }
 
-	Vector4 GetPosition()	const	{ return _position; }
-	void SetPosition(Vector4 v)		{ _position = v; }
+	bool ShouldBeDeleted()												const	{ return _deleteFlag; }
+	void SetDeleteFlag(bool v)													{ _deleteFlag = v; }
 
-	Vector4 GetVelocity()	const	{ return _velocity; }
-	void SetVelocity(Vector4 v)		{ _velocity = v; }
+	std::string GetType()												const	{ return _type; }
 
-	bool IsAlive()			const	{ return _alive; }
-	void SetAlive(bool v)			{ _alive = v; }
-
-	// Functions
+	// Component Functions
 public:
-	virtual bool CollideWith(const GameObject* other, float collisionRange);
+	bool AddComponent(GameObjectComponent* goc)									;
+	bool RemoveComponent(GameObjectComponent* goc)								;
+	bool RemoveComponent(std::string componentType)								;
+	GameObjectComponent* GetComponent(std::string type)							;
+
+	// General Functions
+public:
+	// Setup function -- called to initialise object and its components. Should only be called once
+	virtual void Start();
+
+	// Main update function (called every frame)
 	virtual void Update(double deltaTime);
+
+	// Message handler (called when message occurs)
+	virtual void OnMessage(Message* msg)										{ BroadcastMessage(msg); }
+
+	// Shutdown function -- called when object is destroyed (i.e., from destructor)
+	virtual void End();
+
+	// Resets the game object to the start state (similar to Start(), but may be called more than once)
+	virtual void Reset();
 };
 

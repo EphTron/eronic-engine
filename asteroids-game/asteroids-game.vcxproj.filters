@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="AsteroidsGame.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ExplodableComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GodModeComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiRenderComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="DigitDisplay.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Asteroid.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreDisplay.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Missile.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipControllerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageMessage.cpp">
+      <Filter>Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="Ship.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="UFO.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="HitpointComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LetterDisplay.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="WordDisplay.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenuScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AsteroidsGame.h" />
+    <ClInclude Include="CollisionMatrix.h" />
+    <ClInclude Include="Components.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplodableComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GodModeComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiRenderComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Explosion.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="DigitDisplay.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Asteroid.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreDisplay.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Missile.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipControllerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageMessage.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="UFO.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Ship.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="HitpointComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LetterDisplay.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="WordDisplay.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlayScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="Game ClassDiagram.cd" />
+    <None Include="shader.frag" />
+    <None Include="shader.vert" />
+    <None Include="shaders.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="GameObjects">
+      <UniqueIdentifier>{9816dac6-343c-46e8-969c-e64f41503e2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Messages">
+      <UniqueIdentifier>{3794c4d0-7aee-45d1-b390-0a76f66ba664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{51ea686e-2807-4253-8011-310ebf85db22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{13d12b4b-91ac-4b27-812d-93acca3388ff}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

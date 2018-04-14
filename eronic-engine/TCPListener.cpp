@@ -20,13 +20,16 @@ namespace eronic {
 		_listening_socket->close();
 	}
 
-	int TCPListener::bind(std::string & ip, int port)
+	int TCPListener::bind(std::string & ip, int port, bool blocking)
 	{
 		int TCP = 1;
 		int bind_result = _listening_socket->bind_to(TCP, ip, port);
 		if (bind_result == 0) {
 			_is_bound = true;
 			_is_listening = true;
+			if (!blocking) {
+				_listening_socket->set_blocking(false);
+			}
 			return bind_result;
 		}
 		else {
@@ -74,6 +77,11 @@ namespace eronic {
 		else {
 			return result;
 		}
+	}
+
+	int TCPListener::set_blocking(bool flag)
+	{
+		return _listening_socket->set_blocking(flag);
 	}
 
 	TCPClient * TCPListener::accept()

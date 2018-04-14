@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C6F1A916-32CE-47D0-93D3-6FA358F75094}</ProjectGuid>
+    <ProjectGuid>{62160E6D-C060-4D1A-BC2B-322E959CA501}</ProjectGuid>
     <RootNamespace>asteroids-game</RootNamespace>
     <ProjectName>asteroids-game</ProjectName>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
@@ -68,20 +68,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'">
-    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - DirectX|Win32'">
     <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - DirectX|Win32'">
-    <LibraryPath>$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-    <IncludePath>..\AsteroidEngine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - OpenGL|Win32'">
-    <LibraryPath>$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-    <IncludePath>..\AsteroidEngine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'">
     <ClCompile>
@@ -93,7 +93,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>eronic-engine.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug - DirectX|Win32'">
@@ -106,6 +106,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>eronic-engine.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release - DirectX|Win32'">
@@ -122,6 +123,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>eronic-engine.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release - OpenGL|Win32'">
@@ -138,26 +140,60 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>eronic-engine.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Asteroid.h" />
     <ClInclude Include="AsteroidsGame.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="CollisionMatrix.h" />
+    <ClInclude Include="Components.h" />
+    <ClInclude Include="DamageMessage.h" />
+    <ClInclude Include="DigitDisplay.h" />
+    <ClInclude Include="ExplodableComponent.h" />
     <ClInclude Include="Explosion.h" />
+    <ClInclude Include="GameOverScene.h" />
+    <ClInclude Include="GamePlayScene.h" />
+    <ClInclude Include="GodModeComponent.h" />
+    <ClInclude Include="HitpointComponent.h" />
+    <ClInclude Include="LetterDisplay.h" />
+    <ClInclude Include="MainMenuScene.h" />
+    <ClInclude Include="Missile.h" />
+    <ClInclude Include="MultiRenderComponent.h" />
+    <ClInclude Include="PauseScene.h" />
     <ClInclude Include="ScoreDisplay.h" />
     <ClInclude Include="Ship.h" />
+    <ClInclude Include="ShipControllerComponent.h" />
+    <ClInclude Include="UFO.h" />
+    <ClInclude Include="WordDisplay.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="AsteroidsGame.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="DamageMessage.cpp" />
+    <ClCompile Include="DigitDisplay.cpp" />
+    <ClCompile Include="ExplodableComponent.cpp" />
     <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="GameOverScene.cpp" />
+    <ClCompile Include="GamePlayScene.cpp" />
+    <ClCompile Include="GodModeComponent.cpp" />
+    <ClCompile Include="HitpointComponent.cpp" />
+    <ClCompile Include="LetterDisplay.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenuScene.cpp" />
+    <ClCompile Include="Missile.cpp" />
+    <ClCompile Include="MultiRenderComponent.cpp" />
+    <ClCompile Include="PauseScene.cpp" />
     <ClCompile Include="ScoreDisplay.cpp" />
     <ClCompile Include="Ship.cpp" />
+    <ClCompile Include="ShipControllerComponent.cpp" />
+    <ClCompile Include="UFO.cpp" />
+    <ClCompile Include="WordDisplay.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="Game ClassDiagram.cd" />
     <None Include="shader.frag" />
     <None Include="shader.vert" />

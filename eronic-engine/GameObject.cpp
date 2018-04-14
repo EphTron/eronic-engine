@@ -1,17 +1,17 @@
 #include "GameObject.h"
+#include "GameObjectComponent.h"
+#include "Message.h"
 
 /******************************************************************************************************************/
 // Structors
 /******************************************************************************************************************/
 
-GameObject::GameObject()
+GameObject::GameObject(std::string type)
 	:	_angle(0),
 		_scale(1),
 		_position(0,0),
-		_velocity(0,0),
-		_colour(1,1,1,1),
 		_alive(true),
-		_mesh(NULL)
+		_type(type)
 {
 }
 
@@ -19,58 +19,123 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	End();
 }
 
 /******************************************************************************************************************/
+// Component Functions
+/******************************************************************************************************************/
 
-GameObject::GameObject(const GameObject& other)
+bool GameObject::AddComponent(GameObjectComponent* goc)
 {
-	_angle = other.GetAngle();
-	_scale = other.GetScale();
-	_position = other.GetPosition();
-	_velocity = other.GetVelocity();
-	_colour = other.GetColour();
-	_mesh = other.GetMesh();
+	if (_components.find(goc->GetComponentType()) != _components.end())
+	{
+		// Error - already have this component!
+		return false;
+	}
+	_components[goc->GetComponentType()] = goc;
+
+	return true;
 }
 
 /******************************************************************************************************************/
 
-GameObject& GameObject::operator=(const GameObject& other)
+bool GameObject::RemoveComponent(GameObjectComponent* goc)
 {
-	_angle = other.GetAngle();
-	_scale = other.GetScale();
-	_position = other.GetPosition();
-	_velocity = other.GetVelocity();
-	_colour = other.GetColour();
-	_mesh = other.GetMesh();
-	return *this;
+	return RemoveComponent(goc->GetComponentType());
 }
 
 /******************************************************************************************************************/
-// Functions
-/******************************************************************************************************************/
 
-bool GameObject::CollideWith(const GameObject* other, float collisionRange)
+bool GameObject::RemoveComponent(std::string type)
 {
-	Vector4 diff = other->GetPosition();
-	diff -= this->GetPosition();
+	ComponentMapIterator i = _components.find(type);
+	if (i != _components.end())
+	{
+		// Remove it
+		_components.erase(i);
 
-	return (diff.length() < collisionRange);
+		// Delete it
+		i->second->End();
+		delete i->second;
+
+		return true;
+	}
+
+	// Couldn't find it
+	return false;
 }
 
 /******************************************************************************************************************/
 
+GameObjectComponent* GameObject::GetComponent(std::string type)
+{
+	ComponentMapIterator i = _components.find(type);
+	if (i != _components.end())
+	{
+		// Return it
+		return i->second;
+	}
+
+	// Couldn't find it
+	return NULL;
+}
+
+/******************************************************************************************************************/
+// General Functions
+/******************************************************************************************************************/
+
+// Setup function -- called to initialise object and its components
+void GameObject::Start()
+{
+	// Initialise all objects
+	for (ComponentMapIterator i = _components.begin();
+		i != _components.end();
+		++i)
+	{
+		i->second->Start();
+	}
+}
+
+/******************************************************************************************************************/
+
+// Main update function (called every frame)
 void GameObject::Update(double deltaTime)
 {
-	Vector4 vel = _velocity;
-	vel *= (float)deltaTime;
-	_position += vel;
+	// Update all objects
+	for (ComponentMapIterator i = _components.begin();
+		i != _components.end();
+		++i)
+	{
+		i->second->Update(deltaTime);
+	}
+}
 
-	// Wrap around
-	if (_position.x() < -1) _position.x(_position.x() + 2);
-	else if (_position.x() > 1) _position.x(_position.x() - 2);
-	if (_position.y() < -1) _position.y(_position.y() + 2);
-	else if (_position.y() > 1) _position.y(_position.y() - 2);
+/******************************************************************************************************************/
+
+// Shutdown function -- called when object is destroyed (i.e., from destructor)
+void GameObject::End()
+{
+	// End all objects
+	for (ComponentMapIterator i = _components.begin();
+		i != _components.end();
+		++i)
+	{
+		GameObjectComponent* component = i->second;
+		component->End();
+		delete component;
+	}
+
+	// Clear list
+	_components.clear();
+}
+
+/******************************************************************************************************************/
+
+// Resets the game object to the start state (similar to Start(), but may be called more than once)
+void GameObject::Reset()
+{
+
 }
 
 /******************************************************************************************************************/

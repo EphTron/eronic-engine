@@ -14,11 +14,13 @@ namespace eronic {
 		TCPListener(Socket * listening_socket);
 		~TCPListener();
 
-		int bind(std::string& ip, int port);
+		int bind(std::string& ip, int port, bool blocking);
 		int start(int max_connections);
 
 		int stop(int how);
 		int close();
+
+		int set_blocking(bool flag);
 
 		TCPClient* accept();
 

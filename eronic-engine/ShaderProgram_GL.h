@@ -22,8 +22,8 @@ class ShaderProgram_GL
 	// Data
 private:
 	std::vector<ShaderObject_GL*>		attachedShaders;	// The list of attached shaders
-	GLuint								id;					// The program ID
-	std::map<std::string, GLint>		uniforms;			// Cache uniform IDs;
+	GLuint							id;					// The program ID
+	std::map<std::string, GLint>	uniforms;			// Cache uniform IDs;
 
 	// Structors
 public:

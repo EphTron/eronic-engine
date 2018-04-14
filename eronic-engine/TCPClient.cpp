@@ -18,11 +18,14 @@ namespace eronic {
 	TCPClient::~TCPClient()
 	{}
 
-	bool TCPClient::connect(std::string & ip, int port)
+	bool TCPClient::connect(std::string & ip, int port, bool blocking)
 	{
 		int TCP = 1;
 		int connect_result = _socket->connect_to(TCP, ip, port);
 		if (connect_result == 0) {
+			if (!blocking) {
+				_socket->set_blocking(false);
+			}
 			_is_connected = true;
 			return connect_result;
 		}
@@ -36,9 +39,19 @@ namespace eronic {
 		return _socket->send_data(data, data_size);
 	}
 
-	bool TCPClient::receive(void * data, size_t data_size)
+	int TCPClient::receive(void * data, size_t data_size)
 	{
 		return _socket->receive_data(data, data_size);
+	}
+
+	int TCPClient::receivefrom(void * data, size_t data_size, char * sender_ip)
+	{
+		return _socket->receive_data_from(data, data_size, sender_ip);
+	}
+
+	int TCPClient::set_blocking(bool flag)
+	{
+		return _socket->set_blocking(flag);
 	}
 
 	int TCPClient::stop(int how)
@@ -63,6 +76,11 @@ namespace eronic {
 		else {
 			return result;
 		}
+	}
+
+	Address const * TCPClient::get_address() const
+	{
+		return _socket->get_address();
 	}
 	
 } // namespace eronic

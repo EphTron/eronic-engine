@@ -8,7 +8,7 @@
 
 // Forward declarations
 class Game;
-class GameObject;
+class RenderComponent;
 class Mesh;
 
 // Platform independent renderer base class
@@ -34,7 +34,7 @@ public:
 	virtual void ClearScreen() = 0;
 
 	virtual void Draw(const Mesh* mesh, glm::mat4 MVM, const Colour& colour) = 0;
-	virtual void Draw(GameObject* gob, glm::mat4 MVM);
+	virtual void Draw(RenderComponent* gob, glm::mat4 MVM);
 
 	virtual void Destroy() = 0;
 

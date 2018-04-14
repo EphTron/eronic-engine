@@ -91,7 +91,7 @@ void Window_DX::Initialise()
 	_game->Initialise(this);
 
 	MSG msg;
-	while (_game->IsRunning())
+	while (!_game->GetQuitFlag())
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{

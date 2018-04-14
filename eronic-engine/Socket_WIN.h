@@ -21,11 +21,13 @@ namespace eronic {
 		int connect_to(int type, std::string& ip, int port);
 		int bind_to(int type, std::string& ip, int port);
 		int start_listening(int max_connections);
+		int set_blocking(bool flag);
 
 		Address const* get_address() const;
 
 		int send_data(const void* data, size_t data_size);
 		int receive_data(void* data, size_t data_size);
+		int receive_data_from(void* data, size_t data_size, char *sender_ip);
 
 		Socket* accept_connection();
 
@@ -37,5 +39,5 @@ namespace eronic {
 		WSADATA _wsa_data;
 	};
 
-	char * get_external_ip(std::string &url);
+	std::string get_external_ip(std::string &url);
 } // namespace eronic

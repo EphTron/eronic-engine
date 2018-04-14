@@ -21,11 +21,15 @@ namespace eronic {
 		_listening_socket->close();
 	}
 
-	int UDPListener::bind(std::string & ip, int port)
+	int UDPListener::bind(std::string & ip, int port, bool blocking)
 	{
 		int UDP = 2;
+		std::cout << "test cout in udp listener : ip: " << ip << std::endl;
 		int bind_result = _listening_socket->bind_to(UDP, ip, port);
 		if (bind_result == 0) {
+			if (!blocking) {
+				_listening_socket->set_blocking(false);
+			}
 			_is_bound = true;
 			return bind_result;
 		}
@@ -52,8 +56,18 @@ namespace eronic {
 			return 0;
 		}
 		else {
-			return WSAGetLastError();
+			return recv_result;
 		}
+	}
+
+	int UDPListener::receivefrom(void * data, size_t data_size, char * sender_ip)
+	{
+		return _listening_socket->receive_data_from(data, data_size, sender_ip);
+	}
+
+	int UDPListener::set_blocking(bool flag)
+	{
+		return _listening_socket->set_blocking(flag);
 	}
 
 	int UDPListener::stop(int how)

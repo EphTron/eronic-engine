@@ -10,30 +10,25 @@
 #include "UDPClient.h"
 #include "TCPListener.h"
 #include "UDPListener.h"
-#include "Serializer.h"
 #include "Socket_WIN.h"
 #include "PeerNode.h"
 
 #define MAX_CONN	3
-#define PACKAGE_SIZE sizeof(eronic::Package)
 
-eronic::TCPListener* setup_tcp_listener(int port, int alt_ports);
-eronic::UDPListener* setup_udp_listener(int port, int alt_ports);
-void listen_for_connections(eronic::TCPListener * l, eronic::TCPClient * conns[], int conns_length, bool * flag);
-void start_echo(eronic::UDPListener * listener, bool * flag);
-eronic::TCPClient * setup_tcp_sender(int port);
 eronic::UDPClient * setup_udp_sender(std::string ip, int port);
-
-void create_package(char * data_package, std::string& message, int type, int sender);
+eronic::TCPClient * setup_tcp_sender(int port);
+eronic::UDPListener* setup_udp_listener(int port, int alt_ports);
+eronic::TCPListener* setup_tcp_listener(int port, int alt_ports);
+void listen_for_connections(eronic::TCPListener * l, eronic::TCPClient * conns[], int conns_length, bool * flag);
 
 int main() {
 
 	bool flag = true;
 	int listen_port = 9171;
 
-	eronic::PeerNode * peer = new eronic::PeerNode(true,9001,2);
+	eronic::PeerNode * peer = new eronic::PeerNode(1,true,9001,2);
 	peer->open_network(9100);
-
+	peer->run_peer_network();
 
 	system("Pause");
 	return 0;
@@ -44,7 +39,7 @@ eronic::TCPListener* setup_tcp_listener(int port, int alt_ports) {
 	int listen_port = port;
 	int binding_result = -1;
 	while (listen_port <= port + alt_ports && binding_result != 0) {
-		binding_result = listener->bind((std::string)"ADDR_ANY", listen_port);
+		binding_result = listener->bind((std::string)"ADDR_ANY", listen_port, false);
 		if (binding_result == 10048) {
 			listen_port++;
 			std::cout << "increase port to " << listen_port << std::endl;
@@ -69,18 +64,18 @@ void listen_for_connections(eronic::TCPListener * l, eronic::TCPClient * conns[]
 		std::cout << "Error " << start_result << std::endl;
 
 	int conn_idx = 0;
-	eronic::Package* temp;
+	//eronic::Package* temp;
 	while (conn_idx < conns_length && *flag) {
 		std::cout << "accepting... " << conn_idx << std::endl;
 		if ((conns[conn_idx] = l->accept()) != nullptr) {
 			std::cout << "Connection found !" << std::endl;
 			
-			char data[PACKAGE_SIZE];
-			temp = new eronic::Package;
+			char data[3];
+			//temp = new eronic::Package;
 
 			if (conns[conn_idx]->receive(data, 128) == 0) {
-				eronic::deserialize(data, temp);
-				std::cout << "Received msg: " << temp->message << std::endl;
+				//eronic::deserialize(data, temp);
+				//std::cout << "Received msg: " << temp->message << std::endl;
 			}
 			conn_idx++;
 		}
@@ -90,35 +85,11 @@ void listen_for_connections(eronic::TCPListener * l, eronic::TCPClient * conns[]
 	}
 }
 
-void start_echo(eronic::UDPListener * listener, bool * flag) {
-	eronic::Package* temp;
-	char data[PACKAGE_SIZE];
-	
-	//for (int i = 0; i < 1; i++) {
-	while (*flag) {
-		temp = new eronic::Package;
-		memset(data, '\0', PACKAGE_SIZE); //clear the buffer by filling null, it might have previously received data
-		listener->receive(data, PACKAGE_SIZE);
-		if (*data == 0) {
-			std::cout << " CLOSE " << std::endl;
-			*flag = false;
-		}
-		eronic::deserialize(data, temp);
-		std::cout << "Received msg: " << temp->message << std::endl;
-		delete temp;
-		temp = nullptr;
-	//temp = nullptr;
-	//delete temp;
-	//if (*flag) { 
-	//	start_echo(listener, flag);
-	}
-	//}
-}
 
 eronic::TCPClient * setup_tcp_sender(int port) {
 	eronic::TCPClient * tcp_sender = new eronic::TCPClient(new eronic::Socket_WIN());
 	std::cout << "Created tcp_sender. Connecting... " << port << std::endl;
-	if (tcp_sender->connect((std::string)"127.0.0.1", port) == 0) {
+	if (tcp_sender->connect((std::string)"127.0.0.1", port, false) == 0) {
 		std::cout << "Connected to port: " << port << std::endl;
 	}
 	else {
@@ -130,7 +101,7 @@ eronic::TCPClient * setup_tcp_sender(int port) {
 eronic::UDPClient * setup_udp_sender(std::string ip, int port) {
 	eronic::UDPClient * udp_sender = new eronic::UDPClient(new eronic::Socket_WIN());
 	std::cout << "Created udp_sender. Connecting... " << port << std::endl;
-	if (udp_sender->connect(ip, port) == 0) {
+	if (udp_sender->connect(ip, port, false) == 0) {
 		std::cout << "Connected to port: " << port << std::endl;
 	}
 	else {
@@ -144,7 +115,7 @@ eronic::UDPListener* setup_udp_listener(int port, int alt_ports) {
 	int listen_port = port;
 	int binding_result = -1;
 	while (listen_port <= port + alt_ports && binding_result != 0) {
-		binding_result = listener->bind((std::string)"ADDR_ANY", listen_port);
+		binding_result = listener->bind((std::string)"ADDR_ANY", listen_port, false);
 		if (binding_result == 10048) {
 			listen_port++;
 			std::cout << "increase port to " << listen_port << std::endl;
@@ -159,22 +130,39 @@ eronic::UDPListener* setup_udp_listener(int port, int alt_ports) {
 	return listener;
 }
 
-void create_package(char * data, std::string& message, int type, int sender) {
-	eronic::Package* data_pack = new eronic::Package;
-	data_pack->type = type;
-	data_pack->sender = sender;
-	//strcpy(data_pack->message, "hello from sender\0");
-	//strcpy_s(data_pack->message, 128, "hello from sender\0");
-	strcpy_s(data_pack->message, 128, message.c_str());
-	eronic::serialize(data_pack, data);
-	data_pack = nullptr;
-	delete data_pack;
+void send_and_receive_loop() {
+	eronic::UDPListener* a = setup_udp_listener(9555, 2);
+	a->set_blocking(true);
+
+	eronic::UDPClient * b = setup_udp_sender((std::string)"127.0.0.1", 9555);
+	b->set_blocking(true);
+
+	eronic::DataPackage* temp;
+	while (0) {
+		// prepare data package
+		eronic::DataPackage dp = eronic::DataPackage();
+		char c[sizeof(eronic::DataPackage)];
+		dp.type = 1;
+		dp.network_id = 2;
+		dp.int_data_1 = 3;
+		dp.set_ip((std::string)"127.0.0.1");
+		dp.serialize(c);
+		// send package
+		int res_s = b->send(c, sizeof(eronic::DataPackage));
+
+		//receive package
+		char r[sizeof(eronic::DataPackage)];
+		int res_r = a->receive(r, sizeof(eronic::DataPackage));
+		//deserialize it
+		temp = new eronic::DataPackage(r);
+		std::cout << "recv res " << res_r << " " << temp->sender_ip << std::endl;
+		Sleep(500);
+	}
 }
 
 
 ///////////////////////////////////////////////////////////////////
-
-
+// OLD Code snippets that might be useful (but probably not)
 /* OLD MAIN CODE
 //eronic::get_external_ip((std::string)"api.ipify.org");
 

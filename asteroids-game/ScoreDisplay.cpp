@@ -1,76 +1,27 @@
 #include "ScoreDisplay.h"
+#include "Components.h"
 #include "Renderer.h"
+#include "Message.h"
+#include "Game.h"
 
 /******************************************************************************************************************/
 
-ScoreDisplay::ScoreDisplay(Renderer* renderer)
+ScoreDisplay::ScoreDisplay()
+	: GameObject("scoreDisplay")
 {
-	// Setup letter meshes
-	_numbers[0].AddVertex({ -0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[0].AddVertex({  0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[0].AddVertex({  0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[0].AddVertex({ -0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[0].AddVertex({ -0.04f, -0.09f, 0,		1, 1, 1, 1 });
-
-	_numbers[1].AddVertex({  0.0f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[1].AddVertex({  0.0f,  0.09f, 0,		1, 1, 1, 1 });
-
-	_numbers[2].AddVertex({  0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[2].AddVertex({ -0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[2].AddVertex({ -0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[2].AddVertex({  0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[2].AddVertex({  0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[2].AddVertex({ -0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	 
-	_numbers[3].AddVertex({ -0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[3].AddVertex({  0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[3].AddVertex({  0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[3].AddVertex({ -0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[3].AddVertex({  0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[3].AddVertex({  0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[3].AddVertex({ -0.04f,  0.09f, 0,		1, 1, 1, 1 });
-
-	_numbers[4].AddVertex({ -0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[4].AddVertex({ -0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[4].AddVertex({  0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[4].AddVertex({  0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[4].AddVertex({  0.04f, -0.09f, 0,		1, 1, 1, 1 });
-
-	_numbers[5].AddVertex({ -0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[5].AddVertex({  0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[5].AddVertex({  0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[5].AddVertex({ -0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[5].AddVertex({ -0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[5].AddVertex({  0.04f,  0.09f, 0,		1, 1, 1, 1 });
-
-	_numbers[6].AddVertex({ -0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[6].AddVertex({ -0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[6].AddVertex({  0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[6].AddVertex({  0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[6].AddVertex({ -0.04f,  0.00f, 0,		1, 1, 1, 1 });
-
-	_numbers[7].AddVertex({ -0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[7].AddVertex({  0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[7].AddVertex({  0.04f, -0.09f, 0,		1, 1, 1, 1 });
-
-	_numbers[8].AddVertex({  0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[8].AddVertex({ -0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[8].AddVertex({ -0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[8].AddVertex({  0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[8].AddVertex({  0.04f, -0.00f, 0,		1, 1, 1, 1 });
-	_numbers[8].AddVertex({ -0.04f, -0.00f, 0,		1, 1, 1, 1 });
-	_numbers[8].AddVertex({  0.04f, -0.00f, 0,		1, 1, 1, 1 });
-	_numbers[8].AddVertex({  0.04f, -0.09f, 0,		1, 1, 1, 1 });
-
-	_numbers[9].AddVertex({  0.04f, -0.09f, 0,		1, 1, 1, 1 });
-	_numbers[9].AddVertex({  0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[9].AddVertex({ -0.04f,  0.09f, 0,		1, 1, 1, 1 });
-	_numbers[9].AddVertex({ -0.04f,  0.00f, 0,		1, 1, 1, 1 });
-	_numbers[9].AddVertex({  0.04f,  0.00f, 0,		1, 1, 1, 1 });
-
-	for (int i = 0; i < 10; i++)
+	Colour yellow = Colour::Yellow();
+	Vector4 startPos(-0.95f, 0.90f, 0, 1);
+	for (int i = 0; i < NUM_DIGITS; i++)
 	{
-		_numbers[i].CreateVBO(renderer);
+		_digits[i] = new DigitDisplay();
+		_digits[i]->SetPosition(startPos);
+		_digits[i]->SetAlive(false);
+
+		MultiRenderComponent* mrc = (MultiRenderComponent*)_digits[i]->GetComponent("render");
+		mrc->SetColour(yellow);
+
+		startPos.x(startPos.x() + 0.1f);
+		Game::TheGame->AddGameObject(_digits[i]);
 	}
 }
 
@@ -82,32 +33,108 @@ ScoreDisplay::~ScoreDisplay()
 
 /******************************************************************************************************************/
 
-void ScoreDisplay::Draw(Renderer* renderer, int score, glm::mat4 MVM)
+void ScoreDisplay::Update(double deltaTime)
 {
+	if (InCountdownMode())
+	{
+		_scoreCountdown -= (float)(30 * deltaTime);
+		_score = (int)_scoreCountdown;
+		
+		if (_scoreCountdown < 0)
+		{ 
+			SetCountdownMode(false);
+			_scoreCountdown = 0;
+			_score = 0;
+
+			Message msg("scoreCountdownFinished");
+			Game::TheGame->ListenToMessage(&msg);
+		}
+	}
+
+	// Based on current score, set the various digits
+	int tempScore = _score;
+	int numDigits = 1;
+	while (tempScore >= 10)
+	{
+		tempScore /= 10;
+		numDigits++;
+	}
+
+	for (int i = 0; i < NUM_DIGITS; i++)
+	{
+		if (i < numDigits)
+		{
+			_digits[i]->SetAlive(true); // Turn on digit
+		}
+		else
+		{
+			_digits[i]->SetAlive(false); // Turn off digit
+		}
+	}
+
+	tempScore = _score;
 	int number = 0;
-	float offset = -0.1f;
-	int numberOfDigits = 0;
-	int tscore = score;
-	while (tscore >= 10)
+	while (tempScore >= 10)
 	{
-		tscore /= 10;
-		numberOfDigits++;
+		numDigits--;
+		number = tempScore % 10;
+		_digits[numDigits]->SetCurrentDigit(number);
+		tempScore /= 10;
 	}
 
-	MVM = glm::translate(MVM, glm::vec3(-offset * numberOfDigits, 0, 0));
-	glm::mat4 tempMVM;
+	_digits[0]->SetCurrentDigit(tempScore);
+}
 
-	Colour colour = Colour::Yellow();
+/******************************************************************************************************************/
 
-	while (score >= 10)
+void ScoreDisplay::OnMessage(Message* msg)
+{
+	if (msg->GetMessageType() == "scoreUp")
 	{
-		number = score % 10;
-		renderer->Draw(&_numbers[number], MVM, colour);
-		score /= 10;
-		MVM = glm::translate(MVM, glm::vec3(offset, 0, 0));
+		_score++;
+
+		// Cap score
+		int maxScore = (int)pow(10, NUM_DIGITS);
+		if (_score >= maxScore)
+		{
+			_score = maxScore - 1;
+		}
+	}
+	else if (msg->GetMessageType() == "scoreDown")
+	{
+		_score--;
+
+		// Cap score
+		if (_score < 0)
+		{
+			_score = 0;
+		}
+	}
+}
+
+/******************************************************************************************************************/
+
+void ScoreDisplay::Reset()
+{
+	for (int i = 0; i < NUM_DIGITS; i++)
+	{
+		_digits[i]->SetAlive(false);
 	}
 
-	renderer->Draw(&_numbers[score], MVM, colour);
+	_score = 0;
+}
+
+/******************************************************************************************************************/
+
+void ScoreDisplay::SetPosition(Vector4 v)
+{
+	GameObject::SetPosition(v);
+	Vector4 pos(v);
+	for (int i = 0; i < NUM_DIGITS; i++)
+	{
+		_digits[i]->SetPosition(pos);
+		pos.x(pos.x() + 0.1f);
+	}
 }
 
 /******************************************************************************************************************/
