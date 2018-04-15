@@ -45,14 +45,15 @@ namespace eronic {
 		bool app_broadcast_data(DataPackage* data);
 		bool net_broadcast_data(DataPackage* data);
 		DataPackage& const receive_udp_data(char * sender);
-		//receive_udp_data(DataPackage& data, char * sender);
-		//DataPackage * receive_tcp_data();
+		DataPackage& const receive_tcp_data(TCPClient * client, char * sender);
 
 		void receive_udp_data_loop();
+		void receive_tcp_data_loop(TCPClient* client);
+		void accept_network_connections_loop(); // TODO
+
 		void run_peer_network();
 
 		void broadcast_network_exists_loop();
-		//TCPClient * accept_network_connections();
 
 	private:
 		bool _running;
@@ -82,16 +83,13 @@ namespace eronic {
 		TCPListener * _net_tcp_listener;
 
 		std::map<int, TCPClient *> _net_connections;
-		std::map<int, std::thread> _connection_threads;
+		std::map<int, std::thread *> _connection_threads;
 
 		std::thread _network_broadcast_thread;
 		std::thread _network_connector_thread;
 		std::thread _udp_network_receive_thread;
 
 		// setup and utility functions
-		// TO DO: remove parts that are only there to test it on the same machine
-		void setup_udp_app_listener(std::string ip, int port);
-		void setup_udp_net_listener(std::string ip, int port);
 		void setup_tcp_listener(std::string ip, int port);
 
 		void setup_app_broadcaster(std::string ip, int port);

@@ -146,7 +146,7 @@ namespace eronic {
 				}
 			}
 			else {
-				std::cout << "Timed out" << std::endl;
+				//std::cout << "Timed out" << std::endl;
 				return -1;
 			}
 		}
@@ -221,7 +221,7 @@ namespace eronic {
 				}
 			}
 			else {
-				std::cout << "Timed out" << std::endl;
+				//std::cout << "Timed out" << std::endl;
 				return -1;
 			}
 		}
