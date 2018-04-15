@@ -40,6 +40,8 @@ namespace eronic {
 			setup_app_broadcaster((std::string)"127.0.0.255", app_port);
 		}
 		else {
+			_ip = get_external_ip((std::string)"api.ipify.org");
+			std::cout << "My IP:" << _ip << std::endl;
 			_net_udp_listener->bind((std::string)"ADDR_ANY", _app_udp_port, true);
 			_app_broadcaster->connect((std::string)"127.0.0.255", _app_udp_port, false);
 		}

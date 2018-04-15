@@ -26,7 +26,7 @@ int main() {
 	bool flag = true;
 	int listen_port = 9171;
 
-	eronic::PeerNode * peer = new eronic::PeerNode(1,true,9001,2);
+	eronic::PeerNode * peer = new eronic::PeerNode(1,false,9001,2);
 	peer->open_network(9100);
 	peer->run_peer_network();
 
