@@ -34,9 +34,10 @@ namespace eronic {
 		std::size_t found = _ip.find_last_of(".");
 		_broadcast_ip = _ip.substr(0, found) + ".255";
 		std::cout << "Broadcast Address: " << _broadcast_ip << std::endl;
-		_id = std::stoi(_ip.substr(_ip.find(".") + 3));
+		_id = std::stoi(_ip.substr(found + 1));
 		std::cout << "Setup PeerNode " << _id << std::endl;
 
+		std::cout << "about to bind UDP listener to "<< _app_udp_port  << std::endl;
 		_net_udp_listener->bind((std::string)"ADDR_ANY", _app_udp_port, true);
 		_app_broadcaster->connect(_broadcast_ip, _app_udp_port, false);
 	}
@@ -123,7 +124,7 @@ namespace eronic {
 				new_network->network_id = temp_pack.network_id;
 				new_network->network_ip = temp_pack.sender_ip;
 				
-				if (_networks.count(temp_pack.network_id) > 0) {
+				if (_networks.count(temp_pack.network_id) < 0) {
 					_networks.insert(std::pair<int, Network*>(temp_pack.network_id, new_network));
 					found = true;
 					if (join_first_network) {
@@ -246,7 +247,7 @@ namespace eronic {
 
 	void PeerNode::run_peer_network()
 	{
-		std::cout << "runnning peer network " << _network_id << std::endl;
+		std::cout << "runnning peer network " << std::endl;
 		_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists_loop, this);
 		//_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
 		//_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists, this);

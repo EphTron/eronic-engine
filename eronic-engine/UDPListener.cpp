@@ -25,7 +25,8 @@ namespace eronic {
 	{
 		int UDP = 2;
 		int bind_result = _listening_socket->bind_to(UDP, ip, port);
-		if (bind_result == 0) {
+		if (bind_result != SOCKET_ERROR) {
+			std::cout << "Bind UDPListener to " << _listening_socket->get_address()->get_ip() << ":" << _listening_socket->get_address()->get_port() << std::endl;
 			if (!blocking) {
 				_listening_socket->set_blocking(false);
 			}
@@ -33,6 +34,7 @@ namespace eronic {
 			return bind_result;
 		}
 		else {
+			std::cout << "ERROR binding udp listener" << std::endl;
 			return bind_result;
 		}
 	}

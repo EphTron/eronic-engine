@@ -21,7 +21,7 @@ namespace eronic {
 	{
 		int UDP = 2;
 		int connect_result = _socket->connect_to(UDP, ip, port);
-		if (connect_result != SOCKET_ERROR) {
+		if (connect_result == SOCKET_ERROR) {
 			return WSAGetLastError();
 		}
 		else {
@@ -29,6 +29,7 @@ namespace eronic {
 				_socket->set_blocking(false);
 			}
 			_is_connected = true;
+			std::cout << "Connected udp client to " << _socket->get_address()->get_ip() << ":" << _socket->get_address()->get_port() << std::endl;
 			return connect_result;
 		}
 	}
