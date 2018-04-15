@@ -37,13 +37,13 @@ namespace eronic {
 			setup_udp_app_listener((std::string)"ADDR_ANY", app_port);
 
 			// connect UDP Client (for same machine)
-			setup_app_broadcaster((std::string)"127.0.0.255", app_port);
+			setup_app_broadcaster((std::string)"150.273.93.255", app_port);
 		}
 		else {
 			_ip = get_external_ip((std::string)"api.ipify.org");
 			std::cout << "My IP:" << _ip << std::endl;
 			_net_udp_listener->bind((std::string)"ADDR_ANY", _app_udp_port, true);
-			_app_broadcaster->connect((std::string)"127.0.0.255", _app_udp_port, false);
+			_app_broadcaster->connect((std::string)"150.273.93.255", _app_udp_port, false);
 		}
 	}
 
@@ -137,6 +137,7 @@ namespace eronic {
 
 	void PeerNode::find_networks(int milliseconds, bool join_first_network)
 	{
+		bool found = false;
 		double elapsed_time = 0;
 		std::cout << "Trying to find network " << _networks.size() <<std::endl;
 		std::chrono::duration<double, std::milli> duration;
@@ -148,42 +149,36 @@ namespace eronic {
 			// receive network existence broadcast
 			char sender_ip[INET_ADDRSTRLEN];
 			DataPackage temp_pack = receive_udp_data(sender_ip);
-			
-			//old code
-			//DataPackage * t = receive_udp_data(&temp_pack, sender_ip);
 
-			Sleep(200);
 			std::cout << "receive!" << _networks.size() << std::endl;
-			//if (temp_pack != nullptr) { // if data received
-				if (temp_pack.type == 1) { // if data
+			if (temp_pack.type == 1) { // if data
 					
-					Network* new_network = new Network();
-					new_network->network_port = temp_pack.int_data_1;
-					new_network->network_id = temp_pack.network_id;
-					new_network->network_ip = temp_pack.sender_ip;
-					if (_networks.size() > 0) {
-						if (_networks.count(temp_pack.network_id) > 0) {
-							_networks.insert(std::pair<int, Network*>(temp_pack.network_id, new_network));
-							if (join_first_network) {
-								join_network(temp_pack.network_id, new_network->network_port);
-								std::cout << "joining yippi" << std::endl;
-								if (_connected) {
-									elapsed_time = (double)milliseconds;
-								}
+				Network* new_network = new Network();
+				new_network->network_port = temp_pack.int_data_1;
+				new_network->network_id = temp_pack.network_id;
+				new_network->network_ip = temp_pack.sender_ip;
+				if (_networks.size() > 0) {
+					if (_networks.count(temp_pack.network_id) > 0) {
+						_networks.insert(std::pair<int, Network*>(temp_pack.network_id, new_network));
+						found = true;
+						if (join_first_network) {
+							join_network(temp_pack.network_id, new_network->network_port);
+							std::cout << "joining yippi" << std::endl;
+							if (_connected) {
+								elapsed_time = (double)milliseconds;
 							}
 						}
 					}
-					std::cout << "Found network " << new_network->network_id << " Sender was " << temp_pack.sender_id << std::endl;
 				}
-			//}
-			/*else {
-				delete temp_pack;
-				temp_pack = nullptr;
-				std::cout << "No network found " << std::endl;
-			}*/
+				std::cout << "Found network " << new_network->network_id << " Sender was " << temp_pack.sender_id << std::endl;
+			}
+
 			auto t2 = std::chrono::high_resolution_clock::now();
 			duration = t2 - t1;
 			elapsed_time += duration.count();
+		}
+		if (found == false) {
+			open_network(9172);
 		}
 	}
 
