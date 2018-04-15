@@ -63,7 +63,7 @@ namespace eronic {
 
 	int UDPListener::receivefrom(void * data, size_t data_size, char * sender_ip)
 	{
-		std::cout << "recving " << _listening_socket->get_address()->get_ip() << ":" << _listening_socket->get_address()->get_port() << std::endl;
+		//std::cout << "recving " << _listening_socket->get_address()->get_ip() << ":" << _listening_socket->get_address()->get_port() << std::endl;
 		return _listening_socket->receive_data_from(data, data_size, sender_ip);
 	}
 

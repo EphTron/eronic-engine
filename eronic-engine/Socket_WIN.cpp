@@ -48,7 +48,7 @@ namespace eronic {
 			return WSAGetLastError();
 		}
 		else {
-			std::cout << type <<"type!!!!!!!!!!!!!!!!!!!!Connected to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
+			//std::cout << type <<"type!!!!!!!!!!!!!!!!!!!!Connected to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
 			return 0;
 		}
 		
@@ -245,7 +245,7 @@ namespace eronic {
 			return connected_socket;
 		}
 		else {
-			std::cout << "No connection " << WSAGetLastError() << std::endl;
+			//std::cout << "No connection " << WSAGetLastError() << std::endl;
 			return nullptr;
 		}
 	}

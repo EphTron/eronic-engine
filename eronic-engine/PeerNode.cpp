@@ -51,12 +51,16 @@ namespace eronic {
 	{
 		_network_id = network_id;
 		_network_port = network_port;
-		std::cout << "OPENING NETWORK " << network_id<< " on Port:"<< _network_port << std::endl;
+		std::cout << _id <<" OPENING NETWORK " << network_id<< " on Port:"<< _network_port << std::endl;
 		
 		_net_udp_listener->close();
 		_net_udp_listener->bind((std::string)"ADDR_ANY", _network_port, true);
 
 		_net_broadcaster->connect(_broadcast_ip, _network_port, false);
+
+		std::cout << _id << "Setting up TCP Listener" << std::endl;
+		setup_tcp_listener((std::string)"ADDR_ANY", _network_port);
+		int listen_result = _net_tcp_listener->start(100); // start listening
 		_connected = true;
 	}
 
@@ -192,6 +196,7 @@ namespace eronic {
 			if (data.type < 0) {
 				return DataPackage();
 			} else {
+				std::cout << " udp data Type: " << data.type << "sender: " << data.sender_id << std::endl;
 				return data;
 			}
 		}
@@ -211,6 +216,7 @@ namespace eronic {
 			if (data.type < 0) {
 				return DataPackage();
 			} else {
+				std::cout << " tcp data Type: " << data.type << "sender: " << data.sender_id << std::endl;
 				return data;
 			}
 		}
@@ -268,7 +274,7 @@ namespace eronic {
 	void PeerNode::broadcast_network_exists_loop()
 	{
 		while (_connected) {
-			std::cout << "UDP Broadcast: Network " << _network_id << " exists" << std::endl;
+			//std::cout << "UDP Broadcast: Network " << _network_id << " exists" << std::endl;
 			//DataPackage dp = DataPackage(1, 2, _network_port, _ip, std::to_string(_network_id));
 			DataPackage dp = DataPackage();
 			dp.type = 1;
@@ -288,13 +294,12 @@ namespace eronic {
 		while (_connected) {
 			TCPClient * client = _net_tcp_listener->accept();
 			if (client != nullptr) {
-				std::cout << "Accepting client!" << std::endl;
-
 				DataPackage accepted_pack = DataPackage(3, _id, _network_port, _network_id, _ip, (std::string)"accepted\0");
 				client->send(&accepted_pack, sizeof(DataPackage));
 				char sender_ip[INET_ADDRSTRLEN];
 				DataPackage accepted_response = receive_tcp_data(client, sender_ip);
 				if (accepted_response.type == 4) {
+					std::cout << "got tcp response 4" << std::endl;
 					_net_connections.insert(std::pair<int, TCPClient*>(accepted_response.sender_id, client));
 					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
 					_connection_threads.insert(std::pair<int, std::thread*>(accepted_response.sender_id, t));
@@ -302,7 +307,7 @@ namespace eronic {
 				}
 			}
 			else {
-				std::cout << "Error accepting client!" << std::endl;
+				//std::cout << "Error accepting client!" << std::endl;
 			}
 			Sleep(1000);
 		}

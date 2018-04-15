@@ -45,6 +45,7 @@ namespace eronic {
 
 	int TCPListener::start(int max_connections)
 	{
+		std::cout << "START TCP LISTENING!!!!!!!!!!!!!!!!!!!!" << _listening_socket->get_address()->get_ip();
 		int listen_result = _listening_socket->start_listening(max_connections);
 		if (listen_result == 0) {
 			_is_listening = true;
