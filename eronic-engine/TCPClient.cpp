@@ -36,7 +36,7 @@ namespace eronic {
 
 	int TCPClient::send(const void * data, size_t data_size)
 	{
-		std::cout << "sending " << _socket->get_address()->get_ip() << ":" << _socket->get_address()->get_port() << std::endl;
+		std::cout << "tcp sending " << _socket->get_address()->get_ip() << ":" << _socket->get_address()->get_port() << std::endl;
 		return _socket->send_data(data, data_size);
 	}
 

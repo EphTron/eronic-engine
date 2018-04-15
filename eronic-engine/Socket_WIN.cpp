@@ -48,7 +48,7 @@ namespace eronic {
 			return WSAGetLastError();
 		}
 		else {
-			std::cout << "Connected to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
+			std::cout << type <<"type!!!!!!!!!!!!!!!!!!!!Connected to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
 			return 0;
 		}
 		
@@ -237,7 +237,7 @@ namespace eronic {
 		timeval zero = { 1, 0};
 		// std::cout << "Socket starts select" << std::endl;
 		int sel = select(0, &mySet, NULL, NULL, &zero);
-		std::cout << "select" << sel << std::endl;
+		//std::cout << "select" << sel << std::endl;
 		if (FD_ISSET(_socket_handle, &mySet)) {
 			std::cout << "Acception attempt" << std::endl;
 			int new_socket_handle = accept(_socket_handle, NULL, NULL);

@@ -304,7 +304,9 @@ namespace eronic {
 			else {
 				std::cout << "Error accepting client!" << std::endl;
 			}
+			Sleep(1000);
 		}
+		
 	}
 	
 	void PeerNode::setup_tcp_listener(std::string ip, int port)
@@ -348,9 +350,10 @@ namespace eronic {
 	TCPClient * PeerNode::setup_connection( std::string & ip, int port)
 	{
 		TCPClient * tcp_client = new TCPClient(new Socket_WIN());
+		std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " << ip << port << std::endl;
 		int res = tcp_client->connect(ip, port, true);
 		if (res != SOCKET_ERROR) {
-			std::cout << "TCP CONNECTED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " << tcp_client->get_address()->get_port() << std::endl;
+			std::cout << "TCP CONNECTED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " << tcp_client->get_address()->get_port() << tcp_client->get_address()->get_ip() << std::endl;
 		}
 		else {
 			std::cout << "Error connecting TCPClient to " << tcp_client->get_address()->get_port() << std::endl;
