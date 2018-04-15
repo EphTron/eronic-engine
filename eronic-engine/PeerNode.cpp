@@ -6,12 +6,12 @@ namespace eronic {
 	{
 	}
 
-	PeerNode::PeerNode(int id, bool same_machine, int app_port, int max_connections) :
+	PeerNode::PeerNode(int app_port, int max_connections) :
 		_running(false),
 		_connected(false),
-		_same_machine(same_machine),
-		_id(id),
+		_id(-1),
 		_ip(),
+		_broadcast_ip(),
 		_udp_port(-1),
 		_tcp_port(-1),
 		_network_id(-1),
@@ -28,23 +28,17 @@ namespace eronic {
 		//_net_tcp_client(new eronic::TCPClient(new eronic::Socket_WIN())),
 		_net_connections(std::map<int, eronic::TCPClient *>())
 	{
-		std::cout << "PeerNode id = " << _id << "  SIZE " << _networks.size() << std::endl;
-		if (_same_machine) {
-			// get external ip address;
-			_ip = "127.0.0.1";
+		
+		_ip = get_external_ip((std::string)"api.ipify.org");
+		std::cout << "My IP:" << _ip << std::endl;
+		std::size_t found = _ip.find_last_of(".");
+		_broadcast_ip = _ip.substr(0, found) + ".255";
+		std::cout << "Broadcast Address: " << _broadcast_ip << std::endl;
+		_id = std::stoi(_ip.substr(_ip.find(".") + 3));
+		std::cout << "Setup PeerNode " << _id << std::endl;
 
-			// setup udp listener to listen for networks in the app
-			setup_udp_app_listener((std::string)"ADDR_ANY", app_port);
-
-			// connect UDP Client (for same machine)
-			setup_app_broadcaster((std::string)"150.273.93.255", app_port);
-		}
-		else {
-			_ip = get_external_ip((std::string)"api.ipify.org");
-			std::cout << "My IP:" << _ip << std::endl;
-			_net_udp_listener->bind((std::string)"ADDR_ANY", _app_udp_port, true);
-			_app_broadcaster->connect((std::string)"150.273.93.255", _app_udp_port, false);
-		}
+		_net_udp_listener->bind((std::string)"ADDR_ANY", _app_udp_port, true);
+		_app_broadcaster->connect(_broadcast_ip, _app_udp_port, false);
 	}
 
 	PeerNode::~PeerNode()
@@ -52,72 +46,46 @@ namespace eronic {
 		_network_broadcast_thread.join();
 	}
 
-	void PeerNode::open_network(int network_port)
+	void PeerNode::open_network(int network_id, int network_port)
 	{
-		_network_id = std::rand();
+		_network_id = network_id;
 		_network_port = network_port;
-		_udp_port = _network_port;
-		if (_same_machine) {
-			// get external ip address;
-			_ip = "127.0.0.1";
-			// close listener on app port
-			_net_udp_listener->close();
-			// setup udp listener on network port
-			setup_udp_net_listener((std::string)"ADDR_ANY", _network_port);
+		std::cout << "OPENING NETWORK " << network_id<< " on Port:"<< _network_port << std::endl;
+		
+		_net_udp_listener->close();
+		_net_udp_listener->bind((std::string)"ADDR_ANY", _network_port, true);
 
-			// connect UDP Client (for same machine)
-			_net_broadcaster->stop(0);
-			setup_net_broadcaster((std::string)"127.0.0.255", _network_port);
-			_connected = true;
-		}
-		else {
-			// get external ip address;
-			//_ip = eronic::get_external_ip((std::string)"api.ipify.org");
-			_net_udp_listener->bind((std::string)"ADDR_ANY", _network_port, true);
-			_net_broadcaster->connect((std::string)"127.0.0.255", _network_port, false);
-			_connected = true;
-		}
+		_net_broadcaster->connect(_broadcast_ip, _network_port, false);
+		_connected = true;
+		
 	}
 
 	void PeerNode::join_network(int network_id, int network_port)
 	{
 		std::cout << "JOINING ..." << std::endl;
+		bool joined = false;
 		if (_connected) {
+			std::cout << "already in a network" << std::endl;
 			return;
 		}
 		else {
 			_network_id = network_id;
 			_network_port = network_port;
 			_udp_port = _network_port;
-			if (_same_machine) {
-				// get external ip address;
-				_ip = "127.0.0.1";
-
-				// setup udp listener
-				_net_udp_listener->close();
-				setup_udp_net_listener((std::string)"ADDR_ANY", _udp_port);
-
-				// connect UDP Client (for same machine)
-
-				setup_net_broadcaster((std::string)"127.0.0.255", _network_port);
-				_connected = true;
 			
-				//_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists, this);
-			}
-			else {
-				// get external ip address;
-				//_ip = eronic::get_external_ip((std::string)"api.ipify.org");
-				_net_udp_listener->close();
-				_net_udp_listener->bind((std::string)"ADDR_ANY", _network_port, true);
-				_net_broadcaster->connect((std::string)"127.0.0.255", _network_port, false);
-				_connected = true;
-				//_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists, this);
-			}
+			// get external ip address;
+			//_ip = eronic::get_external_ip((std::string)"api.ipify.org");
+			_net_udp_listener->close();
+			_net_udp_listener->bind((std::string)"ADDR_ANY", _network_port, true);
+			_net_broadcaster->connect(_broadcast_ip, _network_port, false);
+			_connected = true;
+			//_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists, this);
+			
 		}
 		if (_connected) { // if join worked
 			// listen with tcp for connections
-			setup_tcp_listener((std::string)"127.0.0.255", _network_port);
-			int listen_result = _net_tcp_listener->start(100);
+			setup_tcp_listener((std::string)"ADDR_ANY", _network_port);
+			int listen_result = _net_tcp_listener->start(100); // start listening
 			// message network that you are joining
 			DataPackage enter_pack = DataPackage();
 			enter_pack.type = 2;
@@ -144,32 +112,30 @@ namespace eronic {
 
 		_net_udp_listener->set_blocking(true);
 		while (elapsed_time < (double)milliseconds) {
-			std::cout << " find" << _networks.size() << std::endl;
 			auto t1 = std::chrono::high_resolution_clock::now();
 			// receive network existence broadcast
 			char sender_ip[INET_ADDRSTRLEN];
 			DataPackage temp_pack = receive_udp_data(sender_ip);
-
-			std::cout << "receive!" << _networks.size() << std::endl;
 			if (temp_pack.type == 1) { // if data
-					
+				std::cout << "Collected data from " << sender_ip << std::endl;
 				Network* new_network = new Network();
 				new_network->network_port = temp_pack.int_data_1;
 				new_network->network_id = temp_pack.network_id;
 				new_network->network_ip = temp_pack.sender_ip;
-				if (_networks.size() > 0) {
-					if (_networks.count(temp_pack.network_id) > 0) {
-						_networks.insert(std::pair<int, Network*>(temp_pack.network_id, new_network));
-						found = true;
-						if (join_first_network) {
-							join_network(temp_pack.network_id, new_network->network_port);
-							std::cout << "joining yippi" << std::endl;
-							if (_connected) {
-								elapsed_time = (double)milliseconds;
-							}
+				
+				if (_networks.count(temp_pack.network_id) > 0) {
+					_networks.insert(std::pair<int, Network*>(temp_pack.network_id, new_network));
+					found = true;
+					if (join_first_network) {
+						_network_port = new_network->network_port;
+						_network_id = temp_pack.network_id;
+						join_network(_network_port, _network_id);
+						if (_connected) {
+							elapsed_time = (double)milliseconds;
 						}
 					}
 				}
+				
 				std::cout << "Found network " << new_network->network_id << " Sender was " << temp_pack.sender_id << std::endl;
 			}
 
@@ -177,8 +143,12 @@ namespace eronic {
 			duration = t2 - t1;
 			elapsed_time += duration.count();
 		}
+
 		if (found == false) {
-			open_network(9172);
+			std::cout << "NO NETWORK FOUND" << std::endl;
+			_network_port = _app_udp_port + 1;
+			_network_id = _id + 1000;
+			open_network(_network_id, _network_port);
 		}
 	}
 
@@ -224,41 +194,12 @@ namespace eronic {
 			if (data.type < 0) {
 				return DataPackage();
 			} else {
-				std::cout << "Test " << _networks.size() << data.type << std::endl;
+				std::cout << "Received data " << std::endl;
 				return data;
 			}
 		}
 	}
 
-	//DataPackage * PeerNode::receive_udp_data(char * sender_ip)
-	//{
-	//	char data[sizeof(DataPackage)];
-	//	DataPackage * d;
-	//	int recv_result = _net_udp_listener->receivefrom(data, sizeof(DataPackage), sender_ip);
-	//	
-	//	if (recv_result == SOCKET_ERROR) {
-	//		std::cout << "Error receiving udp data " <<  WSAGetLastError() << std::endl;
-	//		return nullptr;
-	//	}
-	//	else {
-	//		d = new DataPackage(data);
-	//		
-	//		if (d->type < 0) {
-	//			delete d;
-	//			//d = nullptr;
-	//			//return nullptr;
-	//		}
-	//		else {
-	//			std::cout << "test!" << _networks.size() << d->type << std::endl;
-	//			return d;
-	//		}
-	//	}
-	//}
-
-	/*void PeerNode::start_receiving_events()
-	{
-
-	}*/
 
 	void PeerNode::receive_udp_data_loop()
 	{

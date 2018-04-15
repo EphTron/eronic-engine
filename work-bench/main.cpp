@@ -24,28 +24,29 @@ void listen_for_connections(eronic::TCPListener * l, eronic::TCPClient * conns[]
 int main() {
 
 	bool flag = true;
-	int listen_port = 9174;
-
-	eronic::UDPListener * a = setup_udp_listener((std::string)"ANY_ADDR", listen_port);
-	eronic::UDPClient * b = setup_udp_sender((std::string)"150.237.93.255", listen_port);
-	while (true) {
-		b->send("1", 1);
-		a->set_blocking(true);
-		char sender_ip[INET_ADDRSTRLEN];
-		a->receivefrom("1", 1, sender_ip);
-		std::cout << "received from" << sender_ip << std::endl;
-		Sleep(500);
-	}
-
-
-	//
-	//eronic::PeerNode * peer = new eronic::PeerNode(1,false,9001,2);
-	//peer->find_networks(6000, true);
-	//peer->run_peer_network();
+	int app_port = 9172;
+	
+	eronic::PeerNode * peer = new eronic::PeerNode(9172,2);
+	peer->find_networks(6000, true);
+	peer->run_peer_network();
 
 	system("Pause");
 	return 0;
 }
+
+//eronic::UDPListener * a = setup_udp_listener((std::string)"ADDR_ANY", listen_port);
+////eronic::UDPClient * b = setup_udp_sender((std::string)"150.237.93.255", listen_port);
+//while (true) {
+//	//b->send("1", 1);
+//	a->set_blocking(true);
+//	char sender_ip[INET_ADDRSTRLEN];
+//	char recv[1];
+//	int res = a->receivefrom(recv, 1, sender_ip);
+//	
+//	std::cout << res << "received from" << recv << " " << sender_ip << std::endl;
+//	Sleep(500);
+//}
+
 
 eronic::TCPListener* setup_tcp_listener(int port, int alt_ports) {
 	eronic::TCPListener * listener = new eronic::TCPListener(new eronic::Socket_WIN());
@@ -141,7 +142,7 @@ eronic::UDPListener* setup_udp_listener(std::string ip, int port) {
 }
 
 void send_and_receive_loop() {
-	eronic::UDPListener* a = setup_udp_listener((std::string)"ANY_ADDR", 9555);
+	eronic::UDPListener* a = setup_udp_listener((std::string)"ADDR_ANY", 9555);
 	a->set_blocking(true);
 
 	eronic::UDPClient * b = setup_udp_sender((std::string)"150.237.93.255", 9555);

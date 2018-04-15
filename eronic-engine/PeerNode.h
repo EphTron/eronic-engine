@@ -34,10 +34,10 @@ namespace eronic {
 	{
 	public:
 		PeerNode();
-		PeerNode(int id, bool same_machine, int app_port, int max_connections);
+		PeerNode(int app_port, int max_connections);
 		~PeerNode();
 
-		void open_network(int network_port);
+		void open_network(int network_id, int network_port);
 		void join_network(int network_id, int network_port);
 		void leave_network();
 		void find_networks(int milliseconds, bool join_first_network);
@@ -61,6 +61,7 @@ namespace eronic {
 
 		int _id;
 		std::string _ip;
+		std::string _broadcast_ip;
 		int _udp_port;
 		int _tcp_port;
 

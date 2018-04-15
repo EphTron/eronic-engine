@@ -76,7 +76,7 @@ namespace eronic {
 				return WSAGetLastError();
 			}
 		}
-		std::cout << "BIND to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
+		// std::cout << "BIND to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
 		return 0;
 	}
 
@@ -120,7 +120,7 @@ namespace eronic {
 	int Socket_WIN::send_data(const void* data, size_t data_size)
 	{
 		if (!_blocking) {
-			std::cout << "non blocking send" << _blocking << std::endl;
+			//std::cout << "non blocking send" << _blocking << std::endl;
 			int send_result = send(_socket_handle, (char*)data, data_size, 0);
 			if (send_result == SOCKET_ERROR) {
 				return WSAGetLastError();
@@ -130,7 +130,7 @@ namespace eronic {
 			}
 		}
 		else {
-			std::cout << "blocking send" << _blocking << std::endl;
+			//std::cout << "blocking send" << _blocking << std::endl;
 			fd_set mySet;
 			FD_ZERO(&mySet);
 			FD_SET(_socket_handle, &mySet);
@@ -337,7 +337,7 @@ namespace eronic {
 
 			lineIndex++;
 		}
-		std::cout << "Your IP Address is  " << ip_address << " \n\n";
+		//std::cout << "Your IP Address is  " << ip_address << " \n\n";
 
 		return ip_address;
 	}
