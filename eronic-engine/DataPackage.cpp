@@ -22,6 +22,24 @@ namespace eronic {
 	{
 	}
 
+	DataPackage::DataPackage(int type, int id, int port, int net_id, std::string & ip, std::string & msg):
+		type(type),
+		sender_id(id),
+		sender_port(port),
+		network_id(net_id),
+		int_data_1(-1),
+		int_data_2(-1),
+		int_data_3(-1),
+		x(-1.0),
+		y(-1.0),
+		z(-1.0),
+		sender_ip("\0"),
+		message("\0")
+	{
+		strcpy_s(sender_ip, INET_ADDRSTRLEN, ip.c_str());
+		strcpy_s(message, MSG_SIZE, msg.c_str());
+	}
+
 	DataPackage::DataPackage(int type, int id, int port, int net_id, 
 							 int d1, int d2, int d3, 
 							 float fx, float fy, float fz, 

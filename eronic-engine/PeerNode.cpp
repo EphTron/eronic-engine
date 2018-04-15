@@ -58,7 +58,6 @@ namespace eronic {
 
 		_net_broadcaster->connect(_broadcast_ip, _network_port, false);
 		_connected = true;
-		
 	}
 
 	void PeerNode::join_network(int network_id, int network_port)
@@ -109,7 +108,6 @@ namespace eronic {
 	{
 		bool found = false;
 		double elapsed_time = 0;
-		std::cout << "Trying to find network " << _networks.size() <<std::endl;
 		std::chrono::duration<double, std::milli> duration;
 
 		_net_udp_listener->set_blocking(true);
@@ -119,7 +117,7 @@ namespace eronic {
 			char sender_ip[INET_ADDRSTRLEN];
 			DataPackage temp_pack = receive_udp_data(sender_ip);
 			if (temp_pack.type == 1) { // if data
-				std::cout << "Collected data from " << sender_ip << std::endl;
+				std::cout << "Recv UDP data from " << sender_ip << std::endl;
 				Network* new_network = new Network();
 				new_network->network_port = temp_pack.int_data_1;
 				new_network->network_id = temp_pack.network_id;
@@ -138,7 +136,7 @@ namespace eronic {
 					}
 				}
 				
-				std::cout << "Found network " << new_network->network_id << " Sender was " << temp_pack.sender_id << std::endl;
+				std::cout << "Found network " << new_network->network_id << ". Sender was " << temp_pack.sender_id << std::endl;
 			}
 
 			auto t2 = std::chrono::high_resolution_clock::now();
@@ -184,15 +182,13 @@ namespace eronic {
 	DataPackage& const PeerNode::receive_udp_data(char * sender_ip)
 	{
 		char recv_buffer[sizeof(DataPackage)];
-		//int recv_result = _net_udp_listener->receive(recv_buffer, sizeof(DataPackage));
 		int recv_result = _net_udp_listener->receivefrom(recv_buffer, sizeof(DataPackage), sender_ip);
 		if (recv_result == SOCKET_ERROR) {
-			std::cout << "Error receiving udp data " << WSAGetLastError() << std::endl;
+			//std::cout << "Error receiving udp data " << WSAGetLastError() << std::endl;
 			return DataPackage();
 		}
 		else {
 			DataPackage data = DataPackage(recv_buffer);
-
 			if (data.type < 0) {
 				return DataPackage();
 			} else {
@@ -206,7 +202,7 @@ namespace eronic {
 		char recv_buffer[sizeof(DataPackage)];
 		int recv_result = client->receivefrom(recv_buffer, sizeof(DataPackage), sender_ip);
 		if (recv_result == SOCKET_ERROR) {
-			std::cout << "Error receiving udp data " << WSAGetLastError() << std::endl;
+			//std::cout << "Error receiving udp data " << WSAGetLastError() << std::endl;
 			return DataPackage();
 		}
 		else {
@@ -223,66 +219,47 @@ namespace eronic {
 	void PeerNode::receive_tcp_data_loop(TCPClient* client)
 	{
 		while (_connected) {
-			//char *ip_addr[INET_ADDRSTRLEN];
 			char sender_ip[INET_ADDRSTRLEN];
 			DataPackage data_pack = receive_tcp_data(client, sender_ip);
 
-			if (data_pack.type == 3) { // if join received
-				std::cout << "message" << std::endl;
+			if (data_pack.type == 3) { // if got accepted
+				DataPackage accepted_response = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)sender_ip);
+				accepted_response.int_data_1 = data_pack.sender_id * _id;
+				client->send(&accepted_response, sizeof(DataPackage));
 			}
 		}
 	}
 
 	void PeerNode::receive_udp_data_loop()
 	{
-		
 		while (_connected) {
-			//char *ip_addr[INET_ADDRSTRLEN];
 			char sender_ip[INET_ADDRSTRLEN];
 			DataPackage data_pack = receive_udp_data( sender_ip);
-			//char a[INET_ADDRSTRLEN] = { sender_ip };
-			//DataPackage dp = DataPackage(1, 2, _network_port, _ip, std::to_string(_network_id));
-//			if (data_pack != nullptr) {
 
-				if (data_pack.type == 2) { // if join received
-					std::cout << "type 2" << std::endl;
+			if (data_pack.type == 2) { // if join received
+				std::cout << "type 2" << std::endl;
 
-					if (_connection_threads.find(data_pack.sender_id) == _connection_threads.end()) {
-						std::string ip = data_pack.sender_ip;
-						TCPClient * client = setup_connection(ip, _network_port);
-						_net_connections.insert(std::pair<int, TCPClient*>(data_pack.sender_id, client));
-						std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
-						_connection_threads.insert(std::pair<int, std::thread*>(data_pack.sender_id, t));
-						//int func() { return 1; }
-						//std::future<int> ret = std::async(&func);
-						//int i = ret.get();
-						//std::promise<TCPClient *> p;
-						//auto future_client = p.get_future();
-						//// TCPClient * tcp_c = setup_connection(sender_ip, _network_port);
-						//std::thread thread(&PeerNode::setup_connection, std::move(p), sender_ip, _network_port);
-						//// lock
-						//_connection_threads.insert(std::pair<int, std::thread*>(dp.sender_id, &thread));
-						//// unlock
-						//thread.join();
-						//TCPClient * client = future_client.get();
-						//_net_connections.insert(std::pair<int, TCPClient*>(dp.sender_id, client));
-						//std::cout << "WORKED" << std::endl;
-					}
+				if (_connection_threads.find(data_pack.sender_id) == _connection_threads.end()) {
+					std::string ip = data_pack.sender_ip;
+					TCPClient * client = setup_connection(ip, _network_port);
+					_net_connections.insert(std::pair<int, TCPClient*>(data_pack.sender_id, client));
+					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
+					_connection_threads.insert(std::pair<int, std::thread*>(data_pack.sender_id, t));
 				}
-				else if (data_pack.type == 3) {
-					std::cout << "ttype 3" << std::endl;
-				}
-			//}
+			}
+			else if (data_pack.type == 3) {
+				std::cout << "type 3" << std::endl;
+			}
 		}
 	}
 
 	void PeerNode::run_peer_network()
 	{
+		_running = true;
 		std::cout << "runnning peer network " << std::endl;
 		_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists_loop, this);
 		_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
 		_network_connector_thread = std::thread(&PeerNode::accept_network_connections_loop, this);
-		//_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists, this);
 		/*while (_running && _connected) {
 
 		}*/
@@ -291,7 +268,7 @@ namespace eronic {
 	void PeerNode::broadcast_network_exists_loop()
 	{
 		while (_connected) {
-			std::cout << "Broadcast: Network " << _network_id << " exists" << std::endl;
+			std::cout << "UDP Broadcast: Network " << _network_id << " exists" << std::endl;
 			//DataPackage dp = DataPackage(1, 2, _network_port, _ip, std::to_string(_network_id));
 			DataPackage dp = DataPackage();
 			dp.type = 1;
@@ -311,11 +288,21 @@ namespace eronic {
 		while (_connected) {
 			TCPClient * client = _net_tcp_listener->accept();
 			if (client != nullptr) {
-				std::cout << "Accepted client!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
-				// TODO
+				std::cout << "Accepting client!" << std::endl;
+
+				DataPackage accepted_pack = DataPackage(3, _id, _network_port, _network_id, _ip, (std::string)"accepted\0");
+				client->send(&accepted_pack, sizeof(DataPackage));
+				char sender_ip[INET_ADDRSTRLEN];
+				DataPackage accepted_response = receive_tcp_data(client, sender_ip);
+				if (accepted_response.type == 4) {
+					_net_connections.insert(std::pair<int, TCPClient*>(accepted_response.sender_id, client));
+					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
+					_connection_threads.insert(std::pair<int, std::thread*>(accepted_response.sender_id, t));
+					std::cout << "Connection successfully established!" << std::endl;
+				}
 			}
 			else {
-				std::cout << "Error accepting client!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+				std::cout << "Error accepting client!" << std::endl;
 			}
 		}
 	}
@@ -373,3 +360,18 @@ namespace eronic {
 	
 
 }
+
+//int func() { return 1; }
+//std::future<int> ret = std::async(&func);
+//int i = ret.get();
+//std::promise<TCPClient *> p;
+//auto future_client = p.get_future();
+//// TCPClient * tcp_c = setup_connection(sender_ip, _network_port);
+//std::thread thread(&PeerNode::setup_connection, std::move(p), sender_ip, _network_port);
+//// lock
+//_connection_threads.insert(std::pair<int, std::thread*>(dp.sender_id, &thread));
+//// unlock
+//thread.join();
+//TCPClient * client = future_client.get();
+//_net_connections.insert(std::pair<int, TCPClient*>(dp.sender_id, client));
+//std::cout << "WORKED" << std::endl;
