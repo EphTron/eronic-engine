@@ -180,7 +180,6 @@ namespace eronic {
 				}
 			}
 			else {
-				std::cout << "Timed out" << std::endl;
 				return -1;
 			}
 		}

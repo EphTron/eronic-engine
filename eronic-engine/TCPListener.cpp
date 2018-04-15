@@ -24,15 +24,17 @@ namespace eronic {
 	{
 		int TCP = 1;
 		int bind_result = _listening_socket->bind_to(TCP, ip, port);
-		if (bind_result == 0) {
-			_is_bound = true;
+
+		if (bind_result == SOCKET_ERROR) {
+			return WSAGetLastError();
+		}
+		else {
+			std::cout << "Bind TCPListener to " << _listening_socket->get_address()->get_ip() << ":" << _listening_socket->get_address()->get_port() << std::endl;
+			_is_bound = true; 
 			_is_listening = true;
 			if (!blocking) {
 				_listening_socket->set_blocking(false);
 			}
-			return bind_result;
-		}
-		else {
 			return bind_result;
 		}
 		//u_long iMode = 0;

@@ -85,6 +85,7 @@ namespace eronic {
 		}
 		if (_connected) { // if join worked
 			// listen with tcp for connections
+			std::cout << "Setting up TCP Listener" << std::endl;
 			setup_tcp_listener((std::string)"ADDR_ANY", _network_port);
 			int listen_result = _net_tcp_listener->start(100); // start listening
 			// message network that you are joining
@@ -124,13 +125,13 @@ namespace eronic {
 				new_network->network_id = temp_pack.network_id;
 				new_network->network_ip = temp_pack.sender_ip;
 				
-				if (_networks.count(temp_pack.network_id) < 0) {
+				if (_networks.count(temp_pack.network_id) < 1) {
 					_networks.insert(std::pair<int, Network*>(temp_pack.network_id, new_network));
 					found = true;
 					if (join_first_network) {
 						_network_port = new_network->network_port;
 						_network_id = temp_pack.network_id;
-						join_network(_network_port, _network_id);
+						join_network(_network_id, _network_port);
 						if (_connected) {
 							elapsed_time = (double)milliseconds;
 						}
@@ -195,7 +196,6 @@ namespace eronic {
 			if (data.type < 0) {
 				return DataPackage();
 			} else {
-				std::cout << "Received data " << std::endl;
 				return data;
 			}
 		}
@@ -249,7 +249,7 @@ namespace eronic {
 	{
 		std::cout << "runnning peer network " << std::endl;
 		_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists_loop, this);
-		//_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
+		_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
 		//_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists, this);
 		/*while (_running && _connected) {
 
@@ -259,7 +259,7 @@ namespace eronic {
 	void PeerNode::broadcast_network_exists_loop()
 	{
 		while (_connected) {
-			std::cout << "network " << _network_id << " exists" << std::endl;
+			std::cout << "Broadcast: Network " << _network_id << " exists" << std::endl;
 			//DataPackage dp = DataPackage(1, 2, _network_port, _ip, std::to_string(_network_id));
 			DataPackage dp = DataPackage();
 			dp.type = 1;
@@ -269,7 +269,7 @@ namespace eronic {
 			dp.set_ip(_ip);
 			app_broadcast_data(&dp);
 
-			Sleep(1500);
+			Sleep(2000);
 		}
 
 	}
