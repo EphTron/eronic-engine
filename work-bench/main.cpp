@@ -17,18 +17,31 @@
 
 eronic::UDPClient * setup_udp_sender(std::string ip, int port);
 eronic::TCPClient * setup_tcp_sender(int port);
-eronic::UDPListener* setup_udp_listener(int port, int alt_ports);
+eronic::UDPListener* setup_udp_listener(std::string ip, int port);
 eronic::TCPListener* setup_tcp_listener(int port, int alt_ports);
 void listen_for_connections(eronic::TCPListener * l, eronic::TCPClient * conns[], int conns_length, bool * flag);
 
 int main() {
 
 	bool flag = true;
-	int listen_port = 9171;
+	int listen_port = 9174;
 
-	eronic::PeerNode * peer = new eronic::PeerNode(1,false,9001,2);
-	peer->find_networks(3000, true);
-	peer->run_peer_network();
+	eronic::UDPListener * a = setup_udp_listener((std::string)"ANY_ADDR", listen_port);
+	eronic::UDPClient * b = setup_udp_sender((std::string)"150.237.93.255", listen_port);
+	while (true) {
+		b->send("1", 1);
+		a->set_blocking(true);
+		char sender_ip[INET_ADDRSTRLEN];
+		a->receivefrom("1", 1, sender_ip);
+		std::cout << "received from" << sender_ip << std::endl;
+		Sleep(500);
+	}
+
+
+	//
+	//eronic::PeerNode * peer = new eronic::PeerNode(1,false,9001,2);
+	//peer->find_networks(6000, true);
+	//peer->run_peer_network();
 
 	system("Pause");
 	return 0;
@@ -110,31 +123,28 @@ eronic::UDPClient * setup_udp_sender(std::string ip, int port) {
 	return udp_sender;
 }
 
-eronic::UDPListener* setup_udp_listener(int port, int alt_ports) {
+eronic::UDPListener* setup_udp_listener(std::string ip, int port) {
 	eronic::UDPListener * listener = new eronic::UDPListener(new eronic::Socket_WIN());
 	int listen_port = port;
 	int binding_result = -1;
-	while (listen_port <= port + alt_ports && binding_result != 0) {
-		binding_result = listener->bind((std::string)"ADDR_ANY", listen_port, false);
-		if (binding_result == 10048) {
-			listen_port++;
-			std::cout << "increase port to " << listen_port << std::endl;
-		}
-		else if (binding_result == SOCKET_ERROR) {
-			std::cout << "Error binding listener on port " << listen_port << std::endl;
-		}
-		else {
-			std::cout << "Bound UDP listener with result " << binding_result  << " to port " << listener->get_address()->get_port() << std::endl;
-		}
+	binding_result = listener->bind(ip, listen_port, false);
+	if (binding_result == 10048) {
+		std::cout << "Port used already" << listen_port << std::endl;
+	}
+	else if (binding_result == SOCKET_ERROR) {
+		std::cout << "Error binding listener on port " << listen_port << std::endl;
+	}
+	else {
+		std::cout << "Bound UDP listener with result " << binding_result  << " to port " << listener->get_address()->get_port() << std::endl;
 	}
 	return listener;
 }
 
 void send_and_receive_loop() {
-	eronic::UDPListener* a = setup_udp_listener(9555, 2);
+	eronic::UDPListener* a = setup_udp_listener((std::string)"ANY_ADDR", 9555);
 	a->set_blocking(true);
 
-	eronic::UDPClient * b = setup_udp_sender((std::string)"127.0.0.1", 9555);
+	eronic::UDPClient * b = setup_udp_sender((std::string)"150.237.93.255", 9555);
 	b->set_blocking(true);
 
 	eronic::DataPackage* temp;
