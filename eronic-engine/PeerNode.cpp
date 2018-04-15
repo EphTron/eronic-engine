@@ -273,73 +273,59 @@ namespace eronic {
 		}
 
 	}
-	void PeerNode::setup_udp_app_listener(std::string ip, int port)
-	{
-		// setup udp listener to listen for networks in the app
-		int binding_result = -1;
-		_app_udp_port = port;
-		while (_app_udp_port <= port + 1 && binding_result != 0) {
-			binding_result = _net_udp_listener->bind(ip, _app_udp_port, true);
-			if (binding_result == 10048) {
-				_app_udp_port++;
-			}
-			else if (binding_result != 0) {
-				std::cout << "Error binding listener on port " << _app_udp_port << std::endl;
-				throw std::invalid_argument("Error binding");
-			}
-			else {
-				std::cout << "Peer UDP List listening on " << _net_udp_listener->get_address()->get_port() << std::endl;
-			}
-		}
-	}
+	//void PeerNode::setup_udp_app_listener(std::string ip, int port)
+	//{
+	//	// setup udp listener to listen for networks in the app
+	//	int binding_result = -1;
+	//	_app_udp_port = port;
+	//	binding_result = _app_udp_listener->bind(ip, _app_udp_port, true);
+	//	if (binding_result == 10048) {
+	//		std::cout << "udp client Port already in use " << _udp_port << std::endl;
+	//	}
+	//	else if (binding_result != 0) {
+	//		std::cout << "Error binding listener on port " << _app_udp_port << std::endl;
+	//		throw std::invalid_argument("Error binding");
+	//	}
+	//	else {
+	//		std::cout << "Peer UDP List listening on " << _net_udp_listener->get_address()->get_port() << std::endl;
+	//	}
+	//}
 
-	void PeerNode::setup_udp_net_listener(std::string ip, int port)
-	{
-		// setup udp listener to listen for networks in the app
-		int binding_result = -1;
-		_udp_port = port;
-		while (_udp_port <= port + 1 && binding_result != 0) {
-			binding_result = _net_udp_listener->bind(ip, _udp_port, true);
-			if (binding_result == 10048) {
-				_udp_port++;
-			}
-			else if (binding_result != 0) {
-				std::cout << "Error binding listener on port " << _udp_port << std::endl;
-				throw std::invalid_argument("Error binding");
-			}
-			else {
-				std::cout << "Peer UDP List listening on " << _net_udp_listener->get_address()->get_port() << std::endl;
-			}
-		}
-	}
+	//void PeerNode::setup_udp_net_listener(std::string ip, int port)
+	//{
+	//	// setup udp listener to listen for networks in the app
+	//	int binding_result = -1;
+	//	_udp_port = port;
+	//	binding_result = _net_udp_listener->bind(ip, _udp_port, true);
+	//	if (binding_result == 10048) {
+	//		std::cout << "Port already in use " << _udp_port << std::endl;
+	//	}
+	//	else if (binding_result != 0) {
+	//		std::cout << "Error binding listener on port " << _udp_port << std::endl;
+	//		throw std::invalid_argument("Error binding");
+	//	}
+	//	else {
+	//		std::cout << "Peer UDP List listening on " << _net_udp_listener->get_address()->get_port() << std::endl;
+	//	}
+	//}
 	void PeerNode::setup_tcp_listener(std::string ip, int port)
 	{
 		_tcp_port = port;
 		int binding_result = _net_tcp_listener->bind(ip, _tcp_port, true);
 		if (binding_result == SOCKET_ERROR) {
-			std::cout << "Error binding listener on port " << _tcp_port << std::endl;
+			std::cout << "Error binding tcp listener on port " << _tcp_port << std::endl;
 			throw std::invalid_argument("Error binding");
 		}
 		else {
-			std::cout << "Peer UDP List listening on " << _net_tcp_listener->get_address()->get_port() << std::endl;
+			std::cout << "TCP setup on port " << _net_tcp_listener->get_address()->get_port() << std::endl;
 		}
 	}
 
 	void PeerNode::setup_app_broadcaster(std::string ip, int port)
 	{
-		int connect_result = -1;
-		if (_udp_port == port) {
-			//connect_result = _app_broadcaster->connect((std::string)"192.168.1.255", port + 1, false);
-			connect_result = _app_broadcaster->connect(ip, port + 1, false);
-			//connect_result = _app_broadcaster->connect((std::string)"127.0.0.1", port + 1, false);
-		}
-		else {
-
-			//connect_result = _app_broadcaster->connect((std::string)"192.168.1.255", port, false);
-			connect_result = _app_broadcaster->connect(ip, port, false);
-			//connect_result = _app_broadcaster->connect((std::string)"127.0.0.1", port, false);
-		}
-		if (connect_result == 0) {
+		int connect_result = connect_result = _app_broadcaster->connect(ip, port, false);
+	
+		if (connect_result != SOCKET_ERROR) {
 			std::cout << "APP Broadcaster connected to " << _app_broadcaster->get_address()->get_ip() << ":" << _app_broadcaster->get_address()->get_port() << std::endl;
 		}
 		else {
@@ -351,12 +337,7 @@ namespace eronic {
 	{
 		_network_port = port;
 		_net_broadcaster->stop(0);
-		int connect_result = -1;
-		if (_udp_port == port)
-			connect_result = _net_broadcaster->connect((std::string)"127.0.0.255", port + 1, false);
-		else
-			connect_result = _net_broadcaster->connect((std::string)"127.0.0.255", port, false);
-
+		int connect_result = connect_result = _net_broadcaster->connect((std::string)"127.0.0.255", port, false);
 		if (connect_result != SOCKET_ERROR) {
 			std::cout << "UDP Broadcaster connected to " << _net_broadcaster->get_address()->get_port() << std::endl;
 		}
@@ -375,7 +356,13 @@ namespace eronic {
 	TCPClient * PeerNode::setup_connection( std::string & ip, int port)
 	{
 		TCPClient * tcp_client = new TCPClient(new Socket_WIN());
-		tcp_client->connect(ip, port, true);
+		int res = tcp_client->connect(ip, port, true);
+		if (res != SOCKET_ERROR) {
+			std::cout << "TCP CONNECTED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " << tcp_client->get_address()->get_port() << std::endl;
+		}
+		else {
+			std::cout << "Error connecting TCPClient to " << tcp_client->get_address()->get_port() << std::endl;
+		}
 		return tcp_client;
 	}
 	
