@@ -215,9 +215,9 @@ namespace eronic {
 					return WSAGetLastError();
 				}
 				else {
-					ZeroMemory(sender_ip, 256); // to string of characters
+					ZeroMemory(sender_ip, INET_ADDRSTRLEN); // to string of characters
 					// Convert from byte array to chars
-					inet_ntop(AF_INET, &client.sin_addr, sender_ip, 256);
+					inet_ntop(AF_INET, &client.sin_addr, sender_ip, INET_ADDRSTRLEN);
 					return recv_result;
 				}
 			}

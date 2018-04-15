@@ -17,8 +17,8 @@ namespace eronic {
 		x(-1.0),
 		y(-1.0),
 		z(-1.0),
-		sender_ip(""),
-		message("")
+		sender_ip("\0"),
+		message("\0")
 	{
 	}
 
@@ -44,18 +44,18 @@ namespace eronic {
 	}
 
 	DataPackage::DataPackage(char * serialized_data) :
-		type(),
-		sender_id(),
-		sender_port(),
-		network_id(),
-		int_data_1(),
-		int_data_2(),
-		int_data_3(),
-		x(),
-		y(),
-		z(),
-		sender_ip(),
-		message()
+		type(-1),
+		sender_id(-1),
+		sender_port(-1),
+		network_id(-1),
+		int_data_1(-1),
+		int_data_2(-1),
+		int_data_3(-1),
+		x(-1.0),
+		y(-1.0),
+		z(-1.0),
+		sender_ip("\0"),
+		message("\0")
 	{
 		int *q = (int*)serialized_data;
 		type = *q; q++;
@@ -87,10 +87,6 @@ namespace eronic {
 			p++;
 			i++;
 		}
-		q = nullptr;
-		delete q;
-		p = nullptr;
-		delete p;
 	}
 
 

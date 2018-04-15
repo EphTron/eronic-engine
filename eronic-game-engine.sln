@@ -16,6 +16,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asteroids-game", "asteroids
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "work-bench-2", "work-bench-2\work-bench-2.vcxproj", "{DDD35221-507E-4007-BEF1-48686B3725B1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29972CCA-EEAC-48E5-AB22-93B6C302027B} = {29972CCA-EEAC-48E5-AB22-93B6C302027B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

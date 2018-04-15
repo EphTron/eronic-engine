@@ -19,9 +19,15 @@
 namespace eronic {
 
 	typedef struct Network {
+		Network():
+			network_id(-1),
+			network_port(-1),
+			network_ip("")
+		{}
+
 		int network_id;
 		int network_port;
-		std::string ip;
+		std::string network_ip;
 	}Network;
 
 	class PeerNode
@@ -38,7 +44,8 @@ namespace eronic {
 
 		bool app_broadcast_data(DataPackage* data);
 		bool net_broadcast_data(DataPackage* data);
-		char * receive_udp_data(char * sender);
+		DataPackage& const receive_udp_data(char * sender);
+		//receive_udp_data(DataPackage& data, char * sender);
 		//DataPackage * receive_tcp_data();
 
 		void receive_udp_data_loop();
