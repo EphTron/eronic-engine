@@ -51,16 +51,17 @@ namespace eronic {
 	int UDPListener::receive(void * data, size_t data_size)
 	{
 		int recv_result = _listening_socket->receive_data(data, data_size);
-		if (recv_result == 0) {
-			return 0;
+		if (recv_result != SOCKET_ERROR) {
+			return recv_result;
 		}
 		else {
-			return recv_result;
+			return WSAGetLastError();
 		}
 	}
 
 	int UDPListener::receivefrom(void * data, size_t data_size, char * sender_ip)
 	{
+		std::cout << "recving " << _listening_socket->get_address()->get_ip() << ":" << _listening_socket->get_address()->get_port() << std::endl;
 		return _listening_socket->receive_data_from(data, data_size, sender_ip);
 	}
 

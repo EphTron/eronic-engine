@@ -248,7 +248,7 @@ namespace eronic {
 	{
 		std::cout << "runnning peer network " << _network_id << std::endl;
 		_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists_loop, this);
-		_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
+		//_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
 		//_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists, this);
 		/*while (_running && _connected) {
 

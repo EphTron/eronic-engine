@@ -21,22 +21,22 @@ namespace eronic {
 	{
 		int UDP = 2;
 		int connect_result = _socket->connect_to(UDP, ip, port);
-		if (connect_result == 0) {
+		if (connect_result != SOCKET_ERROR) {
+			return WSAGetLastError();
+		}
+		else {
 			if (!blocking) {
 				_socket->set_blocking(false);
 			}
 			_is_connected = true;
 			return connect_result;
 		}
-		else {
-			return connect_result;
-		}
 	}
 
 	int UDPClient::send(const void * data, size_t data_size)
 	{
+		std::cout << "sending " << _socket->get_address()->get_ip() << ":" << _socket->get_address()->get_port() << std::endl;
 		int i = _socket->send_data(data, data_size);
-		std::cout << "i :" << i << std::endl;
 		return i;
 	}
 
