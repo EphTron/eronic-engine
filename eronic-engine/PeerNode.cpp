@@ -195,7 +195,7 @@ namespace eronic {
 				std::cout << "catched own tcp pack" << std::endl;
 				return DataPackage();
 			} else {
-				std::cout << " udp data Type: " << data.type << "sender: " << data.sender_id << std::endl;
+				std::cout << "UDP data Type: " << data.type << " Sender: " << data.sender_id << " Message: " << data.message << std::endl;
 				return data;
 			}
 		}
@@ -219,7 +219,7 @@ namespace eronic {
 				std::cout << "catched own tcp pack" << std::endl;
 				return DataPackage();
 			} else {
-				std::cout << " tcp data Type: " << data.type << "sender: " << data.sender_id << std::endl;
+				std::cout << "Tcp data Type: " << data.type << " Sender: " << data.sender_id  << " Message: "<< data.message << std::endl;
 				return data;
 			}
 		}
@@ -232,16 +232,13 @@ namespace eronic {
 			DataPackage data_pack = receive_tcp_data(client, sender_ip);
 
 			if (data_pack.type == 3) { // if got accepted
-				std::cout << "GOT ACCEPTED RESPONSE!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
 				DataPackage accepted_response = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)"established\0");
 				accepted_response.int_data_1 = data_pack.sender_id * _id;
 				client->send(&accepted_response, sizeof(DataPackage));
 			}
 			else if (data_pack.type == 4) { // if got accepted
 				int quiz = data_pack.int_data_1 / data_pack.sender_id;
-
-				std::cout << "got tcp response 4 QUIZ: " << quiz << " = " << _id << std::endl;
-				std::cout << "Connection successfully established!" << std::endl;
+				std::cout << "Connection successfully established! QUIZ: " << quiz << " = " << _id << std::endl;
 			}
 		}
 	}
@@ -253,11 +250,10 @@ namespace eronic {
 			DataPackage data_pack = receive_udp_data( sender_ip);
 			
 			if (data_pack.type == 2) { // if join received
-				std::cout << "type 2" << std::endl;
 
 				if (_connection_threads.find(data_pack.sender_id) == _connection_threads.end()) {
 					std::string ip = data_pack.sender_ip;
-					std::cout << "Setting up client through udp looop ##############" << std::endl;
+					std::cout << "Setting up client through udp looop #" << std::endl;
 					TCPClient * client = setup_connection(ip, _network_port);
 					_net_connections.insert(std::pair<int, TCPClient*>(data_pack.sender_id, client));
 					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
@@ -279,8 +275,15 @@ namespace eronic {
 		_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
 		_network_connector_thread = std::thread(&PeerNode::accept_network_connections_loop, this);
 		while (_running && _connected) {
+			for (auto const& connection : _net_connections)
+			{
+				std::cout << "Send alive msg to "<< connection.first << std::endl;
+				DataPackage alive_question = DataPackage(6, _id, _network_port, _network_id, _ip, (std::string)"u ded?\0");
+				alive_question.int_data_1 = alive_question.sender_id * _id;
+				connection.second->send(&alive_question, sizeof(DataPackage));
+			}
 			std::cout << "client list:" << _net_connections.size() << std::endl;
-			Sleep(10000);
+			Sleep(5000);
 		}
 	}
 
@@ -306,14 +309,16 @@ namespace eronic {
 				char sender_ip[INET_ADDRSTRLEN];
 				DataPackage accepted_response = receive_tcp_data(client, sender_ip);
 				if (accepted_response.type == 4) {
-					std::cout << "got tcp response 4" << std::endl;
+					// send that you got established message
 					DataPackage established = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)"established\0");
 					established.int_data_1 = accepted_response.sender_id * _id;
 					client->send(&established, sizeof(DataPackage));
+					// add connection
 					_net_connections.insert(std::pair<int, TCPClient*>(accepted_response.sender_id, client));
 					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
 					_connection_threads.insert(std::pair<int, std::thread*>(accepted_response.sender_id, t));
-					std::cout << "Connection successfully established!" << std::endl;
+					int quiz = accepted_response.int_data_1 / accepted_response.sender_id;
+					std::cout << "Connection successfully established! QUIZ: " << quiz << " = " << _id << std::endl;
 				}
 			}
 			else {
