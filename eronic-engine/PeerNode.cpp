@@ -178,6 +178,19 @@ namespace eronic {
 		}
 	}
 
+	bool PeerNode::tcp_send_data(TCPClient * client, eronic::DataPackage * data)
+	{
+		char pack[sizeof(DataPackage)];
+		data->serialize(pack);
+		int send_result = client->send(pack, sizeof(DataPackage));
+		if (send_result != SOCKET_ERROR) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	DataPackage& const PeerNode::receive_udp_data(char * sender_ip)
 	{
 		char recv_buffer[sizeof(DataPackage)];
@@ -216,7 +229,7 @@ namespace eronic {
 				return DataPackage();
 			}
 			else if (data.sender_id == _id){
-				std::cout << "catched own tcp pack" << std::endl;
+				std::cout << "catched own ucp pack" << std::endl;
 				return DataPackage();
 			} else {
 				std::cout << "Tcp data Type: " << data.type << " Sender: " << data.sender_id  << " Message: "<< data.message << std::endl;
@@ -234,7 +247,7 @@ namespace eronic {
 			if (data_pack.type == 3) { // if got accepted
 				DataPackage accepted_response = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)"established\0");
 				accepted_response.int_data_1 = data_pack.sender_id * _id;
-				client->send(&accepted_response, sizeof(DataPackage));
+				tcp_send_data(client, &accepted_response);
 			}
 			else if (data_pack.type == 4) { // if got accepted
 				int quiz = data_pack.int_data_1 / data_pack.sender_id;
@@ -278,9 +291,9 @@ namespace eronic {
 			for (auto const& connection : _net_connections)
 			{
 				std::cout << "Send alive msg to "<< connection.first << std::endl;
-				DataPackage alive_question = DataPackage(6, _id, _network_port, _network_id, _ip, (std::string)"u ded?\0");
+				DataPackage alive_question = DataPackage(6, _id, _network_port, _network_id, _ip, (std::string)"u ded?");
 				alive_question.int_data_1 = alive_question.sender_id * _id;
-				connection.second->send(&alive_question, sizeof(DataPackage));
+				tcp_send_data(connection.second, &alive_question);
 			}
 			std::cout << "client list:" << _net_connections.size() << std::endl;
 			Sleep(5000);
@@ -304,7 +317,8 @@ namespace eronic {
 			TCPClient * client = _net_tcp_listener->accept();
 			if (client != nullptr) {
 				DataPackage accepted_pack = DataPackage(3, _id, _network_port, _network_id, _ip, (std::string)"accepted\0");
-				client->send(&accepted_pack, sizeof(DataPackage));
+				tcp_send_data(client, &accepted_pack);
+
 				std::cout << "sending tcp accepted pack" << std::endl;
 				char sender_ip[INET_ADDRSTRLEN];
 				DataPackage accepted_response = receive_tcp_data(client, sender_ip);
@@ -312,7 +326,8 @@ namespace eronic {
 					// send that you got established message
 					DataPackage established = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)"established\0");
 					established.int_data_1 = accepted_response.sender_id * _id;
-					client->send(&established, sizeof(DataPackage));
+					//client->send(&established, sizeof(DataPackage));
+					tcp_send_data(client, &established);
 					// add connection
 					_net_connections.insert(std::pair<int, TCPClient*>(accepted_response.sender_id, client));
 					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);

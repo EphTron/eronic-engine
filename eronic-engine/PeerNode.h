@@ -44,6 +44,7 @@ namespace eronic {
 
 		bool app_broadcast_data(DataPackage* data);
 		bool net_broadcast_data(DataPackage* data);
+		bool tcp_send_data(TCPClient* client, DataPackage* data);
 		DataPackage& const receive_udp_data(char * sender);
 		DataPackage& const receive_tcp_data(TCPClient * client, char * sender);
 
