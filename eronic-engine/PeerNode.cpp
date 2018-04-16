@@ -224,7 +224,7 @@ namespace eronic {
 			DataPackage data_pack = receive_tcp_data(client, sender_ip);
 
 			if (data_pack.type == 3) { // if got accepted
-
+				std::cout << "GOT ACCEPTED RESPONSE!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
 				DataPackage accepted_response = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)sender_ip);
 				accepted_response.int_data_1 = data_pack.sender_id * _id;
 				client->send(&accepted_response, sizeof(DataPackage));
@@ -269,9 +269,10 @@ namespace eronic {
 		_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists_loop, this);
 		_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
 		_network_connector_thread = std::thread(&PeerNode::accept_network_connections_loop, this);
-		/*while (_running && _connected) {
-
-		}*/
+		while (_running && _connected) {
+			std::cout << "client list:" << _net_connections.size() << std::endl;
+			Sleep(10000);
+		}
 	}
 
 	void PeerNode::broadcast_network_exists_loop()
