@@ -36,7 +36,7 @@ namespace eronic {
 			network_id(-1),
 			peer_connection(false),
 			answered_alive(false),
-			connection(nullptr),
+			tcp_client(nullptr),
 			delta_t_to_self_t(0.0)
 		{}
 
@@ -45,7 +45,7 @@ namespace eronic {
 			network_id(n_id),
 			peer_connection(true),
 			answered_alive(false),
-			connection(client),
+			tcp_client(client),
 			delta_t_to_self_t(0.0)
 		{}
 
@@ -53,7 +53,7 @@ namespace eronic {
 		int network_id;
 		bool peer_connection;
 		bool answered_alive;
-		TCPClient * connection;
+		TCPClient * tcp_client;
 		double delta_t_to_self_t;
 	}PeerPartner;
 

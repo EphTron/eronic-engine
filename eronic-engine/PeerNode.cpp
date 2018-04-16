@@ -295,11 +295,14 @@ namespace eronic {
 				if (_connection_threads.find(data_pack.sender_id) == _connection_threads.end()) {
 					std::string ip = data_pack.sender_ip;
 					std::cout << "Setting up client through udp looop #" << std::endl;
+					
 					TCPClient * client = setup_connection(ip, _network_port, true);
+					std::cout << "IP" << ip << " id "  << _id <<std::endl;
 					PeerPartner * peer_partner = new PeerPartner(data_pack.sender_id, _network_id, client);
 					_peer_connections.insert(std::pair<int, PeerPartner*>(data_pack.sender_id, peer_partner));
 					peer_partner->peer_connection = true;
 					peer_partner->answered_alive = true;
+					
 					_peer_connections.at(data_pack.sender_id)->peer_connection = true;
 					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);//, &_peer_connections.at(data_pack.sender_id)->peer_connection);
 						//&peer_partner->peer_connection);//_peer_connections.at(data_pack.sender_id)->peer_connection);
@@ -333,7 +336,7 @@ namespace eronic {
 					std::cout << "Send alive msg to " << connection.first << std::endl;
 					DataPackage alive_question = DataPackage(6, _id, _network_port, _network_id, _ip, (std::string)"u ded?");
 					alive_question.int_data_1 = alive_question.sender_id * _id;
-					tcp_send_data(connection.second->connection, &alive_question);
+					tcp_send_data(connection.second->tcp_client, &alive_question);
 				}
 				
 				if (connection.second->peer_connection == false) {
@@ -343,14 +346,14 @@ namespace eronic {
 			}
 			for (auto const& id : peers_to_delete) {
 				std::cout << "Deleting Peer Connection" << id << std::endl;
-				_peer_connections.at(id)->connection->prepare_stop();
+				_peer_connections.at(id)->tcp_client->prepare_stop();
 				// join thread
 				_connection_threads.at(id)->join();
 				// close client
-				_peer_connections.at(id)->connection->close();
+				_peer_connections.at(id)->tcp_client->close();
 				// delete client
-				delete _peer_connections.at(id)->connection;
-				_peer_connections.at(id)->connection = nullptr;
+				delete _peer_connections.at(id)->tcp_client;
+				_peer_connections.at(id)->tcp_client = nullptr;
 				delete _peer_connections.at(id);
 				_peer_connections.erase(id);
 				// delete thread
@@ -369,16 +372,16 @@ namespace eronic {
 		std::cout << "Deleting Peer Connection" << id << std::endl;
 		
 		// make thread loop stop
-		_peer_connections.at(id)->connection->prepare_stop();
+		_peer_connections.at(id)->tcp_client->prepare_stop();
 		// join thread
 		_connection_threads.at(id)->join();
 		
 		// close client
-		_peer_connections.at(id)->connection->close();
+		_peer_connections.at(id)->tcp_client->close();
 
 		// delete client
-		delete _peer_connections.at(id)->connection;
-		_peer_connections.at(id)->connection = nullptr;
+		delete _peer_connections.at(id)->tcp_client;
+		_peer_connections.at(id)->tcp_client = nullptr;
 		delete _peer_connections.at(id);
 		_peer_connections.erase(id);
 		// delete thread
@@ -411,7 +414,7 @@ namespace eronic {
 				if (accepted_response.type == 4) {
 					int sender_id = accepted_response.sender_id;
 					// send that you got established message
-					std::cout << "sending pack 4" << std::endl;
+					std::cout << "sending pack 4 " << client << std::endl;
 					DataPackage established = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)"established\0");
 					established.int_data_1 = sender_id * _id;
 					//client->send(&established, sizeof(DataPackage));
