@@ -222,13 +222,13 @@ namespace eronic {
 		}
 		else {
 			DataPackage data = DataPackage(recv_buffer);
-			if (recv_result == 0) {
+			/*if (recv_result == 0) {
 				std::string ip = client->get_address()->get_ip();
 				std::size_t found = ip.find_last_of(".");
 				int sender_id = std::stoi(_ip.substr(found + 1));
 				std::cout << "CLOSING " << sender_id << std::endl;
 				data = DataPackage(100, sender_id, _network_port, _network_id, _ip, (std::string)"close this\0");
-			}
+			}*/
 			
 			if (data.type < 0) {
 				std::cout << "invalid pack" << std::endl;
@@ -263,6 +263,7 @@ namespace eronic {
 				std::cout << "Connection successfully established! QUIZ: " << quiz << " = " << _id << std::endl;
 			}
 			else if (data_pack.type == 6) { // if got accepted
+				std::cout << "got 6 - sending pack 7" << std::endl;
 				DataPackage alive_response = DataPackage(7, _id, _network_port, _network_id, _ip, (std::string)"alive\0");
 				tcp_send_data(client, &alive_response);
 			}
@@ -270,12 +271,12 @@ namespace eronic {
 				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
 				std::cout << data_pack.sender_id << " is alive" << std::endl;
 			}
-			else if (data_pack.type == 100) { // if got accepted
-				// setup connection and answered alive to false, so that the connection gets deleted in the next iteration
-				
-				_peer_connections.at(data_pack.sender_id)->answered_alive = false;
-				_peer_connections.at(data_pack.sender_id)->peer_connection = false;
-			}
+			//else if (data_pack.type == 100) { // if got accepted
+			//	// setup connection and answered alive to false, so that the connection gets deleted in the next iteration
+			//	
+			//	_peer_connections.at(data_pack.sender_id)->answered_alive = false;
+			//	_peer_connections.at(data_pack.sender_id)->peer_connection = false;
+			//}
 			//std::cout << "recv tcp loop " << std::endl;
 		}
 	}
@@ -325,7 +326,7 @@ namespace eronic {
 					connection.second->peer_connection = false;
 				}
 				else {
-					connection.second->answered_alive = false;
+					
 					std::cout << "Send alive msg to " << connection.first << std::endl;
 					DataPackage alive_question = DataPackage(6, _id, _network_port, _network_id, _ip, (std::string)"u ded?");
 					alive_question.int_data_1 = alive_question.sender_id * _id;
@@ -333,6 +334,7 @@ namespace eronic {
 				}
 				
 				if (connection.second->peer_connection == false) {
+					std::cout << "closing connection" << std::endl;
 					peers_to_delete.push_back(connection.first);
 				}
 			}
@@ -354,7 +356,7 @@ namespace eronic {
 				
 				std::cout << "Deleted " << id << std::endl;
 			}
-			std::cout << "client list:" << _peer_connections.size() << std::endl;
+			//std::cout << "client list:" << _peer_connections.size() << std::endl;
 			Sleep(2000);
 		}
 	}
@@ -387,7 +389,7 @@ namespace eronic {
 		while (_connected) {
 			DataPackage dp = DataPackage(1, _id, _network_port, _network_id, _ip, (std::string)"exists\0");
 			app_broadcast_data(&dp);
-			Sleep(100);
+			Sleep(200);
 			//d::cout << "client list:" << _peer_connections.size() << std::endl;
 		}
 
@@ -398,6 +400,7 @@ namespace eronic {
 		while (_connected) {
 			TCPClient * client = _net_tcp_listener->accept();
 			if (client != nullptr) {
+				std::cout << "sending pack 3" << std::endl;
 				DataPackage accepted_pack = DataPackage(3, _id, _network_port, _network_id, _ip, (std::string)"accepted\0");
 				tcp_send_data(client, &accepted_pack);
 				char sender_ip[INET_ADDRSTRLEN];
@@ -405,6 +408,7 @@ namespace eronic {
 				if (accepted_response.type == 4) {
 					int sender_id = accepted_response.sender_id;
 					// send that you got established message
+					std::cout << "sending pack 4" << std::endl;
 					DataPackage established = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)"established\0");
 					established.int_data_1 = sender_id * _id;
 					//client->send(&established, sizeof(DataPackage));
