@@ -182,13 +182,11 @@ namespace eronic {
 
 	bool PeerNode::tcp_send_data(TCPClient * client, eronic::DataPackage * data)
 	{
-		std::cout << "hello" << std::endl;
 		char pack[sizeof(DataPackage)];
 		data->serialize(pack);
 		int send_result = client->send(pack, sizeof(DataPackage));
-		std::cout << "break2" << std::endl;
 		if (send_result != SOCKET_ERROR) {
-			std::cout << "sent tcp data Type: " << data->type << " Sender: " << data->sender_id << " Message: " << data->message << std::endl;
+			std::cout << "SENT: TCP MSG Type: " << data->type << " Sender: " << data->sender_id << " Message: " << data->message << std::endl;
 			return true;
 		}
 		else {
@@ -214,7 +212,7 @@ namespace eronic {
 				return DataPackage();
 			}
 			else {
-				std::cout << "UDP data Type: " << data.type << " Sender: " << data.sender_id << " Message: " << data.message << std::endl;
+				std::cout << "RECV: UDP MSG Type: " << data.type << " Sender: " << data.sender_id << " Message: " << data.message << std::endl;
 				return data;
 			}
 		}
@@ -228,10 +226,12 @@ namespace eronic {
 			return DataPackage();
 		}
 		else {
+			DataPackage data = DataPackage(recv_buffer);
 			if (recv_result == 0) {
 				std::cout << "close" << std::endl;
+				data = DataPackage(100, _id, _network_port, _network_id, _ip, (std::string)"close\0");
 			}
-			DataPackage data = DataPackage(recv_buffer);
+			
 			
 			if (data.type < 0) {
 				//std::cout << "invalid pack" << data.type << std::endl;
@@ -239,11 +239,10 @@ namespace eronic {
 				return DataPackage();
 			}
 			else if (data.sender_id == _id) {
-				std::cout << "catched own ucp pack" << data.sender_id << " type " << data.type << std::endl;
 				return DataPackage();
 			}
 			else {
-				std::cout << "Tcp data Type: " << data.type << " Sender: " << data.sender_id << " Message: " << data.message << std::endl;
+				std::cout << "RECV: TCP MSG Type: " << data.type << " Sender: " << data.sender_id << " Message: " << data.message << std::endl;
 				return data;
 			}
 		}
@@ -268,21 +267,16 @@ namespace eronic {
 			}
 			else if (data_pack.type == 6) { // if got accepted
 				DataPackage alive_response = DataPackage(7, _id, _network_port, _network_id, _ip, (std::string)"alive\0");
-				std::cout << "got 6 - sending pack 7" << std::endl;
 				tcp_send_data(client, &alive_response);
-				std::cout << "sent 7" << std::endl;
 			}
 			else if (data_pack.type == 7) { // if got accepted
 				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
 				std::cout << data_pack.sender_id << " is alive" << std::endl;
 			}
-			//else if (data_pack.type == 100) { // if got accepted
-			//	// setup connection and answered alive to false, so that the connection gets deleted in the next iteration
-			//	
-			//	_peer_connections.at(data_pack.sender_id)->answered_alive = false;
-			//	_peer_connections.at(data_pack.sender_id)->peer_connection = false;
-			//}
-			//std::cout << "recv tcp loop " << std::endl;
+			else if (data_pack.type == 100) { // if got accepted
+				// setup connection and answered alive to false, so that the connection gets deleted in the next iteration
+				std::cout << "Sneder will close" << sender_ip << std::endl;
+			}
 		}
 	}
 
@@ -296,12 +290,6 @@ namespace eronic {
 
 				if (_connection_threads.find(data_pack.sender_id) == _connection_threads.end()) {
 					std::string ip = data_pack.sender_ip;
-					std::cout << "Setting up client through udp looop #" << std::endl;
-
-					
-					//TCPClient * client = setup_connection(ip, _network_port, true);
-					std::cout << "IP" << ip << " id "  << _id <<std::endl;
-
 					TCPClient * client = setup_connection(ip, _network_port, false);
 
 					PeerPartner * peer_partner = new PeerPartner(data_pack.sender_id, _network_id, client);
@@ -338,7 +326,7 @@ namespace eronic {
 					connection.second->peer_connection = false;
 				}
 				else {
-					
+					connection.second->answered_alive = false;
 					std::cout << "Send alive msg to " << connection.first << std::endl;
 					DataPackage alive_question = DataPackage(6, _id, _network_port, _network_id, _ip, (std::string)"u ded?");
 					alive_question.int_data_1 = alive_question.sender_id * _id;
