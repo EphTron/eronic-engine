@@ -26,6 +26,7 @@ namespace eronic {
 		int bind_result = _listening_socket->bind_to(TCP, ip, port);
 
 		if (bind_result == SOCKET_ERROR) {
+			std::cout << "Error TCP Listener " << std::endl;
 			return WSAGetLastError();
 		}
 		else {

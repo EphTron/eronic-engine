@@ -22,15 +22,17 @@ namespace eronic {
 	{
 		int TCP = 1;
 		int connect_result = _socket->connect_to(TCP, ip, port);
-		if (connect_result == 0) {
+		if (connect_result != SOCKET_ERROR) {
 			if (!blocking) {
 				_socket->set_blocking(false);
 			}
 			_is_connected = true;
+			std::cout << "Connected TCP " << std::endl;
 			return connect_result;
 		}
 		else {
-			return connect_result;
+			std::cout << "Error TCP client connect " << std::endl;
+			return WSAGetLastError();
 		}
 	}
 
