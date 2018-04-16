@@ -60,9 +60,9 @@ namespace eronic {
 	int TCPClient::stop(int how)
 	{
 		int result = _socket->stop(how);
-		if (result == 0) {
+		if (result != SOCKET_ERROR) {
 			return result;
-			_is_connected = true;
+			_is_connected = false;
 		}
 		else {
 			return result;
@@ -72,8 +72,8 @@ namespace eronic {
 	int TCPClient::close()
 	{
 		int result = _socket->close();
-		if (result == 0) {
-			_is_connected = true;
+		if (result != SOCKET_ERROR) {
+			_is_connected = false;
 			return result;
 		}
 		else {

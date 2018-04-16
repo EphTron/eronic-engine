@@ -179,13 +179,17 @@ namespace eronic {
 
 	bool PeerNode::tcp_send_data(TCPClient * client, eronic::DataPackage * data)
 	{
+		std::cout << "hello" << std::endl;
 		char pack[sizeof(DataPackage)];
 		data->serialize(pack);
 		int send_result = client->send(pack, sizeof(DataPackage));
+		std::cout << "break2" << std::endl;
 		if (send_result != SOCKET_ERROR) {
+			std::cout << "sent tcp data Type: " << data->type << " Sender: " << data->sender_id << " Message: " << data->message << std::endl;
 			return true;
 		}
 		else {
+			std::cout << "sent failed" << WSAGetLastError() << std::endl;
 			return false;
 		}
 	}
@@ -225,16 +229,10 @@ namespace eronic {
 				std::cout << "close" << std::endl;
 			}
 			DataPackage data = DataPackage(recv_buffer);
-			/*if (recv_result == 0) {
-				std::string ip = client->get_address()->get_ip();
-				std::size_t found = ip.find_last_of(".");
-				int sender_id = std::stoi(_ip.substr(found + 1));
-				std::cout << "CLOSING " << sender_id << std::endl;
-				data = DataPackage(100, sender_id, _network_port, _network_id, _ip, (std::string)"close this\0");
-			}*/
 			
 			if (data.type < 0) {
 				//std::cout << "invalid pack" << data.type << std::endl;
+
 				return DataPackage();
 			}
 			else if (data.sender_id == _id) {
@@ -266,9 +264,10 @@ namespace eronic {
 				std::cout << "Connection successfully established! QUIZ: " << quiz << " = " << _id << std::endl;
 			}
 			else if (data_pack.type == 6) { // if got accepted
-				std::cout << "got 6 - sending pack 7" << std::endl;
 				DataPackage alive_response = DataPackage(7, _id, _network_port, _network_id, _ip, (std::string)"alive\0");
+				std::cout << "got 6 - sending pack 7" << std::endl;
 				tcp_send_data(client, &alive_response);
+				std::cout << "sent 7" << std::endl;
 			}
 			else if (data_pack.type == 7) { // if got accepted
 				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
@@ -295,9 +294,13 @@ namespace eronic {
 				if (_connection_threads.find(data_pack.sender_id) == _connection_threads.end()) {
 					std::string ip = data_pack.sender_ip;
 					std::cout << "Setting up client through udp looop #" << std::endl;
+
 					
-					TCPClient * client = setup_connection(ip, _network_port, true);
+					//TCPClient * client = setup_connection(ip, _network_port, true);
 					std::cout << "IP" << ip << " id "  << _id <<std::endl;
+
+					TCPClient * client = setup_connection(ip, _network_port, false);
+
 					PeerPartner * peer_partner = new PeerPartner(data_pack.sender_id, _network_id, client);
 					_peer_connections.insert(std::pair<int, PeerPartner*>(data_pack.sender_id, peer_partner));
 					peer_partner->peer_connection = true;
