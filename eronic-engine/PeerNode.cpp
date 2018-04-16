@@ -224,6 +224,7 @@ namespace eronic {
 			DataPackage data_pack = receive_tcp_data(client, sender_ip);
 
 			if (data_pack.type == 3) { // if got accepted
+
 				DataPackage accepted_response = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)sender_ip);
 				accepted_response.int_data_1 = data_pack.sender_id * _id;
 				client->send(&accepted_response, sizeof(DataPackage));
@@ -248,6 +249,7 @@ namespace eronic {
 
 				if (_connection_threads.find(data_pack.sender_id) == _connection_threads.end()) {
 					std::string ip = data_pack.sender_ip;
+					std::cout << "Setting up client through udp looop ##############" << std::endl;
 					TCPClient * client = setup_connection(ip, _network_port);
 					_net_connections.insert(std::pair<int, TCPClient*>(data_pack.sender_id, client));
 					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
