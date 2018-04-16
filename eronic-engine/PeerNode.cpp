@@ -317,17 +317,26 @@ namespace eronic {
 					tcp_send_data(connection.second->connection, &alive_question);
 				}
 				if (connection.second->peer_connection == false) {
-					// close connections
-					_connection_threads.at(connection.first)->join();
-					connection.second->connection->close();
-					std::cout << "Deleting..." << std::endl;
+					peers_to_delete.push_back(connection.first);
+					
 				}
 			}
 			for (auto const& id : peers_to_delete) {
+				std::cout << "Deleting Peer Connection" << id << std::endl;
+				_peer_connections.at(id)->connection->prepare_stop();
+				// join thread
+				_connection_threads.at(id)->join();
+				// close client
+				_peer_connections.at(id)->connection->close();
+				// delete client
 				delete _peer_connections.at(id)->connection;
 				_peer_connections.at(id)->connection = nullptr;
-				delete _peer_connections.at(id)->connection;
+				delete _peer_connections.at(id);
 				_peer_connections.erase(id);
+				// delete thread
+				delete _connection_threads.at(id);
+				_connection_threads.erase(id);
+				
 				std::cout << "Deleted " << id << std::endl;
 			}
 			std::cout << "client list:" << _peer_connections.size() << std::endl;
