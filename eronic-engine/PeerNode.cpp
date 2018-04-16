@@ -134,7 +134,6 @@ namespace eronic {
 						}
 					}
 				}
-
 				std::cout << "Found network " << new_network->network_id << ". Sender was " << temp_pack.sender_id << std::endl;
 			}
 
@@ -196,7 +195,6 @@ namespace eronic {
 		char recv_buffer[sizeof(DataPackage)];
 		int recv_result = _net_udp_listener->receivefrom(recv_buffer, sizeof(DataPackage), sender_ip);
 		if (recv_result == SOCKET_ERROR) {
-			std::cout << "Error receiving udp data " << WSAGetLastError() << std::endl;
 			return DataPackage();
 		}
 		else {
@@ -220,13 +218,20 @@ namespace eronic {
 		char recv_buffer[sizeof(DataPackage)];
 		int recv_result = client->receivefrom(recv_buffer, sizeof(DataPackage), sender_ip);
 		if (recv_result == SOCKET_ERROR) {
-			std::cout << "Error receiving tcp data " << WSAGetLastError() << std::endl;
 			return DataPackage();
 		}
 		else {
 			DataPackage data = DataPackage(recv_buffer);
-
+			if (recv_result == 0) {
+				std::string ip = client->get_address()->get_ip();
+				std::size_t found = ip.find_last_of(".");
+				int sender_id = std::stoi(_ip.substr(found + 1));
+				std::cout << "CLOSING " << sender_id << std::endl;
+				data = DataPackage(100, sender_id, _network_port, _network_id, _ip, (std::string)"close this\0");
+			}
+			
 			if (data.type < 0) {
+				std::cout << "invalid pack" << std::endl;
 				return DataPackage();
 			}
 			else if (data.sender_id == _id) {
@@ -242,7 +247,7 @@ namespace eronic {
 
 	void PeerNode::receive_tcp_data_loop(TCPClient* client)
 	{
-		while (_connected) {
+		while (_connected && client->is_connected()) {
 			char sender_ip[INET_ADDRSTRLEN];
 			DataPackage data_pack = receive_tcp_data(client, sender_ip);
 
@@ -254,7 +259,6 @@ namespace eronic {
 			}
 			else if (data_pack.type == 4) { // if got accepted
 				int quiz = data_pack.int_data_1 / data_pack.sender_id;
-				_peer_connections.at(data_pack.sender_id)->peer_connection = true;
 				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
 				std::cout << "Connection successfully established! QUIZ: " << quiz << " = " << _id << std::endl;
 			}
@@ -266,6 +270,13 @@ namespace eronic {
 				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
 				std::cout << data_pack.sender_id << " is alive" << std::endl;
 			}
+			else if (data_pack.type == 100) { // if got accepted
+				// setup connection and answered alive to false, so that the connection gets deleted in the next iteration
+				
+				_peer_connections.at(data_pack.sender_id)->answered_alive = false;
+				_peer_connections.at(data_pack.sender_id)->peer_connection = false;
+			}
+			//std::cout << "recv tcp loop " << std::endl;
 		}
 	}
 
@@ -280,10 +291,12 @@ namespace eronic {
 				if (_connection_threads.find(data_pack.sender_id) == _connection_threads.end()) {
 					std::string ip = data_pack.sender_ip;
 					std::cout << "Setting up client through udp looop #" << std::endl;
-					TCPClient * client = setup_connection(ip, _network_port);
+					TCPClient * client = setup_connection(ip, _network_port, true);
 					PeerPartner * peer_partner = new PeerPartner(data_pack.sender_id, _network_id, client);
 					_peer_connections.insert(std::pair<int, PeerPartner*>(data_pack.sender_id, peer_partner));
-					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
+					_peer_connections.at(data_pack.sender_id)->peer_connection = true;
+					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);//, &_peer_connections.at(data_pack.sender_id)->peer_connection);
+						//&peer_partner->peer_connection);//_peer_connections.at(data_pack.sender_id)->peer_connection);
 					_connection_threads.insert(std::pair<int, std::thread*>(data_pack.sender_id, t));
 				}
 			}
@@ -303,7 +316,7 @@ namespace eronic {
 		_network_connector_thread = std::thread(&PeerNode::accept_network_connections_loop, this);
 		while (_running && _connected) {
 			std::vector<int> peers_to_delete = std::vector<int>();
-			for (auto const& connection : _peer_connections)
+			for (auto connection : _peer_connections)
 			{
 				if (connection.second->answered_alive == false) {
 					std::cout << "Guess " << connection.first << " died..." << std::endl;
@@ -316,23 +329,55 @@ namespace eronic {
 					alive_question.int_data_1 = alive_question.sender_id * _id;
 					tcp_send_data(connection.second->connection, &alive_question);
 				}
+				
 				if (connection.second->peer_connection == false) {
-					// close connections
-					_connection_threads.at(connection.first)->join();
-					connection.second->connection->close();
-					std::cout << "Deleting..." << std::endl;
+					peers_to_delete.push_back(connection.first);
 				}
 			}
 			for (auto const& id : peers_to_delete) {
+				std::cout << "Deleting Peer Connection" << id << std::endl;
+				_peer_connections.at(id)->connection->prepare_stop();
+				// join thread
+				_connection_threads.at(id)->join();
+				// close client
+				_peer_connections.at(id)->connection->close();
+				// delete client
 				delete _peer_connections.at(id)->connection;
 				_peer_connections.at(id)->connection = nullptr;
-				delete _peer_connections.at(id)->connection;
+				delete _peer_connections.at(id);
 				_peer_connections.erase(id);
+				// delete thread
+				delete _connection_threads.at(id);
+				_connection_threads.erase(id);
+				
 				std::cout << "Deleted " << id << std::endl;
 			}
 			std::cout << "client list:" << _peer_connections.size() << std::endl;
 			Sleep(5000);
 		}
+	}
+
+	void PeerNode::close_connection(int id)
+	{
+		std::cout << "Deleting Peer Connection" << id << std::endl;
+		
+		// make thread loop stop
+		_peer_connections.at(id)->connection->prepare_stop();
+		// join thread
+		_connection_threads.at(id)->join();
+		
+		// close client
+		_peer_connections.at(id)->connection->close();
+
+		// delete client
+		delete _peer_connections.at(id)->connection;
+		_peer_connections.at(id)->connection = nullptr;
+		delete _peer_connections.at(id);
+		_peer_connections.erase(id);
+		// delete thread
+		delete _connection_threads.at(id);
+		_connection_threads.erase(id);
+		std::cout << "Deleted Peer Connection" << id << std::endl;
 	}
 
 	void PeerNode::broadcast_network_exists_loop()
@@ -341,7 +386,7 @@ namespace eronic {
 			DataPackage dp = DataPackage(1, _id, _network_port, _network_id, _ip, (std::string)"exists\0");
 			app_broadcast_data(&dp);
 			Sleep(2000);
-			//std::cout << "client list:" << _peer_connections.size() << std::endl;
+			std::cout << "client list:" << _peer_connections.size() << std::endl;
 		}
 
 	}
@@ -356,19 +401,21 @@ namespace eronic {
 				char sender_ip[INET_ADDRSTRLEN];
 				DataPackage accepted_response = receive_tcp_data(client, sender_ip);
 				if (accepted_response.type == 4) {
+					int sender_id = accepted_response.sender_id;
 					// send that you got established message
 					DataPackage established = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)"established\0");
-					established.int_data_1 = accepted_response.sender_id * _id;
+					established.int_data_1 = sender_id * _id;
 					//client->send(&established, sizeof(DataPackage));
 					tcp_send_data(client, &established);
 
 					// add connection
-					PeerPartner * peer_partner = new PeerPartner(accepted_response.sender_id, _network_id, client);
-					_peer_connections.insert(std::pair<int, PeerPartner*>(accepted_response.sender_id, peer_partner));
+					PeerPartner * peer_partner = new PeerPartner(sender_id, _network_id, client);
+					_peer_connections.insert(std::pair<int, PeerPartner*>(sender_id, peer_partner));
 					peer_partner->peer_connection = true;
 					peer_partner->answered_alive = true;
 					// add thread
-					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
+					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);// &_peer_connections.at(sender_id)->peer_connection);
+						//&peer_partner->peer_connection);//_peer_connections.at(sender_id)->peer_connection);
 					_connection_threads.insert(std::pair<int, std::thread*>(accepted_response.sender_id, t));
 					int quiz = accepted_response.int_data_1 / accepted_response.sender_id;
 
@@ -408,6 +455,7 @@ namespace eronic {
 			throw std::invalid_argument("Error connecting");
 		}
 	}
+
 	void PeerNode::setup_net_broadcaster(std::string ip, int port)
 	{
 		_network_port = port;
@@ -421,10 +469,10 @@ namespace eronic {
 		}
 	}
 
-	TCPClient * PeerNode::setup_connection(std::string & ip, int port)
+	TCPClient * PeerNode::setup_connection(std::string & ip, int port, bool blocking)
 	{
 		TCPClient * tcp_client = new TCPClient(new Socket_WIN());
-		int res = tcp_client->connect(ip, port, true);
+		int res = tcp_client->connect(ip, port, blocking);
 		if (res != SOCKET_ERROR) {
 
 		}

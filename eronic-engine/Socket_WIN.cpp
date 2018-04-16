@@ -260,6 +260,11 @@ namespace eronic {
 		return shutdown(_socket_handle, how);
 	}
 
+	int Socket_WIN::prepare_stop()
+	{
+		return 0;
+	}
+
 	std::string get_external_ip(std::string &url)
 	{
 		// url: "api.ipify.org"

@@ -28,6 +28,7 @@ namespace eronic {
 
 		virtual int close() = 0;
 		virtual int stop(int how) = 0;
+		virtual int prepare_stop() = 0;
 
 	protected:
 		Address _address;

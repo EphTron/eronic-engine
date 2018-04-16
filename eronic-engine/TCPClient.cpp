@@ -81,9 +81,20 @@ namespace eronic {
 		}
 	}
 
+	int TCPClient::prepare_stop()
+	{
+		_is_connected = false;
+		return 0;
+	}
+
 	Address const * TCPClient::get_address() const
 	{
 		return _socket->get_address();
+	}
+
+	bool const TCPClient::is_connected() const
+	{
+		return _is_connected;
 	}
 	
 } // namespace eronic
