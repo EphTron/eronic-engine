@@ -103,8 +103,6 @@
     </ClCompile>
     <ClCompile Include="Address.cpp" />
     <ClCompile Include="DataPackage.cpp" />
-    <ClCompile Include="Socket.cpp" />
-    <ClCompile Include="Socket_WIN.cpp" />
     <ClCompile Include="TCPClient.cpp">
       <Filter>Network</Filter>
     </ClCompile>
@@ -118,6 +116,12 @@
       <Filter>Network</Filter>
     </ClCompile>
     <ClCompile Include="PeerNode.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket_WIN.cpp">
       <Filter>Network</Filter>
     </ClCompile>
   </ItemGroup>
@@ -231,8 +235,6 @@
     </ClInclude>
     <ClInclude Include="Address.h" />
     <ClInclude Include="DataPackage.h" />
-    <ClInclude Include="Socket.h" />
-    <ClInclude Include="Socket_WIN.h" />
     <ClInclude Include="TCPClient.h">
       <Filter>Network</Filter>
     </ClInclude>
@@ -246,6 +248,12 @@
       <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="PeerNode.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket_WIN.h">
       <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
