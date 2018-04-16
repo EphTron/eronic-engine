@@ -269,10 +269,10 @@ namespace eronic {
 		_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists_loop, this);
 		_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
 		_network_connector_thread = std::thread(&PeerNode::accept_network_connections_loop, this);
-		while (_running && _connected) {
-			std::cout << "client list:" << _net_connections.size() << std::endl;
-			Sleep(10000);
-		}
+		//while (_running && _connected) {
+		//	std::cout << "client list:" << _net_connections.size() << std::endl;
+		//	Sleep(10000);
+		//}
 	}
 
 	void PeerNode::broadcast_network_exists_loop()
@@ -281,6 +281,7 @@ namespace eronic {
 			DataPackage dp = DataPackage(1,_id, _network_port,_network_id, _ip, (std::string)"exists\0");
 			app_broadcast_data(&dp);
 			Sleep(2000);
+			std::cout << "client list:" << _net_connections.size() << std::endl;
 		}
 
 	}
