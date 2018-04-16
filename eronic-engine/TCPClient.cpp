@@ -92,9 +92,10 @@ namespace eronic {
 		return _socket->get_address();
 	}
 
-	bool const TCPClient::is_connected() const
+
+	bool TCPClient::is_connected()
 	{
-		return _is_connected;
+		return is_connected;
 	}
 	
 } // namespace eronic
