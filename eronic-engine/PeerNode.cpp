@@ -221,6 +221,9 @@ namespace eronic {
 			return DataPackage();
 		}
 		else {
+			if (recv_result == 0) {
+				std::cout << "close" << std::endl;
+			}
 			DataPackage data = DataPackage(recv_buffer);
 			/*if (recv_result == 0) {
 				std::string ip = client->get_address()->get_ip();
@@ -231,11 +234,11 @@ namespace eronic {
 			}*/
 			
 			if (data.type < 0) {
-				std::cout << "invalid pack" << std::endl;
+				//std::cout << "invalid pack" << data.type << std::endl;
 				return DataPackage();
 			}
 			else if (data.sender_id == _id) {
-				std::cout << "catched own ucp pack" << std::endl;
+				std::cout << "catched own ucp pack" << data.sender_id << std::endl;
 				return DataPackage();
 			}
 			else {
