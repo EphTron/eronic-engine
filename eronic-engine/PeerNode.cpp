@@ -182,7 +182,6 @@ namespace eronic {
 		std::cout << "hello" << std::endl;
 		char pack[sizeof(DataPackage)];
 		data->serialize(pack);
-		std::cout << "break1" << std::endl;
 		int send_result = client->send(pack, sizeof(DataPackage));
 		std::cout << "break2" << std::endl;
 		if (send_result != SOCKET_ERROR) {
@@ -227,16 +226,8 @@ namespace eronic {
 		}
 		else {
 			DataPackage data = DataPackage(recv_buffer);
-			/*if (recv_result == 0) {
-				std::string ip = client->get_address()->get_ip();
-				std::size_t found = ip.find_last_of(".");
-				int sender_id = std::stoi(_ip.substr(found + 1));
-				std::cout << "CLOSING " << sender_id << std::endl;
-				data = DataPackage(100, sender_id, _network_port, _network_id, _ip, (std::string)"close this\0");
-			}*/
 			
 			if (data.type < 0) {
-				std::cout << "invalid pack" << std::endl;
 				return DataPackage();
 			}
 			else if (data.sender_id == _id) {
