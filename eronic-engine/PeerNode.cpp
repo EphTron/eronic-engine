@@ -66,7 +66,7 @@ namespace eronic {
 
 	void PeerNode::join_network(int network_id, int network_port)
 	{
-		std::cout << "JOINING ..." << std::endl;
+		std::cout << "JOINING NETWORK " << network_id << " ON PORT: "<< network_port << std::endl;
 		bool joined = false;
 		if (_connected) {
 			std::cout << "already in a network" << std::endl;
@@ -116,9 +116,9 @@ namespace eronic {
 			char sender_ip[INET_ADDRSTRLEN];
 			DataPackage temp_pack = receive_udp_data(sender_ip);
 			if (temp_pack.type == 1) { // if data
-				std::cout << "Recv UDP data from " << sender_ip << std::endl;
+				std::cout << "Recv UDP data from " << temp_pack.sender_port<< std::endl;
 				Network* new_network = new Network();
-				new_network->network_port = temp_pack.int_data_1;
+				new_network->network_port = temp_pack.sender_port;
 				new_network->network_id = temp_pack.network_id;
 				new_network->network_ip = temp_pack.sender_ip;
 				
@@ -278,7 +278,7 @@ namespace eronic {
 	void PeerNode::broadcast_network_exists_loop()
 	{
 		while (_connected) {
-			DataPackage dp = DataPackage(1,_id, _network_port,_network_id, _ip, (std::string)"exists\0");
+			DataPackage dp = DataPackage(1, _id, _network_port, _network_id, _ip, (std::string)"exists\0");
 			app_broadcast_data(&dp);
 			Sleep(2000);
 			std::cout << "client list:" << _net_connections.size() << std::endl;
