@@ -115,7 +115,7 @@ namespace eronic {
 			// receive network existence broadcast
 			char sender_ip[INET_ADDRSTRLEN];
 			DataPackage temp_pack = receive_udp_data(sender_ip);
-			if (temp_pack.type == 1) { // if data
+			if (temp_pack.type == 1 && temp_pack.sender_id != _id) { // if data
 				std::cout << "Recv UDP data from " << temp_pack.sender_port<< std::endl;
 				Network* new_network = new Network();
 				new_network->network_port = temp_pack.sender_port;
@@ -190,6 +190,10 @@ namespace eronic {
 			DataPackage data = DataPackage(recv_buffer);
 			if (data.type < 0) {
 				return DataPackage();
+			}
+			else if (data.sender_id == _id) {
+				std::cout << "catched own tcp pack" << std::endl;
+				return DataPackage();
 			} else {
 				std::cout << " udp data Type: " << data.type << "sender: " << data.sender_id << std::endl;
 				return data;
@@ -210,6 +214,10 @@ namespace eronic {
 
 			if (data.type < 0) {
 				return DataPackage();
+			}
+			else if (data.sender_id == _id){
+				std::cout << "catched own tcp pack" << std::endl;
+				return DataPackage();
 			} else {
 				std::cout << " tcp data Type: " << data.type << "sender: " << data.sender_id << std::endl;
 				return data;
@@ -225,7 +233,7 @@ namespace eronic {
 
 			if (data_pack.type == 3) { // if got accepted
 				std::cout << "GOT ACCEPTED RESPONSE!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
-				DataPackage accepted_response = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)sender_ip);
+				DataPackage accepted_response = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)"established\0");
 				accepted_response.int_data_1 = data_pack.sender_id * _id;
 				client->send(&accepted_response, sizeof(DataPackage));
 			}
@@ -243,7 +251,7 @@ namespace eronic {
 		while (_connected) {
 			char sender_ip[INET_ADDRSTRLEN];
 			DataPackage data_pack = receive_udp_data( sender_ip);
-
+			
 			if (data_pack.type == 2) { // if join received
 				std::cout << "type 2" << std::endl;
 
@@ -259,6 +267,7 @@ namespace eronic {
 			else if (data_pack.type == 3) {
 				std::cout << "type 3" << std::endl;
 			}
+			
 		}
 	}
 
@@ -269,10 +278,10 @@ namespace eronic {
 		_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists_loop, this);
 		_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
 		_network_connector_thread = std::thread(&PeerNode::accept_network_connections_loop, this);
-		//while (_running && _connected) {
-		//	std::cout << "client list:" << _net_connections.size() << std::endl;
-		//	Sleep(10000);
-		//}
+		while (_running && _connected) {
+			std::cout << "client list:" << _net_connections.size() << std::endl;
+			Sleep(10000);
+		}
 	}
 
 	void PeerNode::broadcast_network_exists_loop()
@@ -281,7 +290,7 @@ namespace eronic {
 			DataPackage dp = DataPackage(1, _id, _network_port, _network_id, _ip, (std::string)"exists\0");
 			app_broadcast_data(&dp);
 			Sleep(2000);
-			std::cout << "client list:" << _net_connections.size() << std::endl;
+			//std::cout << "client list:" << _net_connections.size() << std::endl;
 		}
 
 	}
@@ -298,6 +307,9 @@ namespace eronic {
 				DataPackage accepted_response = receive_tcp_data(client, sender_ip);
 				if (accepted_response.type == 4) {
 					std::cout << "got tcp response 4" << std::endl;
+					DataPackage established = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)"established\0");
+					established.int_data_1 = accepted_response.sender_id * _id;
+					client->send(&established, sizeof(DataPackage));
 					_net_connections.insert(std::pair<int, TCPClient*>(accepted_response.sender_id, client));
 					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
 					_connection_threads.insert(std::pair<int, std::thread*>(accepted_response.sender_id, t));
