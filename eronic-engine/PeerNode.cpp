@@ -229,7 +229,7 @@ namespace eronic {
 			DataPackage data = DataPackage(recv_buffer);
 			if (recv_result == 0) {
 				std::cout << "close" << std::endl;
-				data = DataPackage(100, _id, _network_port, _network_id, _ip, (std::string)"close\0");
+				return DataPackage(100, _id, _network_port, _network_id, _ip, (std::string)"close\0");
 			}
 			
 			
@@ -275,7 +275,20 @@ namespace eronic {
 			}
 			else if (data_pack.type == 100) { // if got accepted
 				// setup connection and answered alive to false, so that the connection gets deleted in the next iteration
-				std::cout << "Sneder will close" << sender_ip << std::endl;
+				if (data_pack.sender_id = _id){
+					for (auto it = _peer_connections.begin(); it != _peer_connections.end(); ++it) {
+						if (it->second->tcp_client == client) {
+							it->second->peer_connection = false;
+							it->second->answered_alive = false;
+							//close_connection(it->first);
+						}
+					}
+				}
+				else {
+					_peer_connections.at(data_pack.sender_id)->peer_connection = false;
+					_peer_connections.at(data_pack.sender_id)->answered_alive = false;
+				}
+				client->stop(0);
 			}
 		}
 	}
