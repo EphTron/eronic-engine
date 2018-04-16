@@ -302,6 +302,7 @@ namespace eronic {
 		_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
 		_network_connector_thread = std::thread(&PeerNode::accept_network_connections_loop, this);
 		while (_running && _connected) {
+			std::vector<int> peers_to_delete = std::vector<int>();
 			for (auto const& connection : _peer_connections)
 			{
 				if (connection.second->answered_alive == false) {
@@ -317,15 +318,17 @@ namespace eronic {
 				}
 				if (connection.second->peer_connection == false) {
 					// close connections
-					std::cout << "Deleting..." << std::endl;
 					_connection_threads.at(connection.first)->join();
 					connection.second->connection->close();
-					delete connection.second->connection;
-					connection.second->connection = nullptr;
-					delete connection.second;
-					_peer_connections.erase(connection.first);
+					std::cout << "Deleting..." << std::endl;
 				}
-
+			}
+			for (auto const& id : peers_to_delete) {
+				delete _peer_connections.at(id)->connection;
+				_peer_connections.at(id)->connection = nullptr;
+				delete _peer_connections.at(id)->connection;
+				_peer_connections.erase(id);
+				std::cout << "Deleted " << id << std::endl;
 			}
 			std::cout << "client list:" << _peer_connections.size() << std::endl;
 			Sleep(5000);

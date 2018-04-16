@@ -26,7 +26,7 @@ int main() {
 	bool flag = true;
 	int app_port = 9173;
 	
-	eronic::PeerNode * peer = new eronic::PeerNode(app_port,2);
+	eronic::PeerNode * peer = new eronic::PeerNode(app_port,10);
 	peer->find_networks(6000, true);
 	peer->run_peer_network();
 
