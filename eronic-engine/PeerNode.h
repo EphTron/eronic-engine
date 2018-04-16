@@ -43,7 +43,7 @@ namespace eronic {
 		PeerPartner(int p_id, int n_id, TCPClient * client) :
 			peer_id(p_id),
 			network_id(n_id),
-			peer_connection(false),
+			peer_connection(true),
 			answered_alive(false),
 			connection(client),
 			delta_t_to_self_t(0.0)

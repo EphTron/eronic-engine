@@ -20,7 +20,7 @@
 int main() {
 
 	bool flag = true;
-	int listen_port = 9171;
+	int listen_port = 9173;
 
 	eronic::PeerNode * peer = new eronic::PeerNode(listen_port,2);
 	peer->find_networks(10000, true);

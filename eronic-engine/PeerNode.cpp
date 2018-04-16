@@ -196,7 +196,7 @@ namespace eronic {
 		char recv_buffer[sizeof(DataPackage)];
 		int recv_result = _net_udp_listener->receivefrom(recv_buffer, sizeof(DataPackage), sender_ip);
 		if (recv_result == SOCKET_ERROR) {
-			//std::cout << "Error receiving udp data " << WSAGetLastError() << std::endl;
+			std::cout << "Error receiving udp data " << WSAGetLastError() << std::endl;
 			return DataPackage();
 		}
 		else {
@@ -220,7 +220,7 @@ namespace eronic {
 		char recv_buffer[sizeof(DataPackage)];
 		int recv_result = client->receivefrom(recv_buffer, sizeof(DataPackage), sender_ip);
 		if (recv_result == SOCKET_ERROR) {
-			//std::cout << "Error receiving udp data " << WSAGetLastError() << std::endl;
+			std::cout << "Error receiving tcp data " << WSAGetLastError() << std::endl;
 			return DataPackage();
 		}
 		else {
