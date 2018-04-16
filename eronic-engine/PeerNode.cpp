@@ -179,13 +179,18 @@ namespace eronic {
 
 	bool PeerNode::tcp_send_data(TCPClient * client, eronic::DataPackage * data)
 	{
+		std::cout << "hello" << std::endl;
 		char pack[sizeof(DataPackage)];
 		data->serialize(pack);
+		std::cout << "break1" << std::endl;
 		int send_result = client->send(pack, sizeof(DataPackage));
+		std::cout << "break2" << std::endl;
 		if (send_result != SOCKET_ERROR) {
+			std::cout << "sent tcp data Type: " << data->type << " Sender: " << data->sender_id << " Message: " << data->message << std::endl;
 			return true;
 		}
 		else {
+			std::cout << "sent failed" << WSAGetLastError() << std::endl;
 			return false;
 		}
 	}
@@ -263,9 +268,10 @@ namespace eronic {
 				std::cout << "Connection successfully established! QUIZ: " << quiz << " = " << _id << std::endl;
 			}
 			else if (data_pack.type == 6) { // if got accepted
-				std::cout << "got 6 - sending pack 7" << std::endl;
 				DataPackage alive_response = DataPackage(7, _id, _network_port, _network_id, _ip, (std::string)"alive\0");
+				std::cout << "got 6 - sending pack 7" << std::endl;
 				tcp_send_data(client, &alive_response);
+				std::cout << "sent 7" << std::endl;
 			}
 			else if (data_pack.type == 7) { // if got accepted
 				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
@@ -292,7 +298,7 @@ namespace eronic {
 				if (_connection_threads.find(data_pack.sender_id) == _connection_threads.end()) {
 					std::string ip = data_pack.sender_ip;
 					std::cout << "Setting up client through udp looop #" << std::endl;
-					TCPClient * client = setup_connection(ip, _network_port, true);
+					TCPClient * client = setup_connection(ip, _network_port, false);
 					PeerPartner * peer_partner = new PeerPartner(data_pack.sender_id, _network_id, client);
 					_peer_connections.insert(std::pair<int, PeerPartner*>(data_pack.sender_id, peer_partner));
 					peer_partner->peer_connection = true;
