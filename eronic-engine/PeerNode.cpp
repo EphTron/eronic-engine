@@ -247,6 +247,7 @@ namespace eronic {
 			DataPackage data_pack = receive_tcp_data(client, sender_ip);
 
 			if (data_pack.type == 3) { // if got accepted
+				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
 				DataPackage accepted_response = DataPackage(4, _id, _network_port, _network_id, _ip, (std::string)"established\0");
 				accepted_response.int_data_1 = data_pack.sender_id * _id;
 				tcp_send_data(client, &accepted_response);
@@ -254,6 +255,7 @@ namespace eronic {
 			else if (data_pack.type == 4) { // if got accepted
 				int quiz = data_pack.int_data_1 / data_pack.sender_id;
 				_peer_connections.at(data_pack.sender_id)->peer_connection = true;
+				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
 				std::cout << "Connection successfully established! QUIZ: " << quiz << " = " << _id << std::endl;
 			}
 			else if (data_pack.type == 6) { // if got accepted
