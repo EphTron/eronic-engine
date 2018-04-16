@@ -294,6 +294,8 @@ namespace eronic {
 					TCPClient * client = setup_connection(ip, _network_port, true);
 					PeerPartner * peer_partner = new PeerPartner(data_pack.sender_id, _network_id, client);
 					_peer_connections.insert(std::pair<int, PeerPartner*>(data_pack.sender_id, peer_partner));
+					peer_partner->peer_connection = true;
+					peer_partner->answered_alive = true;
 					_peer_connections.at(data_pack.sender_id)->peer_connection = true;
 					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);//, &_peer_connections.at(data_pack.sender_id)->peer_connection);
 						//&peer_partner->peer_connection);//_peer_connections.at(data_pack.sender_id)->peer_connection);
@@ -353,7 +355,7 @@ namespace eronic {
 				std::cout << "Deleted " << id << std::endl;
 			}
 			std::cout << "client list:" << _peer_connections.size() << std::endl;
-			Sleep(5000);
+			Sleep(2000);
 		}
 	}
 
@@ -385,8 +387,8 @@ namespace eronic {
 		while (_connected) {
 			DataPackage dp = DataPackage(1, _id, _network_port, _network_id, _ip, (std::string)"exists\0");
 			app_broadcast_data(&dp);
-			Sleep(2000);
-			std::cout << "client list:" << _peer_connections.size() << std::endl;
+			Sleep(100);
+			//d::cout << "client list:" << _peer_connections.size() << std::endl;
 		}
 
 	}
@@ -425,7 +427,7 @@ namespace eronic {
 			else {
 				//std::cout << "Error accepting client!" << std::endl;
 			}
-			Sleep(1000);
+			Sleep(200);
 		}
 
 	}

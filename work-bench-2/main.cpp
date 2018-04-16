@@ -18,13 +18,12 @@
 
 
 int main() {
-
 	bool flag = true;
-	int listen_port = 9173;
+	int app_port = 9173;
 
-	eronic::PeerNode * peer = new eronic::PeerNode(listen_port,2);
-	peer->find_networks(10000, true);
-
+	eronic::PeerNode * peer = new eronic::PeerNode(app_port, 10);
+	peer->find_networks(6000, true);
+	peer->run_peer_network();
 
 	system("Pause");
 	return 0;
