@@ -9,9 +9,9 @@ namespace eronic {
 	{
 	}
 
-	TCPClient::TCPClient(Socket * _socket):
-		_socket(_socket),
-		_is_connected(false)
+	TCPClient::TCPClient(Socket * socket):
+		_socket(socket),
+		_is_connected(true)
 	{
 	}
 

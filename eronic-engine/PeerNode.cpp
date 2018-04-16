@@ -91,6 +91,9 @@ namespace eronic {
 			std::cout << "Setting up TCP Listener" << std::endl;
 			setup_tcp_listener((std::string)"ADDR_ANY", _network_port);
 			int listen_result = _net_tcp_listener->start(100); // start listening
+			if (listen_result == SOCKET_ERROR) {
+				std::cout << "NOT LISTENINGNEIndlkfjajdsf;akldfjalkjdsflajkdf" << std::endl;
+			}
 			// message network that you are joining
 			DataPackage enter_pack = DataPackage(2, _id, _network_port, _network_id, _ip, (std::string)"joining\0");
 			// send pack
@@ -207,7 +210,7 @@ namespace eronic {
 				return DataPackage();
 			}
 			else if (data.sender_id == _id) {
-				std::cout << "catched own tcp pack" << std::endl;
+				std::cout << "catched own udp pack" << data.type << std::endl;
 				return DataPackage();
 			}
 			else {
@@ -236,7 +239,7 @@ namespace eronic {
 				return DataPackage();
 			}
 			else if (data.sender_id == _id) {
-				std::cout << "catched own ucp pack" << data.sender_id << std::endl;
+				std::cout << "catched own ucp pack" << data.sender_id << " type " << data.type << std::endl;
 				return DataPackage();
 			}
 			else {
@@ -489,7 +492,7 @@ namespace eronic {
 		TCPClient * tcp_client = new TCPClient(new Socket_WIN());
 		int res = tcp_client->connect(ip, port, blocking);
 		if (res != SOCKET_ERROR) {
-
+			std::cout << "Connected TCPClient to " << tcp_client->get_address()->get_port() << std::endl;
 		}
 		else {
 			std::cout << "Error connecting TCPClient to " << tcp_client->get_address()->get_port() << std::endl;
