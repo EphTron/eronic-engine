@@ -92,12 +92,7 @@ namespace eronic {
 			setup_tcp_listener((std::string)"ADDR_ANY", _network_port);
 			int listen_result = _net_tcp_listener->start(100); // start listening
 			// message network that you are joining
-			DataPackage enter_pack = DataPackage();
-			enter_pack.type = 2;
-			enter_pack.network_id = _network_id;
-			enter_pack.sender_id = _id;
-			enter_pack.sender_port = _tcp_port;
-			enter_pack.set_ip(_ip);
+			DataPackage enter_pack = DataPackage(2, _id, _network_port, _network_id, _ip, (std::string)"joining\0");
 			// send pack
 			net_broadcast_data(&enter_pack);
 		}
@@ -233,6 +228,12 @@ namespace eronic {
 				accepted_response.int_data_1 = data_pack.sender_id * _id;
 				client->send(&accepted_response, sizeof(DataPackage));
 			}
+			else if (data_pack.type == 4) { // if got accepted
+				int quiz = data_pack.int_data_1 / data_pack.sender_id;
+
+				std::cout << "got tcp response 4 QUIZ: " << quiz << " = " << _id << std::endl;
+				std::cout << "Connection successfully established!" << std::endl;
+			}
 		}
 	}
 
@@ -274,16 +275,8 @@ namespace eronic {
 	void PeerNode::broadcast_network_exists_loop()
 	{
 		while (_connected) {
-			//std::cout << "UDP Broadcast: Network " << _network_id << " exists" << std::endl;
-			//DataPackage dp = DataPackage(1, 2, _network_port, _ip, std::to_string(_network_id));
-			DataPackage dp = DataPackage();
-			dp.type = 1;
-			dp.network_id = _network_id;
-			dp.int_data_1 = _network_port;
-			dp.sender_id = _id;
-			dp.set_ip(_ip);
+			DataPackage dp = DataPackage(1,_id, _network_port,_network_id, _ip, (std::string)"exists\0");
 			app_broadcast_data(&dp);
-
 			Sleep(2000);
 		}
 
@@ -296,6 +289,7 @@ namespace eronic {
 			if (client != nullptr) {
 				DataPackage accepted_pack = DataPackage(3, _id, _network_port, _network_id, _ip, (std::string)"accepted\0");
 				client->send(&accepted_pack, sizeof(DataPackage));
+				std::cout << "sending tcp accepted pack" << std::endl;
 				char sender_ip[INET_ADDRSTRLEN];
 				DataPackage accepted_response = receive_tcp_data(client, sender_ip);
 				if (accepted_response.type == 4) {
