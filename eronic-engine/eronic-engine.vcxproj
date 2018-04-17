@@ -22,7 +22,7 @@
     <ProjectGuid>{29972CCA-EEAC-48E5-AB22-93B6C302027B}</ProjectGuid>
     <RootNamespace>eronic-engine</RootNamespace>
     <ProjectName>eronic-engine</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'" Label="Configuration">

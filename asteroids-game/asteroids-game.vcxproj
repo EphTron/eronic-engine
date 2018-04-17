@@ -22,7 +22,7 @@
     <ProjectGuid>{62160E6D-C060-4D1A-BC2B-322E959CA501}</ProjectGuid>
     <RootNamespace>asteroids-game</RootNamespace>
     <ProjectName>asteroids-game</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'" Label="Configuration">
