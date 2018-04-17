@@ -106,8 +106,9 @@ namespace eronic {
 		_connected = false;
 	}
 
-	void PeerNode::find_networks(int milliseconds, bool join_first_network)
+	std::vector<Network*> PeerNode::find_networks(int milliseconds, bool join_first_network)
 	{
+		std::vector<Network*> found_networks = std::vector<Network*>();
 		bool found = false;
 		double elapsed_time = 0;
 		std::chrono::duration<double, std::milli> duration;
@@ -115,17 +116,17 @@ namespace eronic {
 		_net_udp_listener->set_blocking(true);
 		while (elapsed_time < (double)milliseconds) {
 			auto t1 = std::chrono::high_resolution_clock::now();
-			// receive network existence broadcast
+
 			char sender_ip[INET_ADDRSTRLEN];
 			DataPackage temp_pack = receive_udp_data(sender_ip);
-			if (temp_pack.type == 1 && temp_pack.sender_id != _id) { // if data
-				std::cout << "Recv UDP data from " << temp_pack.sender_port << std::endl;
+			if (temp_pack.type == 1 && temp_pack.sender_id != _id) { // if 
 				Network* new_network = new Network();
 				new_network->network_port = temp_pack.sender_port;
 				new_network->network_id = temp_pack.network_id;
 				new_network->network_ip = temp_pack.sender_ip;
 
 				if (_networks.count(temp_pack.network_id) < 1) {
+					found_networks.push_back(new_network);
 					_networks.insert(std::pair<int, Network*>(temp_pack.network_id, new_network));
 					found = true;
 					if (join_first_network) {
@@ -147,10 +148,14 @@ namespace eronic {
 
 		if (found == false) {
 			std::cout << "NO NETWORK FOUND" << std::endl;
-			_network_port = _app_udp_port + 1;
-			_network_id = _id + 1000;
-			open_network(_network_id, _network_port);
+
+			if (join_first_network) {
+				_network_port = _app_udp_port + 1;
+				_network_id = _id + 1000;
+				open_network(_network_id, _network_port);
+			}
 		}
+		return found_networks;
 	}
 
 	bool PeerNode::app_broadcast_data(DataPackage * data)
@@ -280,7 +285,6 @@ namespace eronic {
 						if (it->second->tcp_client == client) {
 							it->second->peer_connection = false;
 							it->second->answered_alive = false;
-							//close_connection(it->first);
 						}
 					}
 				}
@@ -326,7 +330,7 @@ namespace eronic {
 	void PeerNode::run_peer_network()
 	{
 		_running = true;
-		std::cout << "runnning peer network " << std::endl;
+		std::cout << "Running Peer Network " << _network_id << std::endl;
 		_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists_loop, this);
 		_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
 		_network_connector_thread = std::thread(&PeerNode::accept_network_connections_loop, this);

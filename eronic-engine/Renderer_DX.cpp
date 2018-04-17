@@ -1,5 +1,6 @@
 #if BUILD_DIRECTX
 
+#include <AntTweakBar.h>
 #include "Renderer_DX.h"
 #include "Mesh.h"
 #include "GameObject.h"
@@ -29,6 +30,8 @@ void Renderer_DX::ClearScreen()
 void Renderer_DX::Destroy()
 {
 	_swapchain->SetFullscreenState(FALSE, NULL);    // switch to windowed mode
+
+	TwTerminate();
 
 	// close and release all existing COM objects
 	_layout->Release();
@@ -101,6 +104,10 @@ void Renderer_DX::Initialise(int width, int height)
 		NULL,
 		&_context);
 
+	
+	TwInit(TW_DIRECT3D11, _device);
+	TwWindowSize(width, height);
+
 	// get the address of the back buffer
 	ID3D11Texture2D *p_backbuffer;
 	_swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&p_backbuffer);
@@ -127,6 +134,9 @@ void Renderer_DX::Initialise(int width, int height)
 
 	// Initialise shaders
 	InitialiseShaders();
+
+
+	
 }
 
 /******************************************************************************************************************/

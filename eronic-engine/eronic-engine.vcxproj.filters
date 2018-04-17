@@ -124,6 +124,12 @@
     <ClCompile Include="Socket_WIN.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkManager.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="TweakBar.cpp">
+      <Filter>Platform Independent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -255,6 +261,12 @@
     </ClInclude>
     <ClInclude Include="Socket_WIN.h">
       <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="TweakBar.h">
+      <Filter>Platform Independent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

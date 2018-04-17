@@ -12,7 +12,17 @@ namespace eronic {
 		NetworkManager();
 		~NetworkManager();
 
+		std::vector<Network*> find_networks();
+		void open_network();
+		void join_network();
+
+		void run_network_loop();
+
 		std::vector<DataPackage*> get_network_data();
+		void send_data_to_network();
+
+
+
 
 
 

@@ -13,6 +13,7 @@
 #include <d3dx11.h>
 #include <d3dx10.h>
 #include <DirectXMath.h>
+#include <AntTweakBar.h>
 
 // include the Direct3D Library file
 #pragma comment (lib, "d3d11.lib")
@@ -25,7 +26,6 @@ class Window_DX :
 {
 	// Data
 private:
-
 	HWND					_hWnd;
 
 	// Structors

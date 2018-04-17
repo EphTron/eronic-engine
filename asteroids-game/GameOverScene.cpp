@@ -103,6 +103,7 @@ void GameOverScene::Render(RenderSystem* renderer)
 	renderer->Process(_gameObjects, 0);
 
 	_title->Render(renderer->GetRenderer(), MVM);
+
 }
 
 /******************************************************************************************************************/

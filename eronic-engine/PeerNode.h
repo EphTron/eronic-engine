@@ -67,7 +67,7 @@ namespace eronic {
 		void open_network(int network_id, int network_port);
 		void join_network(int network_id, int network_port);
 		void leave_network();
-		void find_networks(int milliseconds, bool join_first_network);
+		std::vector<Network *> find_networks(int milliseconds, bool join_first_network);
 
 		bool app_broadcast_data(DataPackage* data);
 		bool net_broadcast_data(DataPackage* data);

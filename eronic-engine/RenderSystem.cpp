@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "RenderComponent.h"
 
+#include "TweakBar.h"
+
 /******************************************************************************************************************/
 // Structors
 /******************************************************************************************************************/
@@ -34,6 +36,7 @@ void RenderSystem::Process(std::vector<GameObject*>& list, double deltaTime)
 			}
 		}
 	}
+	TwDraw();
 
 }
 
