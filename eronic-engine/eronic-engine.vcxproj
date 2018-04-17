@@ -141,6 +141,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Address.cpp" />
+    <ClCompile Include="AIComponent.cpp" />
+    <ClCompile Include="AIController.cpp" />
+    <ClCompile Include="AISystem.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionMessage.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
@@ -155,7 +158,9 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MultiMesh.cpp" />
+    <ClCompile Include="NetworkComponent.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="NetworkSystem.cpp" />
     <ClCompile Include="ObserverSubject.cpp" />
     <ClCompile Include="PeerNode.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
@@ -190,6 +195,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Address.h" />
+    <ClInclude Include="AIComponent.h" />
+    <ClInclude Include="AIController.h" />
+    <ClInclude Include="AISystem.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionMessage.h" />
     <ClInclude Include="CollisionSystem.h" />
@@ -205,7 +213,9 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MultiMesh.h" />
+    <ClInclude Include="NetworkComponent.h" />
     <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="NetworkSystem.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="ObserverSubject.h" />
     <ClInclude Include="PeerNode.h" />
