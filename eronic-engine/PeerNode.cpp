@@ -51,14 +51,12 @@ namespace eronic {
 	{
 		_network_id = network_id;
 		_network_port = network_port;
-		std::cout << _id << " OPENING NETWORK " << network_id << " on Port:" << _network_port << std::endl;
+		std::cout << "OPENING NETWORK " << network_id << " on Port:" << _network_port << std::endl;
 
 		_net_udp_listener->close();
 		_net_udp_listener->bind((std::string)"ADDR_ANY", _network_port, true);
 
 		_net_broadcaster->connect(_broadcast_ip, _network_port, false);
-
-		std::cout << _id << "Setting up TCP Listener" << std::endl;
 		setup_tcp_listener((std::string)"ADDR_ANY", _network_port);
 		int listen_result = _net_tcp_listener->start(100); // start listening
 		_connected = true;
@@ -88,11 +86,10 @@ namespace eronic {
 		}
 		if (_connected) { // if join worked
 			// listen with tcp for connections
-			std::cout << "Setting up TCP Listener" << std::endl;
 			setup_tcp_listener((std::string)"ADDR_ANY", _network_port);
 			int listen_result = _net_tcp_listener->start(100); // start listening
 			if (listen_result == SOCKET_ERROR) {
-				std::cout << "NOT LISTENINGNEIndlkfjajdsf;akldfjalkjdsflajkdf" << std::endl;
+				std::cout << "Error listening to tcp" << std::endl;
 			}
 			// message network that you are joining
 			DataPackage enter_pack = DataPackage(2, _id, _network_port, _network_id, _ip, (std::string)"joining\0");
@@ -103,6 +100,7 @@ namespace eronic {
 
 	void PeerNode::leave_network()
 	{
+
 		_connected = false;
 	}
 
@@ -233,10 +231,8 @@ namespace eronic {
 		else {
 			DataPackage data = DataPackage(recv_buffer);
 			if (recv_result == 0) {
-				std::cout << "close" << std::endl;
-				return DataPackage(100, _id, _network_port, _network_id, _ip, (std::string)"close\0");
+				return DataPackage(5, _id, _network_port, _network_id, _ip, (std::string)"close\0");
 			}
-			
 			
 			if (data.type < 0) {
 				//std::cout << "invalid pack" << data.type << std::endl;
@@ -270,17 +266,9 @@ namespace eronic {
 				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
 				std::cout << "Connection successfully established! QUIZ: " << quiz << " = " << _id << std::endl;
 			}
-			else if (data_pack.type == 6) { // if got accepted
-				DataPackage alive_response = DataPackage(7, _id, _network_port, _network_id, _ip, (std::string)"alive\0");
-				tcp_send_data(client, &alive_response);
-			}
-			else if (data_pack.type == 7) { // if got accepted
-				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
-				std::cout << data_pack.sender_id << " is alive" << std::endl;
-			}
-			else if (data_pack.type == 100) { // if got accepted
-				// setup connection and answered alive to false, so that the connection gets deleted in the next iteration
-				if (data_pack.sender_id = _id){
+			else if (data_pack.type == 5) { // if got accepted
+											// setup connection and answered alive to false, so that the connection gets deleted in the next iteration
+				if (data_pack.sender_id = _id) {
 					for (auto it = _peer_connections.begin(); it != _peer_connections.end(); ++it) {
 						if (it->second->tcp_client == client) {
 							it->second->peer_connection = false;
@@ -294,6 +282,15 @@ namespace eronic {
 				}
 				client->stop(0);
 			}
+			else if (data_pack.type == 6) { // if got accepted
+				DataPackage alive_response = DataPackage(7, _id, _network_port, _network_id, _ip, (std::string)"alive\0");
+				tcp_send_data(client, &alive_response);
+			}
+			else if (data_pack.type == 7) { // if got accepted
+				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
+				std::cout << data_pack.sender_id << " is alive" << std::endl;
+			}
+			
 		}
 	}
 
