@@ -1,5 +1,6 @@
 #pragma once
 #include "System.h"
+#include "AIController.h"
 class AISystem :
 	public System
 {
@@ -7,7 +8,7 @@ class AISystem :
 
 	// Data
 protected:
-
+	std::vector<AIController*> _ai_controllers;
 
 	// Structors
 public:
