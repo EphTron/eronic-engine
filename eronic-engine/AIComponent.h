@@ -16,18 +16,18 @@ public:
 
 	// Gets/Sets
 public:
-	float GetCollisionRadius()				const { return _radius * _parent->GetScale(); }
-	void SetCollisionRadius(float r) { _radius = r; }
+	//float GetCollisionRadius()				const { return _radius * _parent->GetScale(); }
+	//void SetCollisionRadius(float r) { _radius = r; }
 
-	// Collision matrix
-	void SetCollisionMatrixFlag(int flag) { _collisionMatrix |= flag; }
-	void UnsetCollisionMatrixFlag(int flag) { _collisionMatrix &= ~flag; }
-	bool CheckCollisionMatrixFlag(int flag)	const { return (_collisionMatrix & flag) != 0; }
-	int GetCollisionMatrix()				const { return _collisionMatrix; }
+	//// Collision matrix
+	//void SetCollisionMatrixFlag(int flag) { _collisionMatrix |= flag; }
+	//void UnsetCollisionMatrixFlag(int flag) { _collisionMatrix &= ~flag; }
+	//bool CheckCollisionMatrixFlag(int flag)	const { return (_collisionMatrix & flag) != 0; }
+	//int GetCollisionMatrix()				const { return _collisionMatrix; }
 
-	// Collision ID
-	int GetCollisionID()					const { return _collisionID; }
-	void SetCollisionID(int id) { _collisionID = id; }
+	//// Collision ID
+	//int GetCollisionID()					const { return _collisionID; }
+	//void SetCollisionID(int id) { _collisionID = id; }
 
 	// Functions
 public:
