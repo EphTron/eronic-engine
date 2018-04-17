@@ -45,7 +45,9 @@ namespace eronic {
 		bool app_broadcast_data(DataPackage* data);
 		bool net_broadcast_data(DataPackage* data);
 		DataPackage& const receive_udp_data(char * sender);
+
 		DataPackage& const receive_tcp_data(TCPClient * client, char * sender);
+
 
 		void receive_udp_data_loop();
 		void receive_tcp_data_loop(TCPClient* client);
@@ -95,7 +97,6 @@ namespace eronic {
 		void setup_app_broadcaster(std::string ip, int port);
 		void setup_net_broadcaster(std::string ip, int port);
 		TCPClient * setup_connection(std::string& ip, int port);
-		//void setup_connection(std::promise<TCPClient *> && p, std::string & ip, int port);
 		
 	};
 
