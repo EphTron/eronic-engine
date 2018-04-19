@@ -24,7 +24,8 @@ void Window_GL::Initialise()
 	SetSize(512, 512);
 	SetDepthBits(24);
 	SetTitle("Asteroids GL");
-
+	TwInit(TW_OPENGL, NULL);
+	TwWindowSize(512, 512);
 	// wglSwapIntervalEXT(0); // Turn off frame rate
 	
 

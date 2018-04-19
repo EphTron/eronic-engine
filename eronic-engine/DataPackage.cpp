@@ -17,8 +17,8 @@ namespace eronic {
 		x(-1.0),
 		y(-1.0),
 		z(-1.0),
-		sender_ip("\0"),
-		message("\0")
+		sender_ip(""),
+		message("")
 	{
 	}
 
@@ -33,8 +33,8 @@ namespace eronic {
 		x(-1.0),
 		y(-1.0),
 		z(-1.0),
-		sender_ip("\0"),
-		message("\0")
+		sender_ip(""),
+		message("")
 	{
 		strcpy_s(sender_ip, INET_ADDRSTRLEN, ip.c_str());
 		strcpy_s(message, MSG_SIZE, msg.c_str());
@@ -72,8 +72,8 @@ namespace eronic {
 		x(-1.0),
 		y(-1.0),
 		z(-1.0),
-		sender_ip("\0"),
-		message("\0")
+		sender_ip(""),
+		message("")
 	{
 		int *q = (int*)serialized_data;
 		type = *q; q++;

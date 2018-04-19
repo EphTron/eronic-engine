@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Message.cpp" />
     <ClCompile Include="CollisionComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -16,7 +15,6 @@
     <ClCompile Include="DeadObjectMessage.cpp">
       <Filter>Messages</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjectComponent.cpp" />
     <ClCompile Include="KeyPressMessage.cpp">
       <Filter>Messages</Filter>
     </ClCompile>
@@ -101,10 +99,6 @@
     <ClCompile Include="MultiMesh.cpp">
       <Filter>Platform Independent</Filter>
     </ClCompile>
-    <ClCompile Include="Address.cpp" />
-    <ClCompile Include="DataPackage.cpp" />
-    <ClCompile Include="Socket.cpp" />
-    <ClCompile Include="Socket_WIN.cpp" />
     <ClCompile Include="TCPClient.cpp">
       <Filter>Network</Filter>
     </ClCompile>
@@ -120,12 +114,48 @@
     <ClCompile Include="PeerNode.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="Socket.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket_WIN.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="TweakBar.cpp">
+      <Filter>Platform Independent</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="AIComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AISystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DataPackage.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Address.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AIController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="MathsHelper.h" />
-    <ClInclude Include="Message.h" />
     <ClInclude Include="CollisionComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -138,7 +168,6 @@
     <ClInclude Include="DeadObjectMessage.h">
       <Filter>Messages</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectComponent.h" />
     <ClInclude Include="KeyPressMessage.h">
       <Filter>Messages</Filter>
     </ClInclude>
@@ -229,10 +258,6 @@
     <ClInclude Include="MultiMesh.h">
       <Filter>Platform Independent</Filter>
     </ClInclude>
-    <ClInclude Include="Address.h" />
-    <ClInclude Include="DataPackage.h" />
-    <ClInclude Include="Socket.h" />
-    <ClInclude Include="Socket_WIN.h" />
     <ClInclude Include="TCPClient.h">
       <Filter>Network</Filter>
     </ClInclude>
@@ -248,6 +273,43 @@
     <ClInclude Include="PeerNode.h">
       <Filter>Network</Filter>
     </ClInclude>
+    <ClInclude Include="Socket.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket_WIN.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="TweakBar.h">
+      <Filter>Platform Independent</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="AIComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AISystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DataPackage.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Address.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AIController.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

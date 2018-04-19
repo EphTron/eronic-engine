@@ -22,6 +22,7 @@ namespace eronic {
 		int UDP = 2;
 		int connect_result = _socket->connect_to(UDP, ip, port);
 		if (connect_result == SOCKET_ERROR) {
+			std::cout << "Error UDP connect " << std::endl;
 			return WSAGetLastError();
 		}
 		else {
