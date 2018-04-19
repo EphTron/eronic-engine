@@ -2,8 +2,14 @@
 
 namespace eronic {
 
-	NetworkManager::NetworkManager()
+	NetworkManager::NetworkManager():
+		_connected(false),
+		_fully_connected(false),
+		_peer(),
+		networks(std::vector<Network*>()),
+		participants(std::map<int, PeerPartner*>())
 	{
+
 	}
 
 
@@ -61,7 +67,7 @@ namespace eronic {
 	{
 	}
 
-	void NetworkManager::send_private_message()
+	void NetworkManager::send_message()
 	{
 	}
 

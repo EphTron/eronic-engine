@@ -24,7 +24,7 @@ namespace eronic {
 
 		std::vector<DataPackage*> get_network_messages();
 		void broadcast_message();
-		void send_private_message();
+		void send_message();
 
 
 	private:
