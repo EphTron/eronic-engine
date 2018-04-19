@@ -241,8 +241,14 @@ namespace eronic {
 		if (FD_ISSET(_socket_handle, &mySet)) {
 			std::cout << "Acception attempt" << std::endl;
 			int new_socket_handle = accept(_socket_handle, NULL, NULL);
-			Socket* connected_socket = new Socket_WIN(new_socket_handle);
-			return connected_socket;
+			if (new_socket_handle == SOCKET_ERROR) {
+				std::cout << "SOCKET ACCEPT ERROR" << WSAGetLastError() << std::endl;
+				return nullptr;
+			}
+			else {
+				Socket* connected_socket = new Socket_WIN(new_socket_handle);
+				return connected_socket;
+			}
 		}
 		else {
 			//std::cout << "No connection " << WSAGetLastError() << std::endl;
