@@ -72,8 +72,8 @@
     <LibraryPath>G:\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - DirectX|Win32'">
-    <IncludePath>G:\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>G:\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\libs\AntTweakBar\include;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;G:\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\AntTweakBar\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;G:\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - DirectX|Win32'">
     <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
