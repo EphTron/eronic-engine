@@ -1,4 +1,4 @@
-#include "AsteroidsGame.h"
+#include "SurvivalBattleGame.h"
 
 static const int		SCREEN_WIDTH  = 512;
 static const int		SCREEN_HEIGHT = 512;
