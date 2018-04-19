@@ -22,7 +22,7 @@
     <ProjectGuid>{29972CCA-EEAC-48E5-AB22-93B6C302027B}</ProjectGuid>
     <RootNamespace>eronic-engine</RootNamespace>
     <ProjectName>eronic-engine</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'" Label="Configuration">
@@ -68,20 +68,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'">
-    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>G:\AntTweakBar\include;C:\libs\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>G:\AntTweakBar\lib;C:\libs\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - DirectX|Win32'">
-    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>G:\AntTweakBar\include;C:\libs\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>G:\AntTweakBar\lib;C:\libs\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - DirectX|Win32'">
-    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>G:\AntTweakBar\include;C:\libs\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>G:\AntTweakBar\lib;C:\libs\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - OpenGL|Win32'">
-    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>G:\AntTweakBar\include;C:\libs\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>G:\AntTweakBar\lib;C:\libs\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'">
     <ClCompile>
