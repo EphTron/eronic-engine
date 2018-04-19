@@ -30,29 +30,63 @@ namespace eronic {
 		std::string network_ip;
 	}Network;
 
+	typedef struct PeerPartner {
+		PeerPartner() :
+			peer_id(-1),
+			network_id(-1),
+			peer_connection(false),
+			answered_alive(false),
+			tcp_client(nullptr),
+			delta_t_to_self_t(0.0)
+		{}
+
+		PeerPartner(int p_id, int n_id, TCPClient * client) :
+			peer_id(p_id),
+			network_id(n_id),
+			peer_connection(true),
+			answered_alive(false),
+			tcp_client(client),
+			delta_t_to_self_t(0.0)
+		{}
+
+		int peer_id;
+		int network_id;
+		bool peer_connection;
+		bool answered_alive;
+		TCPClient * tcp_client;
+		double delta_t_to_self_t;
+	}PeerPartner;
+
 	class PeerNode
 	{
 	public:
 		PeerNode();
-		PeerNode(int id, bool same_machine, int app_port, int max_connections);
+		PeerNode(int id, int app_port, int max_connections, bool same_machine = false);
 		~PeerNode();
 
-		void open_network(int network_port);
+		void open_network(int network_id, int network_port);
 		void join_network(int network_id, int network_port);
 		void leave_network();
-		void find_networks(int milliseconds, bool join_first_network);
+		std::vector<Network *> find_networks(int milliseconds, bool join_first_network);
 
 		bool app_broadcast_data(DataPackage* data);
 		bool net_broadcast_data(DataPackage* data);
+		bool tcp_send_data(TCPClient* client, DataPackage* data);
+
 		DataPackage& const receive_udp_data(char * sender);
-		//receive_udp_data(DataPackage& data, char * sender);
-		//DataPackage * receive_tcp_data();
+
+		DataPackage& const receive_tcp_data(TCPClient * client, char * sender);
+
 
 		void receive_udp_data_loop();
-		void run_peer_network();
-
+		void receive_tcp_data_loop(TCPClient* client);
 		void broadcast_network_exists_loop();
-		//TCPClient * accept_network_connections();
+		void accept_network_connections_loop();
+
+		void run_peer_network();
+		void close_connection(int id);
+
+
 
 	private:
 		bool _running;
@@ -61,6 +95,7 @@ namespace eronic {
 
 		int _id;
 		std::string _ip;
+		std::string _broadcast_ip;
 		int _udp_port;
 		int _tcp_port;
 
@@ -80,24 +115,19 @@ namespace eronic {
 		UDPListener * _net_udp_listener;
 		TCPListener * _net_tcp_listener;
 
-		std::map<int, TCPClient *> _net_connections;
-		std::map<int, std::thread> _connection_threads;
+		std::map<int, PeerPartner*> _peer_connections;
+		std::map<int, std::thread *> _connection_threads;
 
 		std::thread _network_broadcast_thread;
 		std::thread _network_connector_thread;
 		std::thread _udp_network_receive_thread;
 
 		// setup and utility functions
-		// TO DO: remove parts that are only there to test it on the same machine
-		void setup_udp_app_listener(std::string ip, int port);
-		void setup_udp_net_listener(std::string ip, int port);
 		void setup_tcp_listener(std::string ip, int port);
-
+		void setup_udp_listener(std::string ip, int port);
 		void setup_app_broadcaster(std::string ip, int port);
 		void setup_net_broadcaster(std::string ip, int port);
-		TCPClient * setup_connection(std::string& ip, int port);
-		//void setup_connection(std::promise<TCPClient *> && p, std::string & ip, int port);
-		
+		TCPClient * setup_connection(std::string& ip, int port, bool blocking);
 	};
 
 } // namespace eronic

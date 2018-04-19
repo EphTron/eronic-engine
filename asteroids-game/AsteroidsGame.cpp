@@ -24,6 +24,11 @@ void AsteroidsGame::Initialise(Window* w)
 	// Initialise parent
 	Game::Initialise(w);
 
+	TwBar *myBar;
+	myBar = TwNewBar("Test");
+	int* myvar = new int(10);
+	TwAddVarRW(myBar, "NameOfMyVariable", TW_TYPE_INT32, myvar, "dd");
+
 	//////////////
 	// Setup Meshes
 	Mesh* meshShip = new Mesh();
@@ -128,6 +133,7 @@ void AsteroidsGame::Render()
 
 	_sceneManager.Render(&_renderSystem);
 
+	
 	// Swap buffers
 	_renderer->SwapBuffers();
 }

@@ -24,8 +24,12 @@ namespace eronic {
 
 		int stop(int how);
 		int close();
+		int prepare_stop();
 		
 		Address const * get_address() const;
+
+		bool const is_connected() const;
+
 	private:
 		Socket * _socket;
 		bool _is_connected;

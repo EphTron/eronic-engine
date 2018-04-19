@@ -11,10 +11,11 @@ namespace eronic {
 	struct DataPackage
 	{
 		DataPackage();
+		DataPackage(int type, int id, int port, int net_id, std::string & ip, std::string & msg);
 		DataPackage(int type, int id, int port, int net_id, 
 					int d1, int d2, int d3, 
 					float x, float y, float z, 
-					std::string & ip, std::string & message);
+					std::string & ip, std::string & msg);
 		DataPackage(char* serialized_data);
 		~DataPackage();
 

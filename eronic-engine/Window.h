@@ -1,5 +1,5 @@
 #pragma once
-
+#include "TweakBar.h"
 // Forward declarations
 class Game;
 class Renderer;

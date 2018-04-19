@@ -48,7 +48,7 @@ namespace eronic {
 			return WSAGetLastError();
 		}
 		else {
-			std::cout << "Connected to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
+			//std::cout << type <<"type!!!!!!!!!!!!!!!!!!!!Connected to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
 			return 0;
 		}
 		
@@ -76,7 +76,7 @@ namespace eronic {
 				return WSAGetLastError();
 			}
 		}
-		std::cout << "BIND to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
+		// std::cout << "BIND to port:  " << _address.get_ip() << ":" << _address.get_port() << std::endl;
 		return 0;
 	}
 
@@ -120,7 +120,7 @@ namespace eronic {
 	int Socket_WIN::send_data(const void* data, size_t data_size)
 	{
 		if (!_blocking) {
-			std::cout << "non blocking send" << _blocking << std::endl;
+			//std::cout << "non blocking send" << _blocking << std::endl;
 			int send_result = send(_socket_handle, (char*)data, data_size, 0);
 			if (send_result == SOCKET_ERROR) {
 				return WSAGetLastError();
@@ -130,7 +130,7 @@ namespace eronic {
 			}
 		}
 		else {
-			std::cout << "blocking send" << _blocking << std::endl;
+			//std::cout << "blocking send" << _blocking << std::endl;
 			fd_set mySet;
 			FD_ZERO(&mySet);
 			FD_SET(_socket_handle, &mySet);
@@ -146,7 +146,7 @@ namespace eronic {
 				}
 			}
 			else {
-				std::cout << "Timed out" << std::endl;
+				//std::cout << "Timed out" << std::endl;
 				return -1;
 			}
 		}
@@ -180,7 +180,6 @@ namespace eronic {
 				}
 			}
 			else {
-				std::cout << "Timed out" << std::endl;
 				return -1;
 			}
 		}
@@ -222,7 +221,7 @@ namespace eronic {
 				}
 			}
 			else {
-				std::cout << "Timed out" << std::endl;
+				//std::cout << "Timed out" << std::endl;
 				return -1;
 			}
 		}
@@ -238,15 +237,21 @@ namespace eronic {
 		timeval zero = { 1, 0};
 		// std::cout << "Socket starts select" << std::endl;
 		int sel = select(0, &mySet, NULL, NULL, &zero);
-		std::cout << "select" << sel << std::endl;
+		//std::cout << "select" << sel << std::endl;
 		if (FD_ISSET(_socket_handle, &mySet)) {
 			std::cout << "Acception attempt" << std::endl;
 			int new_socket_handle = accept(_socket_handle, NULL, NULL);
-			Socket* connected_socket = new Socket_WIN(new_socket_handle);
-			return connected_socket;
+			if (new_socket_handle == SOCKET_ERROR) {
+				std::cout << "SOCKET ACCEPT ERROR" << WSAGetLastError() << std::endl;
+				return nullptr;
+			}
+			else {
+				Socket* connected_socket = new Socket_WIN(new_socket_handle);
+				return connected_socket;
+			}
 		}
 		else {
-			std::cout << "No connection " << WSAGetLastError() << std::endl;
+			//std::cout << "No connection " << WSAGetLastError() << std::endl;
 			return nullptr;
 		}
 	}
@@ -259,6 +264,11 @@ namespace eronic {
 	int Socket_WIN::stop(int how) 
 	{
 		return shutdown(_socket_handle, how);
+	}
+
+	int Socket_WIN::prepare_stop()
+	{
+		return 0;
 	}
 
 	std::string get_external_ip(std::string &url)
@@ -337,7 +347,7 @@ namespace eronic {
 
 			lineIndex++;
 		}
-		std::cout << "Your IP Address is  " << ip_address << " \n\n";
+		//std::cout << "Your IP Address is  " << ip_address << " \n\n";
 
 		return ip_address;
 	}

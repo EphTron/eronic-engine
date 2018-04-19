@@ -33,6 +33,7 @@ namespace eronic {
 
 		int close();
 		int stop(int how);
+		int prepare_stop();
 
 	private:
 		Address _address;

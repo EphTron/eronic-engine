@@ -56,6 +56,9 @@ Window_DX::~Window_DX()
 // This is the main message handler for the program
 LRESULT CALLBACK Window_DX::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	//add handle
+	TwEventWin(hWnd, message, wParam, lParam); // send event message to AntTweakBar
+		
 	switch (message)
 	{
 	case WM_DESTROY:
