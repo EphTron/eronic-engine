@@ -22,7 +22,7 @@
     <ProjectGuid>{62160E6D-C060-4D1A-BC2B-322E959CA501}</ProjectGuid>
     <RootNamespace>asteroids-game</RootNamespace>
     <ProjectName>asteroids-game</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'" Label="Configuration">
@@ -68,20 +68,21 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'">
-    <IncludePath>G:\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;..\eronic-engine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>G:\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>G:\AntTweakBar\include;C:\libs\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>G:\AntTweakBar\lib;C:\libs\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - DirectX|Win32'">
-    <IncludePath>C:\libs\AntTweakBar\include;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;G:\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;..\eronic-engine;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\AntTweakBar\lib;C:\libs\DirectX SDK\Lib\x86;G:\CSLib\lib;G:\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>G:\AntTweakBar\include;C:\libs\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>G:\AntTweakBar\lib;C:\libs\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - DirectX|Win32'">
-    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>G:\AntTweakBar\lib;C:\libs\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>G:\AntTweakBar\include;C:\libs\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - OpenGL|Win32'">
-    <LibraryPath>C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-    <IncludePath>C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>G:\AntTweakBar\lib;C:\libs\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>G:\AntTweakBar\include;C:\libs\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;..\eronic-engine;$(CSLib)\inc;$(DXSDK_DIR)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug - OpenGL|Win32'">
     <ClCompile>
