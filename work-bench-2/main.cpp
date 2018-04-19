@@ -19,9 +19,9 @@
 
 int main() {
 	bool flag = true;
-	int app_port = 9173;
+	int app_port = 9174;
 
-	eronic::PeerNode * peer = new eronic::PeerNode(app_port, 10);
+	eronic::PeerNode * peer = new eronic::PeerNode(2, app_port, 10, true);
 	peer->find_networks(6000, true);
 	peer->run_peer_network();
 
