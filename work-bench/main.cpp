@@ -25,8 +25,8 @@ int main() {
 
 	bool flag = true;
 	int app_port = 9173;
-	
-	eronic::PeerNode * peer = new eronic::PeerNode(app_port,10);
+
+	eronic::PeerNode * peer = new eronic::PeerNode(1, app_port, 10, true);
 	peer->find_networks(6000, true);
 	peer->run_peer_network();
 
@@ -83,7 +83,7 @@ void listen_for_connections(eronic::TCPListener * l, eronic::TCPClient * conns[]
 		std::cout << "accepting... " << conn_idx << std::endl;
 		if ((conns[conn_idx] = l->accept()) != nullptr) {
 			std::cout << "Connection found !" << std::endl;
-			
+
 			char data[3];
 			//temp = new eronic::Package;
 
@@ -136,7 +136,7 @@ eronic::UDPListener* setup_udp_listener(std::string ip, int port) {
 		std::cout << "Error binding listener on port " << listen_port << std::endl;
 	}
 	else {
-		std::cout << "Bound UDP listener with result " << binding_result  << " to port " << listener->get_address()->get_port() << std::endl;
+		std::cout << "Bound UDP listener with result " << binding_result << " to port " << listener->get_address()->get_port() << std::endl;
 	}
 	return listener;
 }
