@@ -31,7 +31,7 @@ namespace eronic {
 		}
 		else {
 			std::cout << "Bind TCPListener to " << _listening_socket->get_address()->get_ip() << ":" << _listening_socket->get_address()->get_port() << std::endl;
-			_is_bound = true; 
+			_is_bound = true;
 			_is_listening = true;
 			if (!blocking) {
 				_listening_socket->set_blocking(false);
@@ -41,12 +41,13 @@ namespace eronic {
 		//u_long iMode = 0;
 		//WSAAsyncSelect(_listening_socket, nullptr, MY_MESSAGE_NOTIFICATION, FD_READ | FD_CONNECT | FD_CLOSE | FD_ACCEPT); //Set
 		//int result = ioctlsocket(_listening_socket, FIONBIO, &iMode);
-		
+
 	}
 
 	int TCPListener::start(int max_connections)
 	{
-		std::cout << "START TCP LISTENING!!!!!!!!!!!!!!!!!!!!" << _listening_socket->get_address()->get_ip();
+		std::cout << "Start TCP Listener on " << _listening_socket->get_address()->get_ip() << ":" 
+			<< _listening_socket->get_address()->get_port() << std::endl;
 		int listen_result = _listening_socket->start_listening(max_connections);
 		if (listen_result == 0) {
 			_is_listening = true;
