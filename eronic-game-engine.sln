@@ -20,6 +20,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "work-bench-2", "work-bench-
 		{29972CCA-EEAC-48E5-AB22-93B6C302027B} = {29972CCA-EEAC-48E5-AB22-93B6C302027B}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "survival-battle-game", "survival-battle-game\battle-tank-game.vcxproj", "{96C2A339-4ECE-483D-A808-20D8EEC30462}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29972CCA-EEAC-48E5-AB22-93B6C302027B} = {29972CCA-EEAC-48E5-AB22-93B6C302027B}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug - DirectX|Win32 = Debug - DirectX|Win32
@@ -64,6 +69,14 @@ Global
 		{DDD35221-507E-4007-BEF1-48686B3725B1}.Release - DirectX|Win32.Build.0 = Release - DirectX|Win32
 		{DDD35221-507E-4007-BEF1-48686B3725B1}.Release - OpenGL|Win32.ActiveCfg = Release - OpenGL|Win32
 		{DDD35221-507E-4007-BEF1-48686B3725B1}.Release - OpenGL|Win32.Build.0 = Release - OpenGL|Win32
+		{96C2A339-4ECE-483D-A808-20D8EEC30462}.Debug - DirectX|Win32.ActiveCfg = Debug - DirectX|Win32
+		{96C2A339-4ECE-483D-A808-20D8EEC30462}.Debug - DirectX|Win32.Build.0 = Debug - DirectX|Win32
+		{96C2A339-4ECE-483D-A808-20D8EEC30462}.Debug - OpenGL|Win32.ActiveCfg = Debug - OpenGL|Win32
+		{96C2A339-4ECE-483D-A808-20D8EEC30462}.Debug - OpenGL|Win32.Build.0 = Debug - OpenGL|Win32
+		{96C2A339-4ECE-483D-A808-20D8EEC30462}.Release - DirectX|Win32.ActiveCfg = Release - DirectX|Win32
+		{96C2A339-4ECE-483D-A808-20D8EEC30462}.Release - DirectX|Win32.Build.0 = Release - DirectX|Win32
+		{96C2A339-4ECE-483D-A808-20D8EEC30462}.Release - OpenGL|Win32.ActiveCfg = Release - OpenGL|Win32
+		{96C2A339-4ECE-483D-A808-20D8EEC30462}.Release - OpenGL|Win32.Build.0 = Release - OpenGL|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
