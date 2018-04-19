@@ -107,7 +107,6 @@ namespace eronic {
 		else
 		{
 			_blocking = flag;
-			std::cout << "Set socket blocking = " << flag << " socket now =" << _blocking<<std::endl;
 			return set_result;
 		}
 	}
