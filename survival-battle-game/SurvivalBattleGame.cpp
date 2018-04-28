@@ -31,9 +31,9 @@ void SurvivalBattleGame::Initialise(Window* w)
 
 	//////////////
 	// Setup Meshes
-	Mesh* meshShip = new Mesh();
-	meshShip->LoadFromFile("ShipMesh.txt");
-	AddMesh("ship", meshShip);
+	Mesh* meshTank = new Mesh();
+	meshTank->LoadFromFile("TankMesh.txt");
+	AddMesh("tank", meshTank);
 
 	Mesh* meshBullet = new Mesh();
 	meshBullet->LoadFromFile("BulletMesh.txt");

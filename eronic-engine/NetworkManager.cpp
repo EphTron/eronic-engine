@@ -71,5 +71,9 @@ namespace eronic {
 	{
 	}
 
+	void NetworkManager::OnMessage(Message * msg)
+	{
+	}
+
 
 } // namespace eronic

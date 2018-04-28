@@ -7,8 +7,10 @@
 #include "PhysicsSystem.h"
 #include "RenderSystem.h"
 #include "CollisionSystem.h"
+#include "NetworkSystem.h"
 
 #include "SceneManager.h"
+#include "P2PNetworkManager.h"
 
 // Forward declarations
 class GameObject;
@@ -43,9 +45,13 @@ protected:
 
 	// Systems
 	RenderSystem					_renderSystem;		// To handle rendering
+	NetworkSystem					_networkSystem;		// To handle network communication
 
 	// Scene Manager
 	SceneManager					_sceneManager;
+
+	// Network Manager				
+	eronic::P2PNetworkManager*		_networkManager;
 
 	// Structors
 public:
@@ -64,7 +70,8 @@ public:
 	void SetQuitFlag(bool v)						{ _quitFlag = v; }
 
 	// Renderer
-	Renderer* GetRenderer()					const	{ return _renderer; }
+	Renderer* GetRenderer()							const { return _renderer; }
+	eronic::P2PNetworkManager* GetNetworkManager()	const { return _networkManager; }
 
 	// Functions
 public:
@@ -76,6 +83,9 @@ public:
 
 	// Keyboard input
 	virtual void OnKeyboard(int key, bool down);
+
+	// Keyboard input
+	// virtual void OnMouseMove(int key, bool down);
 
 	// Draw everything
 	virtual void Render() = 0;

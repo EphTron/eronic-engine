@@ -5,7 +5,7 @@
 class Mesh;
 class Message;
 
-class Ship :
+class Tank :
 	public GameObject
 {
 	// Constants
@@ -15,11 +15,12 @@ public:
 
 	// Data
 protected:
+	float				_aim_angle;			// Angle of cannon in degrees
 
 	// Structors
 public:
-	Ship(Mesh* mesh);
-	virtual ~Ship();
+	Tank(Mesh* mesh, Mesh* cannon);
+	virtual ~Tank();
 
 	// Functions
 public:

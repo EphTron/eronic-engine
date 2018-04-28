@@ -1,4 +1,9 @@
 #pragma once
+
+#define _WINSOCKAPI_ 
+#include <winsock2.h>
+#include <WS2tcpip.h>
+
 #if BUILD_OPENGL
 #include "Window.h"
 #include "GL\GXBase\GXBase.h"

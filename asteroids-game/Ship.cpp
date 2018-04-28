@@ -13,7 +13,7 @@ Ship::Ship(Mesh* mesh)
 	: GameObject("ship")
 {
 	// Create components for Ship (they will add themselves)
-	new ShipControllerComponent(this);
+	new TankControllerComponent(this);
 	new GodModeComponent(this);
 	new ExplodableComponent(this);
 
@@ -93,7 +93,7 @@ void Ship::Reset()
 	GodModeComponent* gc = (GodModeComponent*)GetComponent("godmode");
 	gc->SetGodMode(false);
 
-	ShipControllerComponent* sc = (ShipControllerComponent*)GetComponent("input");
+	TankControllerComponent* sc = (TankControllerComponent*)GetComponent("input");
 	sc->Reset();
 
 	_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);

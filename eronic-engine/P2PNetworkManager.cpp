@@ -1,12 +1,12 @@
-#include "PeerNode.h"
+#include "P2PNetworkManager.h"
 
 namespace eronic {
 
-	PeerNode::PeerNode()
+	P2PNetworkManager::P2PNetworkManager()
 	{
 	}
 
-	PeerNode::PeerNode(int id, int app_port, int max_connections, bool same_machine) :
+	P2PNetworkManager::P2PNetworkManager(int id, int app_port, int max_connections, bool same_machine) :
 		_running(false),
 		_connected(false),
 		_same_machine(same_machine),
@@ -52,6 +52,7 @@ namespace eronic {
 		}
 		else {
 			_ip = "127.0.0.1";
+			OutputDebugStringA("Setup Peer Manager");
 			std::cout << "My IP:" << _ip << std::endl;
 			std::size_t found = _ip.find_last_of(".");
 			_broadcast_ip = _ip.substr(0, found) + ".255";
@@ -60,6 +61,7 @@ namespace eronic {
 			_app_udp_port = app_port;
 			int binding_result = _net_udp_listener->bind((std::string)"ADDR_ANY", _app_udp_port, true);
 			if (binding_result == 10048) {
+				OutputDebugStringA("Port in use");
 				_id += 1;
 				_app_udp_port += 1;
 				binding_result = _net_udp_listener->bind((std::string)"ADDR_ANY", _app_udp_port, true);
@@ -76,12 +78,12 @@ namespace eronic {
 		}
 	}
 
-	PeerNode::~PeerNode()
+	P2PNetworkManager::~P2PNetworkManager()
 	{
 		_network_broadcast_thread.join();
 	}
 
-	void PeerNode::open_network(int network_id, int network_port)
+	void P2PNetworkManager::open_network(int network_id, int network_port)
 	{
 		std::cout << "OPENING NETWORK " << network_id << " on Port:" << _network_port << std::endl;
 		_network_id = network_id;
@@ -126,7 +128,7 @@ namespace eronic {
 		}
 	}
 
-	void PeerNode::join_network(int network_id, int network_port)
+	void P2PNetworkManager::join_network(int network_id, int network_port)
 	{
 		std::cout << "JOINING NETWORK " << network_id << " ON PORT: " << network_port << std::endl;
 		bool joined = false;
@@ -180,12 +182,12 @@ namespace eronic {
 		}
 	}
 
-	void PeerNode::leave_network()
+	void P2PNetworkManager::leave_network()
 	{
 		_connected = false;
 	}
 
-	std::vector<Network*> PeerNode::find_networks(int milliseconds, bool join_first_network)
+	std::vector<Network*> P2PNetworkManager::find_networks(int milliseconds, bool join_first_network)
 	{
 		std::cout << "Trying to find network" << std::endl;
 		std::vector<Network*> found_networks = std::vector<Network*>();
@@ -236,7 +238,7 @@ namespace eronic {
 		return found_networks;
 	}
 
-	bool PeerNode::app_broadcast_data(DataPackage * data)
+	bool P2PNetworkManager::app_broadcast_data(DataPackage * data)
 	{
 		char pack[sizeof(DataPackage)];
 		data->serialize(pack);
@@ -252,7 +254,7 @@ namespace eronic {
 
 	}
 
-	bool PeerNode::net_broadcast_data(eronic::DataPackage * data)
+	bool P2PNetworkManager::net_broadcast_data(eronic::DataPackage * data)
 	{
 		char pack[sizeof(DataPackage)];
 		data->serialize(pack);
@@ -267,7 +269,7 @@ namespace eronic {
 		}
 	}
 
-	bool PeerNode::tcp_send_data(TCPClient * client, eronic::DataPackage * data)
+	bool P2PNetworkManager::tcp_send_data(TCPClient * client, eronic::DataPackage * data)
 	{
 		char pack[sizeof(DataPackage)];
 		data->serialize(pack);
@@ -282,7 +284,7 @@ namespace eronic {
 		}
 	}
 
-	DataPackage& const PeerNode::receive_udp_data(char * sender_ip)
+	DataPackage& const P2PNetworkManager::receive_udp_data(char * sender_ip)
 	{
 		char recv_buffer[sizeof(DataPackage)];
 		//std::cout << "recv udp" << std::endl;
@@ -309,7 +311,7 @@ namespace eronic {
 		}
 	}
 
-	DataPackage & const PeerNode::receive_tcp_data(TCPClient * client, char * sender_ip)
+	DataPackage & const P2PNetworkManager::receive_tcp_data(TCPClient * client, char * sender_ip)
 	{
 		char recv_buffer[sizeof(DataPackage)];
 		int recv_result = client->receivefrom(recv_buffer, sizeof(DataPackage), sender_ip);
@@ -335,7 +337,7 @@ namespace eronic {
 		}
 	}
 
-	void PeerNode::receive_tcp_data_loop(TCPClient* client)
+	void P2PNetworkManager::receive_tcp_data_loop(TCPClient* client)
 	{
 		while (_connected && client->is_connected()) {
 			char sender_ip[INET_ADDRSTRLEN];
@@ -380,7 +382,7 @@ namespace eronic {
 		}
 	}
 
-	void PeerNode::receive_udp_data_loop()
+	void P2PNetworkManager::receive_udp_data_loop()
 	{
 		while (_connected) {
 			char sender_ip[INET_ADDRSTRLEN];
@@ -398,7 +400,7 @@ namespace eronic {
 					peer_partner->answered_alive = true;
 					
 					_peer_connections.at(data_pack.sender_id)->peer_connection = true;
-					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);
+					std::thread * t = new std::thread(&P2PNetworkManager::receive_tcp_data_loop, this, client);
 					_connection_threads.insert(std::pair<int, std::thread*>(data_pack.sender_id, t));
 				}
 			}
@@ -409,13 +411,13 @@ namespace eronic {
 		}
 	}
 
-	void PeerNode::run_peer_network()
+	void P2PNetworkManager::run_peer_network()
 	{
 		_running = true;
 		std::cout << "Running Peer Network " << _network_id << std::endl;
-		_network_broadcast_thread = std::thread(&PeerNode::broadcast_network_exists_loop, this);
-		_udp_network_receive_thread = std::thread(&PeerNode::receive_udp_data_loop, this);
-		_network_connector_thread = std::thread(&PeerNode::accept_network_connections_loop, this);
+		_network_broadcast_thread = std::thread(&P2PNetworkManager::broadcast_network_exists_loop, this);
+		_udp_network_receive_thread = std::thread(&P2PNetworkManager::receive_udp_data_loop, this);
+		_network_connector_thread = std::thread(&P2PNetworkManager::accept_network_connections_loop, this);
 		while (_running && _connected) {
 			std::vector<int> peers_to_delete = std::vector<int>();
 			for (auto connection : _peer_connections)
@@ -460,7 +462,7 @@ namespace eronic {
 		}
 	}
 
-	void PeerNode::close_connection(int id)
+	void P2PNetworkManager::close_connection(int id)
 	{
 		std::cout << "Deleting Peer Connection" << id << std::endl;
 		
@@ -483,7 +485,12 @@ namespace eronic {
 		std::cout << "Deleted Peer Connection" << id << std::endl;
 	}
 
-	void PeerNode::broadcast_network_exists_loop()
+	std::map<int, Network*> const& P2PNetworkManager::get_networks() const
+	{
+		return _networks;
+	}
+
+	void P2PNetworkManager::broadcast_network_exists_loop()
 	{
 		std::cout << "Sending Network signal to port" << _app_broadcaster->get_address()->get_port() <<std::endl;
 		while (_connected) {
@@ -495,7 +502,7 @@ namespace eronic {
 
 	}
 
-	void PeerNode::accept_network_connections_loop()
+	void P2PNetworkManager::accept_network_connections_loop()
 	{
 		while (_connected) {
 			std::cout << "Trying to accept" << std::endl;
@@ -521,7 +528,7 @@ namespace eronic {
 					peer_partner->peer_connection = true;
 					peer_partner->answered_alive = true;
 					// add thread
-					std::thread * t = new std::thread(&PeerNode::receive_tcp_data_loop, this, client);// &_peer_connections.at(sender_id)->peer_connection);
+					std::thread * t = new std::thread(&P2PNetworkManager::receive_tcp_data_loop, this, client);// &_peer_connections.at(sender_id)->peer_connection);
 						//&peer_partner->peer_connection);//_peer_connections.at(sender_id)->peer_connection);
 					_connection_threads.insert(std::pair<int, std::thread*>(accepted_response.sender_id, t));
 					int quiz = accepted_response.int_data_1 / accepted_response.sender_id;
@@ -537,7 +544,7 @@ namespace eronic {
 
 	}
 
-	void PeerNode::setup_tcp_listener(std::string ip, int port)
+	void P2PNetworkManager::setup_tcp_listener(std::string ip, int port)
 	{
 		_tcp_port = port;
 		int binding_result = _net_tcp_listener->bind(ip, _tcp_port, true);
@@ -550,7 +557,7 @@ namespace eronic {
 		}
 	}
 
-	void PeerNode::setup_udp_listener(std::string ip, int port)
+	void P2PNetworkManager::setup_udp_listener(std::string ip, int port)
 	{
 		_udp_port = port;
 		int binding_result = _net_udp_listener->bind(ip, _udp_port, true);
@@ -564,7 +571,7 @@ namespace eronic {
 		
 	}
 
-	void PeerNode::setup_app_broadcaster(std::string ip, int port)
+	void P2PNetworkManager::setup_app_broadcaster(std::string ip, int port)
 	{
 		int connect_result = connect_result = _app_broadcaster->connect(ip, port, false);
 
@@ -577,7 +584,7 @@ namespace eronic {
 		}
 	}
 
-	void PeerNode::setup_net_broadcaster(std::string ip, int port)
+	void P2PNetworkManager::setup_net_broadcaster(std::string ip, int port)
 	{
 		_network_port = port;
 		_net_broadcaster->stop(0);
@@ -590,7 +597,7 @@ namespace eronic {
 		}
 	}
 
-	TCPClient * PeerNode::setup_connection(std::string & ip, int port, bool blocking)
+	TCPClient * P2PNetworkManager::setup_connection(std::string & ip, int port, bool blocking)
 	{
 		TCPClient * tcp_client = new TCPClient(new Socket_WIN());
 		int res = tcp_client->connect(ip, port, blocking);

@@ -1,7 +1,7 @@
 #include "GodModeComponent.h"
 #include "Message.h"
 #include "Components.h"
-#include "Ship.h"
+#include "Tank.h"
 
 /******************************************************************************************************************/
 // Structors

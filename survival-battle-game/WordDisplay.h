@@ -36,6 +36,8 @@ public:
 	std::string GetWord()	const	{ return _word; }
 	void SetWord(std::string w)		{ _word = w; }
 
+	void ChangeScale(float s) { _letterDisplay.SetScale(s); }
+
 	// Functions
 public:
 	virtual void Update(double deltaTime);

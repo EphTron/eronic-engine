@@ -1,6 +1,9 @@
 /***************************************************/
 // DX code based on http://www.directxtutorial.com //
 /***************************************************/
+//#define _WINSOCKAPI_ 
+#include <winsock2.h>
+#include <WS2tcpip.h>
 
 #pragma once
 #if BUILD_DIRECTX

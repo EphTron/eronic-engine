@@ -30,7 +30,7 @@ protected:
 	glm::mat4							_IM;  // Identity matrix
 	glm::mat4							_MVM; // ModelView matrix
 
-	Ship*								_ship;
+	Ship*								_tank;
 	UFO*								_ufo;
 	ScoreDisplay*						_scoreDisplay;
 

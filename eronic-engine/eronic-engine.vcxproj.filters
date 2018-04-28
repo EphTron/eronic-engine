@@ -111,16 +111,10 @@
     <ClCompile Include="UDPListener.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="PeerNode.cpp">
-      <Filter>Network</Filter>
-    </ClCompile>
     <ClCompile Include="Socket.cpp">
       <Filter>Network</Filter>
     </ClCompile>
     <ClCompile Include="Socket_WIN.cpp">
-      <Filter>Network</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkManager.cpp">
       <Filter>Network</Filter>
     </ClCompile>
     <ClCompile Include="TweakBar.cpp">
@@ -151,6 +145,9 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="AIController.cpp" />
+    <ClCompile Include="P2PNetworkManager.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -270,16 +267,10 @@
     <ClInclude Include="UDPListener.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="PeerNode.h">
-      <Filter>Network</Filter>
-    </ClInclude>
     <ClInclude Include="Socket.h">
       <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="Socket_WIN.h">
-      <Filter>Network</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkManager.h">
       <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="TweakBar.h">
@@ -310,6 +301,15 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="AIController.h" />
+    <ClInclude Include="PeerPartner.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="P2PNetworkManager.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h">
+      <Filter>Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

@@ -29,14 +29,8 @@
     <ClCompile Include="Missile.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="ShipControllerComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="DamageMessage.cpp">
       <Filter>Messages</Filter>
-    </ClCompile>
-    <ClCompile Include="Ship.cpp">
-      <Filter>GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="UFO.cpp">
       <Filter>GameObjects</Filter>
@@ -63,6 +57,14 @@
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="SurvivalBattleGame.cpp" />
+    <ClCompile Include="Tank.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="TankControllerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionMatrix.h" />
@@ -96,16 +98,10 @@
     <ClInclude Include="Missile.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="ShipControllerComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="DamageMessage.h">
       <Filter>Messages</Filter>
     </ClInclude>
     <ClInclude Include="UFO.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Ship.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="HitpointComponent.h">
@@ -130,6 +126,14 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="SurvivalBattleGame.h" />
+    <ClInclude Include="Tank.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="TankControllerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuPoint.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

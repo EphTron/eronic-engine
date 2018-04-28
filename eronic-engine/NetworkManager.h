@@ -2,6 +2,7 @@
 
 
 #include <vector>
+#include "Message.h"
 #include "PeerNode.h"
 
 namespace eronic {
@@ -26,11 +27,14 @@ namespace eronic {
 		void broadcast_message();
 		void send_message();
 
+		/// Respond to messages
+		void OnMessage(Message* msg);
+
 
 	private:
 		bool _connected;
 		bool _fully_connected;
-		PeerNode * _peer;
+		P2PNetworkManager * _peer;
 		std::vector<Network*> networks;
 		std::map<int, PeerPartner*> participants;
 		//std::vector<DataPackage*> _data_buffer;

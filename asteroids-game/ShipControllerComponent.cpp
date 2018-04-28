@@ -6,13 +6,13 @@
 #include "ThrustMessage.h"
 #include "Ship.h"
 
-const float ShipControllerComponent::ACCELERATION = 1.0f;
+const float TankControllerComponent::ACCELERATION = 1.0f;
 
 /******************************************************************************************************************/
 // Structors
 /******************************************************************************************************************/
 
-ShipControllerComponent::ShipControllerComponent(GameObject* gob)
+TankControllerComponent::TankControllerComponent(GameObject* gob)
 	: UserInputComponent(gob),
 	_turnLeftPressed(false),
 	_turnRightPressed(false),
@@ -29,7 +29,7 @@ ShipControllerComponent::ShipControllerComponent(GameObject* gob)
 
 /******************************************************************************************************************/
 
-ShipControllerComponent::~ShipControllerComponent()
+TankControllerComponent::~TankControllerComponent()
 {
 	// Bullets deleted by the game
 }
@@ -39,7 +39,7 @@ ShipControllerComponent::~ShipControllerComponent()
 /******************************************************************************************************************/
 
 // Setup function -- called when parent object is initialised (using its own Start method)
-void ShipControllerComponent::Start()
+void TankControllerComponent::Start()
 {
 	// Register as a listener
 	_parent->RegisterListener("keypress", this);
@@ -54,7 +54,7 @@ void ShipControllerComponent::Start()
 /******************************************************************************************************************/
 
 // Main update function (called every frame)
-void ShipControllerComponent::Update(double deltaTime)
+void TankControllerComponent::Update(double deltaTime)
 {
 	if (_turnLeftPressed)	// Left
 	{
@@ -73,7 +73,7 @@ void ShipControllerComponent::Update(double deltaTime)
 /******************************************************************************************************************/
 
 // Message handler (called when message occurs)
-void ShipControllerComponent::OnMessage(Message* msg)
+void TankControllerComponent::OnMessage(Message* msg)
 {
 	if (msg->GetMessageType() == "keypress")
 	{
@@ -111,14 +111,14 @@ void ShipControllerComponent::OnMessage(Message* msg)
 /******************************************************************************************************************/
 
 // Shutdown function -- called when parent object is destroyed
-void ShipControllerComponent::End()
+void TankControllerComponent::End()
 {
 	_parent->UnregisterListener("keypress", this);
 }
 
 /******************************************************************************************************************/
 
-void ShipControllerComponent::TurnLeft(float angle)
+void TankControllerComponent::TurnLeft(float angle)
 {
 	float currentAngle = _parent->GetAngle();
 	currentAngle -= angle;
@@ -128,7 +128,7 @@ void ShipControllerComponent::TurnLeft(float angle)
 
 /******************************************************************************************************************/
 
-void ShipControllerComponent::TurnRight(float angle)
+void TankControllerComponent::TurnRight(float angle)
 {
 	float currentAngle = _parent->GetAngle();
 	currentAngle += angle;
@@ -138,7 +138,7 @@ void ShipControllerComponent::TurnRight(float angle)
 
 /******************************************************************************************************************/
 
-void ShipControllerComponent::Accelerate(float amt)
+void TankControllerComponent::Accelerate(float amt)
 {
 	Vector4 thrust(0, amt, 0, 0);
 	thrust.rotate(_parent->GetAngle());
@@ -150,7 +150,7 @@ void ShipControllerComponent::Accelerate(float amt)
 
 /******************************************************************************************************************/
 
-void ShipControllerComponent::FireBullet()
+void TankControllerComponent::FireBullet()
 {
 	for (int i = 0; i < NUM_BULLETS; i++)
 	{
@@ -165,7 +165,7 @@ void ShipControllerComponent::FireBullet()
 
 /******************************************************************************************************************/
 
-void ShipControllerComponent::Reset()
+void TankControllerComponent::Reset()
 {
 	_turnLeftPressed = false;
 	_turnRightPressed = false;

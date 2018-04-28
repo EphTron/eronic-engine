@@ -15,54 +15,17 @@
 #include "TCPListener.h"
 #include "TCPClient.h"
 #include "Socket_WIN.h"
+#include "Network.h"
+#include "PeerPartner.h"
 
 namespace eronic {
 
-	typedef struct Network {
-		Network():
-			network_id(-1),
-			network_port(-1),
-			network_ip("")
-		{}
-
-		int network_id;
-		int network_port;
-		std::string network_ip;
-	}Network;
-
-	typedef struct PeerPartner {
-		PeerPartner() :
-			peer_id(-1),
-			network_id(-1),
-			peer_connection(false),
-			answered_alive(false),
-			tcp_client(nullptr),
-			delta_t_to_self_t(0.0)
-		{}
-
-		PeerPartner(int p_id, int n_id, TCPClient * client) :
-			peer_id(p_id),
-			network_id(n_id),
-			peer_connection(true),
-			answered_alive(false),
-			tcp_client(client),
-			delta_t_to_self_t(0.0)
-		{}
-
-		int peer_id;
-		int network_id;
-		bool peer_connection;
-		bool answered_alive;
-		TCPClient * tcp_client;
-		double delta_t_to_self_t;
-	}PeerPartner;
-
-	class PeerNode
+	class P2PNetworkManager
 	{
 	public:
-		PeerNode();
-		PeerNode(int id, int app_port, int max_connections, bool same_machine = false);
-		~PeerNode();
+		P2PNetworkManager();
+		P2PNetworkManager(int id, int app_port, int max_connections, bool same_machine = false);
+		~P2PNetworkManager();
 
 		void open_network(int network_id, int network_port);
 		void join_network(int network_id, int network_port);
@@ -74,9 +37,7 @@ namespace eronic {
 		bool tcp_send_data(TCPClient* client, DataPackage* data);
 
 		DataPackage& const receive_udp_data(char * sender);
-
 		DataPackage& const receive_tcp_data(TCPClient * client, char * sender);
-
 
 		void receive_udp_data_loop();
 		void receive_tcp_data_loop(TCPClient* client);
@@ -86,7 +47,7 @@ namespace eronic {
 		void run_peer_network();
 		void close_connection(int id);
 
-
+		std::map<int, Network*> const& get_networks() const;
 
 	private:
 		bool _running;

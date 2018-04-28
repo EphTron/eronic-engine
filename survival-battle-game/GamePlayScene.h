@@ -6,7 +6,7 @@
 
 // Game classes
 #include "Asteroid.h"
-#include "Ship.h"
+#include "Tank.h"
 #include "UFO.h"
 #include "ScoreDisplay.h"
 #include "WordDisplay.h"
@@ -30,7 +30,7 @@ protected:
 	glm::mat4							_IM;  // Identity matrix
 	glm::mat4							_MVM; // ModelView matrix
 
-	Ship*								_ship;
+	Tank*								_tank;
 	UFO*								_ufo;
 	ScoreDisplay*						_scoreDisplay;
 

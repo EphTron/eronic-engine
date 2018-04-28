@@ -1,19 +1,19 @@
-#include "Ship.h"
+#include "Tank.h"
 #include "CollisionMatrix.h"
 #include "CollisionMessage.h"
 #include "Components.h"
 #include "DeadObjectMessage.h"
 #include "Game.h"
 
-const float Ship::MAX_SPEED = 0.5f;
+const float Tank::MAX_SPEED = 0.5f;
 
 /******************************************************************************************************************/
 
-Ship::Ship(Mesh* mesh)
-	: GameObject("ship")
+Tank::Tank(Mesh* mesh, Mesh* cannon)
+	: GameObject("tank")
 {
 	// Create components for Ship (they will add themselves)
-	new ShipControllerComponent(this);
+	new TankControllerComponent(this);
 	new GodModeComponent(this);
 	new ExplodableComponent(this);
 
@@ -36,13 +36,13 @@ Ship::Ship(Mesh* mesh)
 
 /******************************************************************************************************************/
 
-Ship::~Ship()
+Tank::~Tank()
 {
 }
 
 /******************************************************************************************************************/
 
-void Ship::Update(double deltaTime)
+void Tank::Update(double deltaTime)
 {
 	GameObject::Update(deltaTime);
 
@@ -53,7 +53,7 @@ void Ship::Update(double deltaTime)
 
 /******************************************************************************************************************/
 
-void Ship::OnMessage(Message* msg)
+void Tank::OnMessage(Message* msg)
 {
 	if (msg->GetMessageType() == "collision")
 	{
@@ -80,7 +80,7 @@ void Ship::OnMessage(Message* msg)
 
 /******************************************************************************************************************/
 
-void Ship::Reset()
+void Tank::Reset()
 {
 	_alive = true;
 
@@ -93,7 +93,7 @@ void Ship::Reset()
 	GodModeComponent* gc = (GodModeComponent*)GetComponent("godmode");
 	gc->SetGodMode(false);
 
-	ShipControllerComponent* sc = (ShipControllerComponent*)GetComponent("input");
+	TankControllerComponent* sc = (TankControllerComponent*)GetComponent("input");
 	sc->Reset();
 
 	_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);

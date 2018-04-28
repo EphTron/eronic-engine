@@ -1,4 +1,7 @@
 #include "SurvivalBattleGame.h"
+#pragma comment (lib, "ws2_32.lib")
+#include <winsock2.h>
+#include <WS2tcpip.h>
 
 static const int		SCREEN_WIDTH  = 512;
 static const int		SCREEN_HEIGHT = 512;

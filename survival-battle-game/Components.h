@@ -4,7 +4,7 @@
 #include "MultiRenderComponent.h"
 #include "UserInputComponent.h"
 #include "LifeTimerComponent.h"
-#include "ShipControllerComponent.h"
+#include "TankControllerComponent.h"
 #include "GodModeComponent.h"
 #include "ExplodableComponent.h"
 #include "HitpointComponent.h"

@@ -106,7 +106,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>eronic-engine.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;eronic-engine.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release - DirectX|Win32'">
@@ -145,6 +145,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Asteroid.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuPoint.h" />
     <ClInclude Include="SurvivalBattleGame.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CollisionMatrix.h" />
@@ -163,13 +165,15 @@
     <ClInclude Include="MultiRenderComponent.h" />
     <ClInclude Include="PauseScene.h" />
     <ClInclude Include="ScoreDisplay.h" />
-    <ClInclude Include="Ship.h" />
-    <ClInclude Include="ShipControllerComponent.h" />
+    <ClInclude Include="TankControllerComponent.h" />
+    <ClInclude Include="Tank.h" />
     <ClInclude Include="UFO.h" />
     <ClInclude Include="WordDisplay.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Asteroid.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuPoint.cpp" />
     <ClCompile Include="SurvivalBattleGame.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="DamageMessage.cpp" />
@@ -187,8 +191,8 @@
     <ClCompile Include="MultiRenderComponent.cpp" />
     <ClCompile Include="PauseScene.cpp" />
     <ClCompile Include="ScoreDisplay.cpp" />
-    <ClCompile Include="Ship.cpp" />
-    <ClCompile Include="ShipControllerComponent.cpp" />
+    <ClCompile Include="TankControllerComponent.cpp" />
+    <ClCompile Include="Tank.cpp" />
     <ClCompile Include="UFO.cpp" />
     <ClCompile Include="WordDisplay.cpp" />
   </ItemGroup>

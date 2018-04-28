@@ -36,8 +36,8 @@ void GamePlayScene::Initialise()
 
 	////////////////
 	// Setup Objects
-	_ship = new Ship(_sceneManager->GetGame()->GetMesh("ship"));
-	_gameObjects.push_back(_ship);
+	_tank = new Ship(_sceneManager->GetGame()->GetMesh("ship"));
+	_gameObjects.push_back(_tank);
 
 	_ufo = new UFO(_sceneManager->GetGame()->GetMesh("ufo"));
 	_gameObjects.push_back(_ufo);
@@ -140,10 +140,10 @@ void GamePlayScene::Update(double deltaTime)
 	}
 
 	// Change game state if necessary
-	if (!_ship->IsAlive())
+	if (!_tank->IsAlive())
 	{
 		// Ship is dead
-		if (ExplodableComponent* ec = (ExplodableComponent*)(_ship->GetComponent("explodable")))
+		if (ExplodableComponent* ec = (ExplodableComponent*)(_tank->GetComponent("explodable")))
 		{
 			if (!ec->GetExplosion()->IsAlive() && ec->HasExploded())
 			{

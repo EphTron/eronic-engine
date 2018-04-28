@@ -11,7 +11,8 @@
 #include "TCPListener.h"
 #include "UDPListener.h"
 #include "Socket_WIN.h"
-#include "PeerNode.h"
+#include "P2PNetworkManager.h"
+#include "NetworkManager.h"
 
 #define MAX_CONN	3
 
@@ -26,9 +27,11 @@ int main() {
 	bool flag = true;
 	int app_port = 9173;
 
-	eronic::PeerNode * peer = new eronic::PeerNode(1, app_port, 10);
+	// setup peer node
+	eronic::P2PNetworkManager * peer = new eronic::P2PNetworkManager(1, app_port, 10);
 	peer->find_networks(6000, true);
 	peer->run_peer_network();
+
 
 	system("Pause");
 	return 0;

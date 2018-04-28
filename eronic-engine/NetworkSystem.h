@@ -1,6 +1,6 @@
 #pragma once
 #include "System.h"
-#include "NetworkManager.h"
+#include "P2PNetworkManager.h"
 
 class NetworkSystem :
 	public System
@@ -8,7 +8,7 @@ class NetworkSystem :
 
 	// Data
 protected:
-	eronic::NetworkManager* _network_manager;
+	eronic::P2PNetworkManager* _network_manager;
 
 	// Structors
 public:
@@ -17,8 +17,8 @@ public:
 
 	// Get / sets
 public:
-	eronic::NetworkManager* GetNetworkManager()		const { return _network_manager; }
-	void SetRenderer(eronic::NetworkManager* nwm) { _network_manager = nwm; }
+	eronic::P2PNetworkManager* GetNetworkManager()		const { return _network_manager; }
+	void SetNetworkManager(eronic::P2PNetworkManager* nwm) { _network_manager = nwm; }
 
 	// Functions
 public:

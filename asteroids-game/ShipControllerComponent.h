@@ -5,7 +5,7 @@
 class Bullet;
 
 
-class ShipControllerComponent
+class TankControllerComponent
 	: public UserInputComponent
 {
 	// Constants
@@ -24,8 +24,8 @@ protected:
 
 	// Structors
 public:
-	ShipControllerComponent(GameObject* gob);
-	virtual ~ShipControllerComponent();
+	TankControllerComponent(GameObject* gob);
+	virtual ~TankControllerComponent();
 
 	// Gets/Sets
 public:

@@ -59,7 +59,7 @@ void UFO::Update(double deltaTime)
 
 		// Fire a missile
 		Missile* missile = new Missile(Game::TheGame->GetMesh("missile"));
-		missile->SetValidTargetType("ship");
+		missile->SetValidTargetType("tank");
 		missile->Spawn(_position);
 		Game::TheGame->AddGameObject(missile);
 	}

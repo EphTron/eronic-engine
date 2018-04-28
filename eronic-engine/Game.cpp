@@ -9,8 +9,13 @@ Game* Game::TheGame = NULL;
 
 Game::Game()
 	: _quitFlag(false),
-	  _sceneManager(this)
+	  _sceneManager(this),
+	  _networkSystem(),
+	  _networkManager(new eronic::P2PNetworkManager(1, 9173, 10, true))
 {
+
+	_networkSystem.SetNetworkManager(_networkManager);
+
 	for (int i = 0; i < 256; i++) _keyStates[i] = false;
 	_currentTime = clock();
 
