@@ -1,5 +1,7 @@
 .vs/
 Debug - OpenGL/
 Debug - DirectX/
+Release - OpenGL/
+Release - DirectX/
 *.zip
 
