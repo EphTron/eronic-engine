@@ -2,6 +2,8 @@
 #include <stack>
 #include <vector>
 
+#include "P2PNetworkManager.h"
+
 class RenderSystem;
 class Scene;
 class Game;
@@ -16,8 +18,9 @@ public:
 
 	// Data
 protected:
-	Game*				_game;
-	std::stack<Scene*>	_scenes;
+	Game*						_game;
+	//eronic::P2PNetworkManager*	_networkManager;
+	std::stack<Scene*>			_scenes;
 
 	// Structors
 public:

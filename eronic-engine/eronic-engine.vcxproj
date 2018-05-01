@@ -76,8 +76,8 @@
     <LibraryPath>G:\AntTweakBar\lib;C:\libs\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - DirectX|Win32'">
-    <IncludePath>G:\AntTweakBar\include;C:\libs\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>G:\AntTweakBar\lib;C:\libs\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\Users\ephra\Projects\eronic-game-engine\include;C:\libs\AntTweakBar\include;G:\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\AntTweakBar\lib;G:\AntTweakBar\lib;G:\DirectX SDK\Lib\x86;G:\CSLib\lib;C:\libs\DirectX SDK\Lib\x86;C:\libs\CSLib\lib;$(SolutionDir)$(Configuration)\;..\CSLib2013;$(DXSDK_DIR)\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - OpenGL|Win32'">
     <IncludePath>G:\AntTweakBar\include;C:\libs\AntTweakBar\include;G:\DirectX SDK\Include;G:\CSLib\inc;C:\libs\DirectX SDK\Include;C:\libs\CSLib\inc;$(CSLib)\inc;$(CSLib)\inc;$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
@@ -159,9 +159,11 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MultiMesh.cpp" />
     <ClCompile Include="NetworkComponent.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="NetworkSystem.cpp" />
     <ClCompile Include="ObserverSubject.cpp" />
     <ClCompile Include="P2PNetworkManager.cpp" />
+    <ClCompile Include="PeerNode.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
@@ -180,7 +182,6 @@
     <ClCompile Include="TCPClient.cpp" />
     <ClCompile Include="TCPListener.cpp" />
     <ClCompile Include="ThrustMessage.cpp" />
-    <ClCompile Include="TweakBar.cpp" />
     <ClCompile Include="UDPClient.cpp" />
     <ClCompile Include="UDPListener.cpp" />
     <ClCompile Include="UserInputComponent.cpp" />
@@ -214,10 +215,12 @@
     <ClInclude Include="MultiMesh.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="NetworkComponent.h" />
+    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="NetworkSystem.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="ObserverSubject.h" />
     <ClInclude Include="P2PNetworkManager.h" />
+    <ClInclude Include="PeerNode.h" />
     <ClInclude Include="PeerPartner.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PhysicsSystem.h" />
@@ -231,13 +234,13 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderObject_GL.h" />
     <ClInclude Include="ShaderProgram_GL.h" />
+    <ClInclude Include="SharedBuffer.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="Socket_WIN.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TCPClient.h" />
     <ClInclude Include="TCPListener.h" />
     <ClInclude Include="ThrustMessage.h" />
-    <ClInclude Include="TweakBar.h" />
     <ClInclude Include="UDPClient.h" />
     <ClInclude Include="UDPListener.h" />
     <ClInclude Include="UserInputComponent.h" />

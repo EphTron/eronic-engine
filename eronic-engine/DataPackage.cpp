@@ -17,6 +17,10 @@ namespace eronic {
 		x(-1.0),
 		y(-1.0),
 		z(-1.0),
+		angle(-1.0),
+		f1(-1.0),
+		f2(-1.0),
+		f3(-1.0),
 		sender_ip(""),
 		message("")
 	{
@@ -33,6 +37,10 @@ namespace eronic {
 		x(-1.0),
 		y(-1.0),
 		z(-1.0),
+		angle(-1.0),
+		f1(-1.0),
+		f2(-1.0),
+		f3(-1.0),
 		sender_ip(""),
 		message("")
 	{
@@ -43,7 +51,8 @@ namespace eronic {
 	DataPackage::DataPackage(int type, int id, int port, int net_id, 
 							 int d1, int d2, int d3, 
 							 float fx, float fy, float fz, 
-							std::string & ip, std::string & msg):
+							 float a, float f_1, float f_2, float f_3,
+							 std::string & ip, std::string & msg):
 		type(type),
 		sender_id(id),
 		sender_port(port),
@@ -53,7 +62,11 @@ namespace eronic {
 		int_data_3(d3),
 		x(fx),
 		y(fy),
-		z(fz),
+		z(fz), 
+		angle(a),
+		f1(f_1),
+		f2(f_2),
+		f3(f_3),
 		sender_ip(),
 		message()
 	{
@@ -72,6 +85,10 @@ namespace eronic {
 		x(-1.0),
 		y(-1.0),
 		z(-1.0),
+		angle(-1.0),
+		f1(-1.0),
+		f2(-1.0),
+		f3(-1.0),
 		sender_ip(""),
 		message("")
 	{
@@ -88,6 +105,10 @@ namespace eronic {
 		x = *f; f++;
 		y = *f; f++;
 		z = *f; f++;
+		angle = *f; f++;
+		f1 = *f; f++;
+		f2 = *f; f++;
+		f3 = *f; f++;
 
 		char *p = (char*)q;
 		int i = 0;
@@ -127,6 +148,10 @@ namespace eronic {
 		*f = x; f++;
 		*f = y; f++;
 		*f = z; f++;
+		*f = angle; f++;
+		*f = f1; f++;
+		*f = f2; f++;
+		*f = f3; f++;
 
 		char *p = (char*)q;
 		int i = 0;

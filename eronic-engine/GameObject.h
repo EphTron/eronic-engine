@@ -26,6 +26,7 @@ public:
 
 	// Data
 protected:
+	std::string			_id_tag;		// id
 	std::string			_type;			// Type of the object
 	float				_angle;			// Angle of object in degrees
 	float				_scale;			// Scale of the object (1 = normal)

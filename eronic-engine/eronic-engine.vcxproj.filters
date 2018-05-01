@@ -117,9 +117,6 @@
     <ClCompile Include="Socket_WIN.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="TweakBar.cpp">
-      <Filter>Platform Independent</Filter>
-    </ClCompile>
     <ClCompile Include="NetworkSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -148,6 +145,10 @@
     <ClCompile Include="P2PNetworkManager.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkManager.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="PeerNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -273,9 +274,6 @@
     <ClInclude Include="Socket_WIN.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="TweakBar.h">
-      <Filter>Platform Independent</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -310,6 +308,11 @@
     <ClInclude Include="Network.h">
       <Filter>Network</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkManager.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="PeerNode.h" />
+    <ClInclude Include="SharedBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

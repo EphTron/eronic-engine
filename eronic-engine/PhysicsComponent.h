@@ -42,6 +42,7 @@ public:
 	// Extra Functions
 public:
 	void LimitToMaximumSpeed(float max);
+	void SlowDown(float delta, float max);
 	Vector4 GetObjectPosition();
 	void SetObjectPosition(Vector4 v);
 };

@@ -67,6 +67,15 @@ void PhysicsComponent::LimitToMaximumSpeed(float max)
 	_velocity.limitTo(max);
 }
 
+void PhysicsComponent::SlowDown(float delta,float slow)
+{
+	Vector4 v(_velocity.x() - (_velocity.x() / slow) * delta, 
+			  _velocity.y() - (_velocity.y() / slow) * delta,
+		      _velocity.z() - (_velocity.z() / slow) * delta,
+			  _velocity.w());
+	_velocity = v;
+}
+
 /******************************************************************************************************************/
 
 Vector4 PhysicsComponent::GetObjectPosition()

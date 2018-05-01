@@ -1,9 +1,9 @@
 #if BUILD_DIRECTX
 
-#include <AntTweakBar.h>
 #include "Renderer_DX.h"
 #include "Mesh.h"
 #include "GameObject.h"
+
 
 /******************************************************************************************************************/
 
@@ -104,9 +104,11 @@ void Renderer_DX::Initialise(int width, int height)
 		NULL,
 		&_context);
 
-	
+	std::cout << "renderer  bfore: tw init " << std::endl;
 	TwInit(TW_DIRECT3D11, _device);
 	TwWindowSize(width, height);
+
+	std::cout << "renderer after: tw init " << std::endl;
 
 	// get the address of the back buffer
 	ID3D11Texture2D *p_backbuffer;
@@ -114,28 +116,31 @@ void Renderer_DX::Initialise(int width, int height)
 
 	// use the back buffer address to create the render target
 	_device->CreateRenderTargetView(p_backbuffer, NULL, &_backbuffer);
+
 	p_backbuffer->Release();
 
 	// set the render target as the back buffer
 	_context->OMSetRenderTargets(1, &_backbuffer, NULL);
 
-
 	// Set the viewport
 	D3D11_VIEWPORT viewport;
+	std::cout << "renderer somehwere 1" << std::endl;
 	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
 
+	std::cout << "renderer somehwere 2" << std::endl;
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.Width = width;
 	viewport.Height = height;
 
+	std::cout << "renderer somehwere 3 " << std::endl;
 	_context->RSSetViewports(1, &viewport);
-
+	std::cout << "renderer before shader " << std::endl;
 
 	// Initialise shaders
 	InitialiseShaders();
 
-
+	std::cout << "renderer after: shader " << std::endl;
 	
 }
 
@@ -151,30 +156,35 @@ void Renderer_DX::SwapBuffers()
 // Load and prepare shaders
 void Renderer_DX::InitialiseShaders()
 {
+	std::cout << "init shader " << std::endl;
 	// load and compile the two shaders
 	ID3D10Blob *VS, *PS;
 	D3DX11CompileFromFile(L"shaders.hlsl", 0, 0, "VShader", "vs_4_0", 0, 0, 0, &VS, 0, 0);
 	D3DX11CompileFromFile(L"shaders.hlsl", 0, 0, "PShader", "ps_4_0", 0, 0, 0, &PS, 0, 0);
 
+	std::cout << "init shaders 1 " << std::endl;
 	// encapsulate both shaders into shader objects
 	_device->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &_vertexShader);
+	std::cout << "init shaders 1.5 " << std::endl;
 	_device->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &_pixelShader);
+
+	std::cout << "init shaders 2 " << std::endl;
 
 	// set the shader objects
 	_context->VSSetShader(_vertexShader, 0, 0);
 	_context->PSSetShader(_pixelShader, 0, 0);
-
+	std::cout << "init shaders 3 " << std::endl;
 	// create the input layout object
 	D3D11_INPUT_ELEMENT_DESC ied[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-
+	std::cout << "init shaders 4 " << std::endl;
 	_device->CreateInputLayout(ied, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &_layout);
 	_context->IASetInputLayout(_layout);
 
-
+	std::cout << "init shaders 5 " << std::endl;
 	// Create uniform buffer
 	UniformBuffer uniforms;
 
@@ -191,9 +201,10 @@ void Renderer_DX::InitialiseShaders()
 	InitData.pSysMem = &uniforms;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
-
+	std::cout << "before shader create buffer " << std::endl;
 	// Create the buffer.
 	_device->CreateBuffer(&cbDesc, &InitData, &_uniformBuffer);
+
 }
 
 /******************************************************************************************************************/

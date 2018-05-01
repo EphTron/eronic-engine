@@ -1,5 +1,7 @@
 #pragma once
 #include "GameObjectComponent.h"
+#include "Vector4.h"
+
 class NetworkComponent :
 	public GameObjectComponent
 {
@@ -11,7 +13,7 @@ protected:
 
 									// RenderComponent
 public:
-	NetworkComponent(GameObject* gob);
+	NetworkComponent(GameObject* gob, std::string tag);
 	virtual ~NetworkComponent();
 
 
@@ -36,5 +38,10 @@ public:
 
 	// Shutdown function -- called when parent object is destroyed
 	virtual void End();
+
+	// Extra Functions
+	Vector4 GetObjectPosition();
+
+	void SetObjectPosition(Vector4 v);
 };
 

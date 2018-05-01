@@ -7,6 +7,7 @@
 #if BUILD_OPENGL
 #include "Window.h"
 #include "GL\GXBase\GXBase.h"
+#include <AntTweakBar.h>
 
 using namespace gxbase;
 

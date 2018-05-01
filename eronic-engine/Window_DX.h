@@ -2,13 +2,15 @@
 // DX code based on http://www.directxtutorial.com //
 /***************************************************/
 //#define _WINSOCKAPI_ 
-#include <winsock2.h>
-#include <WS2tcpip.h>
+
+//#include <WS2tcpip.h>
+
 
 #pragma once
 #if BUILD_DIRECTX
 #include "Window.h"
-
+#include <winsock2.h>
+#include <AntTweakBar.h>
 // include Windows and Direct3D headers
 #include <windows.h>
 #include <windowsx.h>

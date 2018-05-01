@@ -14,7 +14,8 @@ namespace eronic {
 		DataPackage(int type, int id, int port, int net_id, std::string & ip, std::string & msg);
 		DataPackage(int type, int id, int port, int net_id, 
 					int d1, int d2, int d3, 
-					float x, float y, float z, 
+					float x, float y, float z,
+					float a, float f_1, float f_2, float f_3,
 					std::string & ip, std::string & msg);
 		DataPackage(char* serialized_data);
 		~DataPackage();
@@ -33,6 +34,10 @@ namespace eronic {
 		float x;
 		float y;
 		float z;
+		float angle;
+		float f1;
+		float f2;
+		float f3;
 		char sender_ip[INET_ADDRSTRLEN];
 		char message[MSG_SIZE];
 

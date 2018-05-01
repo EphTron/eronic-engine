@@ -11,6 +11,7 @@
 
 #include "SceneManager.h"
 #include "P2PNetworkManager.h"
+#include "NetworkManager.h"
 
 // Forward declarations
 class GameObject;
@@ -33,6 +34,7 @@ public:
 
 	// Data
 protected:
+	std::string						_name;
 	double							_currentTime;		// Current time for delta time purposes
 	double							_deltaTime;			// Time since last frame
 	bool							_keyStates[256];	// Keyboard status
@@ -52,6 +54,8 @@ protected:
 
 	// Network Manager				
 	eronic::P2PNetworkManager*		_networkManager;
+	std::thread						_network_manager_thread;
+	//eronic::NetworkManager*		_networkManager;
 
 	// Structors
 public:
@@ -69,6 +73,8 @@ public:
 	bool GetQuitFlag()						const	{ return _quitFlag; }
 	void SetQuitFlag(bool v)						{ _quitFlag = v; }
 
+	std::string const& GetNameTag() const { return _name; };
+
 	// Renderer
 	Renderer* GetRenderer()							const { return _renderer; }
 	eronic::P2PNetworkManager* GetNetworkManager()	const { return _networkManager; }
@@ -81,11 +87,13 @@ public:
 	// Initialise game
 	virtual void Initialise(Window* w);
 
+	virtual void RunNetwork(bool flag);
+
 	// Keyboard input
 	virtual void OnKeyboard(int key, bool down);
 
 	// Keyboard input
-	// virtual void OnMouseMove(int key, bool down);
+	virtual void HandleNetworkData(eronic::DataPackage* data);
 
 	// Draw everything
 	virtual void Render() = 0;

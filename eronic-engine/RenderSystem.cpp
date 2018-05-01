@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "RenderComponent.h"
 
-#include "TweakBar.h"
+//#include "TweakBar.h"
 
 /******************************************************************************************************************/
 // Structors

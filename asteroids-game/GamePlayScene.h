@@ -3,6 +3,7 @@
 #include "WordDisplay.h"
 #include "CollisionSystem.h"
 #include "PhysicsSystem.h"
+#include "NetworkSystem.h"
 
 // Game classes
 #include "Asteroid.h"
@@ -25,6 +26,7 @@ public:
 protected:
 	PhysicsSystem						_physicsSystem;
 	CollisionSystem						_collisionSystem;
+	NetworkSystem						_networkSystem;
 
 	// Matrices
 	glm::mat4							_IM;  // Identity matrix

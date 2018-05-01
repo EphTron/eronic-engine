@@ -1,6 +1,5 @@
 #pragma once
 
-#include <AntTweakBar.h>
 #include <vector>
 
 
@@ -15,7 +14,7 @@ public:
 	void terminate();
 
 private:
-	std::vector<TwBar *> tweak_bars;
+	//std::vector<TwBar *> tweak_bars;
 	
 };
 

@@ -1,4 +1,5 @@
 #include "P2PNetworkManager.h"
+#include <ctime>
 
 namespace eronic {
 
@@ -21,14 +22,14 @@ namespace eronic {
 		_app_udp_port(app_port),
 		_app_tcp_port(app_port),
 		_max_connections(max_connections),
-		_received_data(std::vector<DataPackage*>()),
+		_data_buffer(),
 		_app_broadcaster(new eronic::UDPClient(new eronic::Socket_WIN())),
 		_net_udp_listener(new eronic::UDPListener(new eronic::Socket_WIN())),
 		_net_broadcaster(new eronic::UDPClient(new eronic::Socket_WIN())),
 		_net_tcp_listener(new eronic::TCPListener(new eronic::Socket_WIN())),
 		_peer_connections(std::map<int, PeerPartner *>())
 	{
-		if (!_same_machine){
+		if (!_same_machine) {
 			_ip = get_external_ip((std::string)"api.ipify.org");
 			std::cout << "My IP:" << _ip << std::endl;
 			std::size_t found = _ip.find_last_of(".");
@@ -49,6 +50,7 @@ namespace eronic {
 			_net_udp_listener->bind((std::string)"ADDR_ANY", _app_udp_port, true);
 			_app_broadcaster->connect(_broadcast_ip, _app_udp_port, false);
 			std::cout << "PeerNode id = " << _id << std::endl;
+			OutputDebugStringA("not the same");
 		}
 		else {
 			_ip = "127.0.0.1";
@@ -65,7 +67,7 @@ namespace eronic {
 				_id += 1;
 				_app_udp_port += 1;
 				binding_result = _net_udp_listener->bind((std::string)"ADDR_ANY", _app_udp_port, true);
-			}			
+			}
 			if (_app_udp_port == app_port) {
 				_udp_port = _app_udp_port + 1;
 				int connect_result = _app_broadcaster->connect(_broadcast_ip, _udp_port, false);
@@ -76,11 +78,16 @@ namespace eronic {
 			}
 			std::cout << "Setup PeerNode " << _id << std::endl;
 		}
+
+		_current_time = clock();
+		_alive_timer = 0.0;
+		_frequency = 1.0;
+		std::cout << "next" << std::endl;
 	}
 
 	P2PNetworkManager::~P2PNetworkManager()
 	{
-		_network_broadcast_thread.join();
+		stop_peer_network();
 	}
 
 	void P2PNetworkManager::open_network(int network_id, int network_port)
@@ -148,7 +155,7 @@ namespace eronic {
 				_net_broadcaster->connect(_broadcast_ip, _network_port, false);
 				_connected = true;
 				// setup tcp
-				setup_tcp_listener((std::string)"ADDR_ANY", _network_port);				
+				setup_tcp_listener((std::string)"ADDR_ANY", _network_port);
 			}
 			else {
 				_network_id = network_id;
@@ -167,7 +174,7 @@ namespace eronic {
 				else {
 					_udp_port = network_port;
 					int connect_result = _net_broadcaster->connect(_broadcast_ip, _udp_port, false);
-			
+
 				}
 				std::cout << "TCP PORT: " << _network_port << std::endl;
 				setup_tcp_listener((std::string)"ADDR_ANY", _network_port);
@@ -178,12 +185,15 @@ namespace eronic {
 				std::cout << "Error listening to tcp" << std::endl;
 			}
 			DataPackage enter_pack = DataPackage(2, _id, _network_port, _network_id, _ip, (std::string)"joining\0");
-			net_broadcast_data(&enter_pack);				
+			net_broadcast_data(&enter_pack);
 		}
 	}
 
 	void P2PNetworkManager::leave_network()
 	{
+		DataPackage close_information = DataPackage(5, _id, _network_port, _network_id, _ip, (std::string)"bye bye");
+		broadcast_tcp_data(&close_information);
+
 		_connected = false;
 	}
 
@@ -238,6 +248,58 @@ namespace eronic {
 		return found_networks;
 	}
 
+	std::vector<Network*> P2PNetworkManager::find_future_networks(std::promise<int> p, int milliseconds, bool join_first_network)
+	{
+		std::cout << "Trying to find network" << std::endl;
+		std::vector<Network*> found_networks = std::vector<Network*>();
+		bool found = false;
+		double elapsed_time = 0;
+		std::chrono::duration<double, std::milli> duration;
+
+		_net_udp_listener->set_blocking(true);
+		while (elapsed_time < (double)milliseconds) {
+			auto t1 = std::chrono::high_resolution_clock::now();
+
+			char sender_ip[INET_ADDRSTRLEN];
+			DataPackage temp_pack = receive_udp_data(sender_ip);
+
+			if (temp_pack.type == 1 && temp_pack.sender_id != _id) { // if 
+				Network* new_network = new Network();
+				new_network->network_port = temp_pack.sender_port;
+				new_network->network_id = temp_pack.network_id;
+				new_network->network_ip = temp_pack.sender_ip;
+
+				if (_networks.count(temp_pack.network_id) < 1) {
+					found_networks.push_back(new_network);
+					_networks.insert(std::pair<int, Network*>(temp_pack.network_id, new_network));
+					found = true;
+					if (join_first_network) {
+						_network_port = new_network->network_port;
+						_network_id = temp_pack.network_id;
+						join_network(_network_id, _network_port);
+						if (_connected) {
+							elapsed_time = (double)milliseconds;
+						}
+					}
+				}
+				std::cout << "Found network " << new_network->network_id << std::endl;
+			}
+			auto t2 = std::chrono::high_resolution_clock::now();
+			duration = t2 - t1;
+			elapsed_time += duration.count();
+		}
+		if (found == false) {
+			std::cout << "NO NETWORK FOUND" << std::endl;
+			if (join_first_network) {
+				_network_port = _app_udp_port + 3;
+				_network_id = _id + 1000;
+				open_network(_network_id, _network_port);
+			}
+		}
+		p.set_value(found_networks.size());
+		return found_networks;
+	}
+
 	bool P2PNetworkManager::app_broadcast_data(DataPackage * data)
 	{
 		char pack[sizeof(DataPackage)];
@@ -251,7 +313,6 @@ namespace eronic {
 			std::cout << "error sending " << WSAGetLastError() << std::endl;
 			return false;
 		}
-
 	}
 
 	bool P2PNetworkManager::net_broadcast_data(eronic::DataPackage * data)
@@ -284,11 +345,24 @@ namespace eronic {
 		}
 	}
 
+	bool P2PNetworkManager::broadcast_tcp_data(DataPackage * data)
+	{
+		bool res = true;
+		for (auto connection : _peer_connections)
+		{
+			OutputDebugStringA("SENT");
+			res = tcp_send_data(connection.second->tcp_client, data);
+			if (!res) {
+				OutputDebugStringA("ERRRRRRRROR");
+				return false;
+			}
+		}
+		return true;
+	}
+
 	DataPackage& const P2PNetworkManager::receive_udp_data(char * sender_ip)
 	{
 		char recv_buffer[sizeof(DataPackage)];
-		//std::cout << "recv udp" << std::endl;
-		//int recv_result = _net_udp_listener->receive(recv_buffer, sizeof(DataPackage));
 		int recv_result = _net_udp_listener->receivefrom(recv_buffer, sizeof(DataPackage), sender_ip);
 		if (recv_result == SOCKET_ERROR) {
 			std::cout << "Error receiving " << WSAGetLastError() << std::endl;
@@ -311,7 +385,7 @@ namespace eronic {
 		}
 	}
 
-	DataPackage & const P2PNetworkManager::receive_tcp_data(TCPClient * client, char * sender_ip)
+	DataPackage& const P2PNetworkManager::receive_tcp_data(TCPClient * client, char * sender_ip)
 	{
 		char recv_buffer[sizeof(DataPackage)];
 		int recv_result = client->receivefrom(recv_buffer, sizeof(DataPackage), sender_ip);
@@ -354,8 +428,8 @@ namespace eronic {
 				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
 				std::cout << "Connection successfully established! QUIZ: " << quiz << " = " << _id << std::endl;
 			}
-			else if (data_pack.type == 5) { // if got accepted
-											// setup connection and answered alive to false, so that the connection gets deleted in the next iteration
+			else if (data_pack.type == 5) { // received close call
+				// setu connection and answered_alive to false, so that the connection gets deleted in the next iteration
 				if (data_pack.sender_id = _id) {
 					for (auto it = _peer_connections.begin(); it != _peer_connections.end(); ++it) {
 						if (it->second->tcp_client == client) {
@@ -370,15 +444,21 @@ namespace eronic {
 				}
 				client->stop(0);
 			}
-			else if (data_pack.type == 6) { // if got accepted
+			else if (data_pack.type == 6) { // received alive question
 				DataPackage alive_response = DataPackage(7, _id, _network_port, _network_id, _ip, (std::string)"alive\0");
 				tcp_send_data(client, &alive_response);
 			}
-			else if (data_pack.type == 7) { // if got accepted
+			else if (data_pack.type == 7) { // received alive response
 				_peer_connections.at(data_pack.sender_id)->answered_alive = true;
 				std::cout << data_pack.sender_id << " is alive" << std::endl;
 			}
-			
+			else if (data_pack.type == 8) { // spawn tank
+				_data_buffer.add_data(new DataPackage(data_pack));
+			}
+			else if (data_pack.type == 9) { // move tank
+				_data_buffer.add_data(new DataPackage(data_pack));
+			}
+
 		}
 	}
 
@@ -398,7 +478,7 @@ namespace eronic {
 					_peer_connections.insert(std::pair<int, PeerPartner*>(data_pack.sender_id, peer_partner));
 					peer_partner->peer_connection = true;
 					peer_partner->answered_alive = true;
-					
+
 					_peer_connections.at(data_pack.sender_id)->peer_connection = true;
 					std::thread * t = new std::thread(&P2PNetworkManager::receive_tcp_data_loop, this, client);
 					_connection_threads.insert(std::pair<int, std::thread*>(data_pack.sender_id, t));
@@ -418,59 +498,51 @@ namespace eronic {
 		_network_broadcast_thread = std::thread(&P2PNetworkManager::broadcast_network_exists_loop, this);
 		_udp_network_receive_thread = std::thread(&P2PNetworkManager::receive_udp_data_loop, this);
 		_network_connector_thread = std::thread(&P2PNetworkManager::accept_network_connections_loop, this);
-		while (_running && _connected) {
-			std::vector<int> peers_to_delete = std::vector<int>();
-			for (auto connection : _peer_connections)
-			{
-				if (connection.second->answered_alive == false) {
-					std::cout << "Guess " << connection.first << " died..." << std::endl;
-					connection.second->peer_connection = false;
-				}
-				else {
-					connection.second->answered_alive = false;
-					std::cout << "Send alive msg to " << connection.first << std::endl;
-					DataPackage alive_question = DataPackage(6, _id, _network_port, _network_id, _ip, (std::string)"u ded?");
-					alive_question.int_data_1 = alive_question.sender_id * _id;
-					tcp_send_data(connection.second->tcp_client, &alive_question);
-				}
-				
-				if (connection.second->peer_connection == false) {
-					std::cout << "closing connection" << std::endl;
-					peers_to_delete.push_back(connection.first);
-				}
+
+		auto now = std::chrono::steady_clock::now();
+		while (_running) {
+			double temp_time = clock();
+			_delta_time = (temp_time - _current_time) / CLOCKS_PER_SEC;
+			_current_time = temp_time;
+			_alive_timer += _delta_time;
+
+			if (_connected && _alive_timer > 2.0) {
+				std::cout << "Connected" << std::endl;
+				handle_alive_connections();
+				_alive_timer = 0.0;
 			}
-			for (auto const& id : peers_to_delete) {
-				std::cout << "Deleting Peer Connection" << id << std::endl;
-				_peer_connections.at(id)->tcp_client->prepare_stop();
-				// join thread
-				_connection_threads.at(id)->join();
-				// close client
-				_peer_connections.at(id)->tcp_client->close();
-				// delete client
-				delete _peer_connections.at(id)->tcp_client;
-				_peer_connections.at(id)->tcp_client = nullptr;
-				delete _peer_connections.at(id);
-				_peer_connections.erase(id);
-				// delete thread
-				delete _connection_threads.at(id);
-				_connection_threads.erase(id);
-				
-				std::cout << "Deleted " << id << std::endl;
-			}
-			//std::cout << "client list:" << _peer_connections.size() << std::endl;
-			Sleep(2000);
+			std::chrono::milliseconds duration = std::chrono::duration_cast<std::chrono::milliseconds>(
+				std::chrono::duration<double>{(1.0 / _frequency)});
+			std::this_thread::sleep_for(duration);
+			std::cout << "waited for " << std::to_string(duration.count()) << std::endl;
 		}
+
+		_running = false;
+	}
+
+	void P2PNetworkManager::stop_peer_network()
+	{
+
+		_network_broadcast_thread.join();
+		_connected = false;
+		_udp_network_receive_thread.join();
+		_network_connector_thread.join();
+
+		if (_connected)
+			leave_network();
+
+		_running = false;
 	}
 
 	void P2PNetworkManager::close_connection(int id)
 	{
 		std::cout << "Deleting Peer Connection" << id << std::endl;
-		
+
 		// make thread loop stop
 		_peer_connections.at(id)->tcp_client->prepare_stop();
 		// join thread
 		_connection_threads.at(id)->join();
-		
+
 		// close client
 		_peer_connections.at(id)->tcp_client->close();
 
@@ -485,19 +557,79 @@ namespace eronic {
 		std::cout << "Deleted Peer Connection" << id << std::endl;
 	}
 
+	std::vector<DataPackage*> const & P2PNetworkManager::read_data()
+	{
+		_data_buffer.swap_buffers();
+		return _data_buffer.get_data();
+	}
+
 	std::map<int, Network*> const& P2PNetworkManager::get_networks() const
 	{
 		return _networks;
 	}
 
+	void P2PNetworkManager::broadcast_message(int type, int d1, int d2, int d3,
+		float x, float y, float z,
+		float angle, float f1, float f2, float f3,
+		std::string & msg)
+	{
+		DataPackage message_data(type, _id, _network_port, _network_id, d1, d2, d3, x, y, z, angle, f1, f2, f3, _ip, msg);
+		broadcast_tcp_data(&message_data);
+	}
+
+	void P2PNetworkManager::handle_alive_connections()
+	{
+		std::vector<int> peers_to_delete = std::vector<int>();
+		for (auto connection : _peer_connections)
+		{
+			if (connection.second->answered_alive == false) {
+				std::cout << "Guess " << connection.first << " died..." << std::endl;
+				connection.second->peer_connection = false;
+			}
+			else {
+				connection.second->answered_alive = false;
+				//std::cout << "Send alive msg to " << connection.first << std::endl;
+				DataPackage alive_question = DataPackage(6, _id, _network_port, _network_id, _ip, (std::string)"u ded?");
+				alive_question.int_data_1 = alive_question.sender_id * _id;
+				tcp_send_data(connection.second->tcp_client, &alive_question);
+			}
+
+			if (connection.second->peer_connection == false) {
+				std::cout << "closing connection" << std::endl;
+				peers_to_delete.push_back(connection.first);
+			}
+		}
+		for (auto const& id : peers_to_delete) {
+			_peer_connections.at(id)->tcp_client->prepare_stop();
+			// join thread
+			_connection_threads.at(id)->join();
+			// close client
+			_peer_connections.at(id)->tcp_client->close();
+			// delete client
+			delete _peer_connections.at(id)->tcp_client;
+			_peer_connections.at(id)->tcp_client = nullptr;
+			delete _peer_connections.at(id);
+			_peer_connections.erase(id);
+			// delete thread
+			delete _connection_threads.at(id);
+			_connection_threads.erase(id);
+
+			std::cout << "Deleted " << id << std::endl;
+		}
+	}
+
+	void P2PNetworkManager::set_frequency(double freq)
+	{
+		_frequency = freq;
+	}
+
 	void P2PNetworkManager::broadcast_network_exists_loop()
 	{
-		std::cout << "Sending Network signal to port" << _app_broadcaster->get_address()->get_port() <<std::endl;
+		//std::cout << "Sending Network signal to port" << _app_broadcaster->get_address()->get_port() <<std::endl;
 		while (_connected) {
 			DataPackage dp = DataPackage(1, _id, _network_port, _network_id, _ip, (std::string)"exists\0");
 			app_broadcast_data(&dp);
 			Sleep(200);
-			//d::cout << "client list:" << _peer_connections.size() << std::endl;
 		}
 
 	}
@@ -505,10 +637,9 @@ namespace eronic {
 	void P2PNetworkManager::accept_network_connections_loop()
 	{
 		while (_connected) {
-			std::cout << "Trying to accept" << std::endl;
 			TCPClient * client = _net_tcp_listener->accept();
 			if (client != nullptr) {
-				std::cout << "sending pack 3" << std::endl;
+				std::cout << "Sending pack 3" << std::endl;
 				DataPackage accepted_pack = DataPackage(3, _id, _network_port, _network_id, _ip, (std::string)"accepted\0");
 				tcp_send_data(client, &accepted_pack);
 				char sender_ip[INET_ADDRSTRLEN];
@@ -568,7 +699,6 @@ namespace eronic {
 		else {
 			std::cout << "UDP setup on port " << _net_udp_listener->get_address()->get_port() << std::endl;
 		}
-		
 	}
 
 	void P2PNetworkManager::setup_app_broadcaster(std::string ip, int port)
@@ -609,21 +739,4 @@ namespace eronic {
 		}
 		return tcp_client;
 	}
-
-
 }
-
-//int func() { return 1; }
-//std::future<int> ret = std::async(&func);
-//int i = ret.get();
-//std::promise<TCPClient *> p;
-//auto future_client = p.get_future();
-//// TCPClient * tcp_c = setup_connection(sender_ip, _network_port);
-//std::thread thread(&PeerNode::setup_connection, std::move(p), sender_ip, _network_port);
-//// lock
-//_connection_threads.insert(std::pair<int, std::thread*>(dp.sender_id, &thread));
-//// unlock
-//thread.join();
-//TCPClient * client = future_client.get();
-//_net_connections.insert(std::pair<int, TCPClient*>(dp.sender_id, client));
-//std::cout << "WORKED" << std::endl;

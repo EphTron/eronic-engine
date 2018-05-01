@@ -2,6 +2,7 @@
 #include "Window_DX.h"
 #include "Renderer_DX.h"
 #include "Game.h"
+#include <iostream>
 
 
 /******************************************************************************************************************/
@@ -43,6 +44,7 @@ Window_DX::Window_DX(Game* game, int width, int height, HINSTANCE hInstance, int
 		NULL);
 
 	ShowWindow(_hWnd, nCmdShow);
+	std::cout << "window started" << std::endl;
 }
 
 /******************************************************************************************************************/
@@ -86,13 +88,16 @@ LRESULT CALLBACK Window_DX::WindowProc(HWND hWnd, UINT message, WPARAM wParam, L
 
 void Window_DX::Initialise()
 {
+	std::cout << "window.cpp : Initialise: 1 " << std::endl;
 	// Initialise DirectX
 	_renderer = new Renderer_DX(_hWnd);
+	std::cout << "window.cpp : Initialise: before renderer init " << std::endl;
 	_renderer->Initialise(_width, _height);
-
+	std::cout << "window.cpp : Initialise:  before game  " << std::endl;
 	// Setup Game
 	_game->Initialise(this);
 
+	std::cout << "window.cpp : Initialise: 2 " << std::endl;
 	MSG msg;
 	while (!_game->GetQuitFlag())
 	{
@@ -108,6 +113,7 @@ void Window_DX::Initialise()
 		_game->Run();
 	}
 
+	std::cout << "window.cpp : Initialise: 3 " << std::endl;
 	// Clean up DirectX
 	_renderer->Destroy();
 }

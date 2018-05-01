@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <thread>
+#include <future>
 #include <cstring>
 #include <sstream>
 
@@ -13,6 +14,7 @@
 #include "Socket_WIN.h"
 #include "P2PNetworkManager.h"
 #include "NetworkManager.h"
+#include "Network.h"
 
 #define MAX_CONN	3
 
@@ -22,15 +24,46 @@ eronic::UDPListener* setup_udp_listener(std::string ip, int port);
 eronic::TCPListener* setup_tcp_listener(int port, int alt_ports);
 void listen_for_connections(eronic::TCPListener * l, eronic::TCPClient * conns[], int conns_length, bool * flag);
 
-int main() {
 
+
+int main() {
+	std::cout << "WORK BENCH" << std::endl;
+	
 	bool flag = true;
 	int app_port = 9173;
 
+	std::string _tag = "hello";
+	std::string sub = "he";
+	if (strncmp(_tag.c_str(), sub.c_str(),sub.size()) == 0) {
+		std::cout << " in there" << std::endl;
+	}
+	else {
+		std::cout << "not in there" << std::endl;
+	}
 	// setup peer node
-	eronic::P2PNetworkManager * peer = new eronic::P2PNetworkManager(1, app_port, 10);
-	peer->find_networks(6000, true);
-	peer->run_peer_network();
+
+	eronic::P2PNetworkManager * peer = new eronic::P2PNetworkManager(2, app_port, 10, true);
+	std::promise<int> p;
+	std::future<int> f = p.get_future();
+	
+	std::thread t1 = std::thread(&eronic::P2PNetworkManager::find_future_networks, std::ref(*peer), std::move(p), 6000, true);
+	//peer->find_networks(6000, true);
+	
+	std::cout << " runs threads" << std::endl;
+	std::future_status status;
+	std::thread t2;
+	status = f.wait_for(std::chrono::seconds(7));
+	if (status == std::future_status::ready) {
+		std::cout << "TEEEESSTT success" << f.get() << std::endl;
+		t1.join();
+		t2 = std::thread(&eronic::P2PNetworkManager::run_peer_network, std::ref(*peer));
+	}
+	int todo = 0;
+	while (true) {
+		Sleep(2500);
+		std::cout << "main " << todo << std::endl;
+		todo++;
+	}
 
 
 	system("Pause");

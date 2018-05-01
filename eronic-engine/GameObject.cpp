@@ -7,7 +7,8 @@
 /******************************************************************************************************************/
 
 GameObject::GameObject(std::string type)
-	:	_angle(0),
+	:	_id_tag(type),
+		_angle(0),
 		_scale(1),
 		_position(0,0),
 		_alive(true),
