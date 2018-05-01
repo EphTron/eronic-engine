@@ -16,7 +16,8 @@ TankControllerComponent::TankControllerComponent(GameObject* gob)
 	: UserInputComponent(gob),
 	_turnLeftPressed(false),
 	_turnRightPressed(false),
-	_acceleratePressed(false)
+	_acceleratePressed(false),
+	_deacceleratePressed(false)
 {
 	// Create 5 bullets
 	for (int i = 0; i < NUM_BULLETS; i++)
@@ -68,9 +69,9 @@ void TankControllerComponent::Update(double deltaTime)
 	{
 		Accelerate((float)(ACCELERATION * deltaTime));
 	}
-	if (_acceleratePressed)	// Up
+	if (_deacceleratePressed)	// Up
 	{
-		Accelerate((float)(ACCELERATION * deltaTime));
+		Deaccelerate((float)(ACCELERATION * deltaTime));
 	}
 }
 
@@ -79,6 +80,7 @@ void TankControllerComponent::Update(double deltaTime)
 // Message handler (called when message occurs)
 void TankControllerComponent::OnMessage(Message* msg)
 {
+	OutputDebugStringA(" CONTROLLER KEYBOARD");
 	if (msg->GetMessageType() == "keypress")
 	{
 		KeyPressMessage* kpm = (KeyPressMessage*)msg;
@@ -92,6 +94,9 @@ void TankControllerComponent::OnMessage(Message* msg)
 				break;
 			case 38: // Up
 				_acceleratePressed = kpm->GetDown();
+				break;
+			case 40: // Back
+				_deacceleratePressed = kpm->GetDown();
 				break;
 			case 17: // Ctrl
 			case 32: // Space
@@ -147,6 +152,16 @@ void TankControllerComponent::Accelerate(float amt)
 	Vector4 thrust(0, amt, 0, 0);
 	thrust.rotate(_parent->GetAngle());
 	
+	// Create thrust message and send to parent object
+	ThrustMessage msg(thrust);
+	_parent->OnMessage(&msg);
+}
+
+void TankControllerComponent::Deaccelerate(float amt)
+{
+	Vector4 thrust(0, -amt, 0, 0);
+	thrust.rotate(_parent->GetAngle());
+
 	// Create thrust message and send to parent object
 	ThrustMessage msg(thrust);
 	_parent->OnMessage(&msg);

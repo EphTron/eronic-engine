@@ -19,6 +19,7 @@ protected:
 	bool		_turnLeftPressed;
 	bool		_turnRightPressed;
 	bool		_acceleratePressed;
+	bool		_deacceleratePressed;
 
 	Bullet*		_bullets[NUM_BULLETS];
 
@@ -52,6 +53,7 @@ public:
 	void TurnLeft(float angle)					;
 	void TurnRight(float angle)					;
 	void Accelerate(float amt)					;
+	void Deaccelerate(float amt)				;
 	void FireBullet()							;
 	void Reset()								;
 };

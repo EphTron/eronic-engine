@@ -1,3 +1,4 @@
+
 #include "SurvivalBattleGame.h"
 #include "Components.h"
 #include "Message.h"
@@ -21,13 +22,21 @@ SurvivalBattleGame::~SurvivalBattleGame()
 
 void SurvivalBattleGame::Initialise(Window* w)
 {
+	std::cout << "setup " << std::endl;
+	int id = clock();
+	std::stringstream sstm;
+	_name = "Player_";
+	sstm << _name << id;
+	_name = sstm.str();
+	_networkSystem.set_tag(_name);
+
 	// Initialise parent
 	Game::Initialise(w);
 
 	TwBar *myBar;
 	myBar = TwNewBar("Test");
 	int* myvar = new int(10);
-	TwAddVarRW(myBar, "NameOfMyVariable", TW_TYPE_INT32, myvar, "dd");
+	TwAddVarRW(myBar, "NameOfMyVariable", TW_TYPE_INT32, myvar, "");
 
 	//////////////
 	// Setup Meshes
@@ -85,7 +94,7 @@ void SurvivalBattleGame::Initialise(Window* w)
 	{
 		i->second->CreateVBO(_renderer);
 	}
-
+	std::cout << " setup all meshes" << std::endl;
 	_sceneManager.PushScene(new MainMenuScene());
 }
 
@@ -124,6 +133,10 @@ void SurvivalBattleGame::OnKeyboard(int key, bool down)
 	//}
 }
 
+void SurvivalBattleGame::HandleNetworkData(eronic::DataPackage * data)
+{
+}
+
 /******************************************************************************************************************/
 
 void SurvivalBattleGame::Render()
@@ -144,6 +157,8 @@ void SurvivalBattleGame::Run()
 {
 	// Run parent method to get delta time etc
 	Game::Run();
+
+	//_networkManager->read_data();
 
 	// Update scenes
 	_sceneManager.Update(_deltaTime);

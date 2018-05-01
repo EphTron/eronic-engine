@@ -41,8 +41,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	// Create a Window object
 	Window_DX application(&game, SCREEN_WIDTH, SCREEN_HEIGHT, hInstance, nCmdShow);
-
+	std::cout << "main.cpp : window here now " << std::endl;
 	application.Initialise();
+	std::cout << "main.cpp : app init " << std::endl;
 }
 
 #else
@@ -52,7 +53,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 using namespace gxbase;
 
 // Simple application class (all it does is contain our main window)
-class AsteroidsApp
+class SurvivalBattleApp
 	: public App
 {
 private:
@@ -60,19 +61,19 @@ private:
 	Game* game;
 
 public:
-	AsteroidsApp()
-		: win(new AsteroidsGame(), SCREEN_WIDTH, SCREEN_HEIGHT)
+	SurvivalBattleApp()
+		: win(new SurvivalBattleGame(), SCREEN_WIDTH, SCREEN_HEIGHT)
 	{
 		game = win.GetGame();
 	}
 
-	~AsteroidsApp()
+	~SurvivalBattleApp()
 	{
 		delete game;
 	}
 };
 
 // This is the single instance of our application
-static AsteroidsApp asteroids;
+static SurvivalBattleApp survival;
 
 #endif

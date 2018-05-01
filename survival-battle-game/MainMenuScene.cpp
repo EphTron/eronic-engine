@@ -15,10 +15,11 @@ MainMenuScene::MainMenuScene()
 	: _title(NULL),
 	_network(nullptr),
 	_menu(std::vector<MenuElement*>()),
-	_menu_state(0),
-	_menu_selection(0)
+	_menu_state(Idle),
+	_menu_selection(0) //,
+	//_networkManager(nullptr)
 {
-
+	std::cout << " createed" << std::endl;
 }
 
 /******************************************************************************************************************/
@@ -30,7 +31,6 @@ MainMenuScene::~MainMenuScene()
 		delete w->text_display;
 		delete w;
 	}
-
 }
 
 /******************************************************************************************************************/
@@ -43,6 +43,10 @@ void MainMenuScene::Initialise()
 	_title->SetPosition(Vector4(-0.8f, 0.6f, 1.0));
 	_title->SetColour(Colour::Green());
 	_title->SetWord("BATTLE OF SURVIVAL");
+
+	// beverley jennifer
+
+	// calls at 4o clock on wednesday
 
 	_menu_scale = 0.5f;
 
@@ -59,7 +63,7 @@ void MainMenuScene::Initialise()
 	_menu.push_back(exit);
 
 	_menu[_menu_selection]->text_display->SetColour(Colour::Red());
-	_menu[_menu_selection]->text_display->SetScale(_menu_scale + _menu_scale * 0.1);
+	_menu[_menu_selection]->text_display->ChangeScale(_menu_scale + _menu_scale * 0.5);
 	_menu[_menu_selection]->selected = true;
 
 	// Create asteroids
@@ -76,6 +80,8 @@ void MainMenuScene::Initialise()
 	{
 		_gameObjects[i]->Start();
 	}
+
+	_networkManager = _sceneManager->GetGame()->GetNetworkManager();
 }
 
 /******************************************************************************************************************/
@@ -83,7 +89,7 @@ void MainMenuScene::Initialise()
 void MainMenuScene::OnKeyboard(int key, bool down)
 {
 	if (down) return; // Ignore key down events
-
+	OutputDebugStringA("KEYBOARD");
 	// Switch key presses
 	switch (key)
 	{
@@ -91,21 +97,29 @@ void MainMenuScene::OnKeyboard(int key, bool down)
 		switch (_menu_selection) {
 			case 0: // CREATE AND PLAY
 				OutputDebugStringA("Open network");
-				_sceneManager->GetGame()->GetNetworkManager()->open_network(1,9175);
-				_sceneManager->GetGame()->GetNetworkManager()->run_peer_network();
+				//_sceneManager->GetGame()->GetNetworkManager()->open_network(1, 9175);
+				//_sceneManager->GetGame()->RunNetwork(true);
+				//_sceneManager->GetGame()->GetNetworkManager()->open_network(1,9175);
+				//_sceneManager->GetGame()->GetNetworkManager()->run_peer_network();
 				_sceneManager->PushScene(new GamePlayScene()); // Play game
 				break;
 			case 1: // FIND NETWORK
 				OutputDebugStringA("Search for network");
-				_sceneManager->GetGame()->GetNetworkManager()->find_networks(5000, false);
+				_search_promise = std::promise<int>();
+				_search_future = _search_promise.get_future();
+				_search_thread = std::thread(&eronic::P2PNetworkManager::find_future_networks,
+					std::ref(*_networkManager),
+					std::move(_search_promise), 5000, false);
+				//_sceneManager->GetGame()->GetNetworkManager()->find_networks(5000, false);
 				//_menu[2]->text_display->SetColour(Colour::Yellow());
 				//_menu[2]->selectable = true;
-				_menu_state = 1;
+				_menu_state = Searching;
 				break;
 			case 2: // JOIN AND PLAY
+				_menu_state = Connecting;
 				OutputDebugStringA("Join network");
 				_sceneManager->GetGame()->GetNetworkManager()->join_network(_network->network_id,_network->network_port);
-				_sceneManager->GetGame()->GetNetworkManager()->run_peer_network();
+				_sceneManager->GetGame()->RunNetwork(true);
 				_sceneManager->PushScene(new GamePlayScene()); // Play game
 				break;
 			case 3: // EXIT
@@ -122,7 +136,7 @@ void MainMenuScene::OnKeyboard(int key, bool down)
 		break;
 	case 40: // Down
 		_menu[_menu_selection]->text_display->SetColour(Colour::Yellow());
-		_menu[_menu_selection]->text_display->SetScale(_menu_scale);
+		_menu[_menu_selection]->text_display->ChangeScale(_menu_scale);
 		_menu[_menu_selection]->selected = false;
 		do {
 			if (_menu_selection < _menu.size() - 1) {
@@ -134,7 +148,7 @@ void MainMenuScene::OnKeyboard(int key, bool down)
 		} while (_menu[_menu_selection]->selectable == false);
 
 		_menu[_menu_selection]->text_display->SetColour(Colour::Red());
-		_menu[_menu_selection]->text_display->ChangeScale(_menu_scale + _menu_scale * 0.1);
+		_menu[_menu_selection]->text_display->ChangeScale(_menu_scale + _menu_scale * 0.5);
 		_menu[_menu_selection]->selected = true;
 		break;
 	case 38: // Up
@@ -150,7 +164,7 @@ void MainMenuScene::OnKeyboard(int key, bool down)
 			}
 		} while (_menu[_menu_selection]->selectable == false);
 		_menu[_menu_selection]->text_display->SetColour(Colour::Red());
-		_menu[_menu_selection]->text_display->SetScale(_menu_scale + _menu_scale * 0.1);
+		_menu[_menu_selection]->text_display->ChangeScale(_menu_scale + _menu_scale * 0.5);
 		_menu[_menu_selection]->selected = true;
 		break;
 	default: // Any other key
@@ -166,15 +180,31 @@ void MainMenuScene::Update(double deltaTime)
 {
 	Scene::Update(deltaTime);
 	_physicsSystem.Process(_gameObjects, deltaTime);
-	if (_menu_state == 1 && _sceneManager->GetGame()->GetNetworkManager()->get_networks().size() > 0) {
-
-		int found_networks = _sceneManager->GetGame()->GetNetworkManager()->get_networks().size();
-		_menu[1]->text_display->SetWord("FOUND NETWORK");
-		_menu[2]->text_display->SetColour(Colour::Yellow());
-		_menu[2]->selectable = true;
-		_title->SetWord("BATTLE OF");
-		_menu_state = 0;
-		_network = _sceneManager->GetGame()->GetNetworkManager()->get_networks().begin()->second;
+	
+	if (_menu_state == Searching) {
+		std::future_status status = _search_future.wait_for(std::chrono::seconds(0));
+		if (status == std::future_status::ready) {
+			if (_search_future.get() == true) {
+				int found_networks = _sceneManager->GetGame()->GetNetworkManager()->get_networks().size();
+				_menu[1]->text_display->SetWord("FOUND NETWORK");
+				_menu[2]->text_display->SetColour(Colour::Yellow());
+				_menu[2]->selectable = true;
+				_menu_state = Idle;
+				std::map<int, eronic::Network*> networks;
+				networks = _sceneManager->GetGame()->GetNetworkManager()->get_networks();
+				_network = networks.begin()->second;
+				_search_thread.join();
+				OutputDebugStringA("True");
+			}
+			else {
+				_menu_state = Idle;
+				OutputDebugStringA("False");
+				_search_thread.join();
+			}
+		}
+		else {
+			//OutputDebugStringA("Not Ready");
+		}
 	}
 
 }

@@ -1,22 +1,18 @@
-#include "Tank.h"
+#include "EnemyPlayerTank.h"
 #include "CollisionMatrix.h"
 #include "CollisionMessage.h"
 #include "Components.h"
-#include "NetworkComponent.h"
 #include "DeadObjectMessage.h"
 #include "Game.h"
 
-const float Tank::MAX_SPEED = 0.5f;
+const float EnemyPlayerTank::MAX_SPEED = 0.5f;
 
 /******************************************************************************************************************/
 
-Tank::Tank(std::string & tag,Mesh* mesh, Mesh* cannon)
-	: GameObject("tank")
+EnemyPlayerTank::EnemyPlayerTank(Mesh* mesh, Mesh* cannon)
+	: GameObject("enemytank")
 {
-	_id_tag = tag;
-
-	// Create components for Ship (they will add themselves)
-	new TankControllerComponent(this);
+	// Create components for Tank (they will add themselves)
 	new GodModeComponent(this);
 	new ExplodableComponent(this);
 
@@ -30,53 +26,69 @@ Tank::Tank(std::string & tag,Mesh* mesh, Mesh* cannon)
 	cc->SetCollisionMatrixFlag(CollisionID::UFO_ID);
 	cc->SetCollisionMatrixFlag(CollisionID::Missile_ID);
 
-	NetworkComponent* nc = new NetworkComponent(this, tag);
-
 	RenderComponent* rc = new RenderComponent(this);
-	rc->SetColour(Colour(0.5f, 0.5f, 1.0f, 1.0f));
+	rc->SetColour(Colour(1.0f, 0.1f, 0.1f, 1.0f));
 	rc->SetMesh(mesh);
 	rc->ShouldDraw(true);
 }
 
 /******************************************************************************************************************/
 
-Tank::~Tank()
+EnemyPlayerTank::~EnemyPlayerTank()
 {
 }
 
 /******************************************************************************************************************/
 
-void Tank::Update(double deltaTime)
+void EnemyPlayerTank::Update(double deltaTime)
 {
 	GameObject::Update(deltaTime);
 
 	// Cap speed
 	PhysicsComponent* physics = (PhysicsComponent*)GetComponent("physics");
 	physics->LimitToMaximumSpeed(MAX_SPEED);
-	physics->SlowDown(deltaTime, 0.5);
 }
 
 /******************************************************************************************************************/
 
-void Tank::OnMessage(Message* msg)
+void EnemyPlayerTank::OnMessage(Message* msg)
 {
-	if (msg->GetMessageType() == "collision")
+	//if (msg->GetMessageType() == "collision")
+	//{
+	//	CollisionMessage* col = (CollisionMessage*)msg;
+	//	if (col->GetCollidee() == this ||
+	//		col->GetCollider() == this)
+	//	{
+	//		RenderComponent* rc = (RenderComponent*)GetComponent("render");
+	//		rc->ShouldDraw(false);
+	//		_alive = false;
+
+	//		// Send out death message
+	//		DeadObjectMessage dom(this);
+	//		OnMessage(&dom);
+
+	//		// Change game state
+	//		Message msg("state=dead");
+	//		Game::TheGame->ListenToMessage(&msg);
+	//	}
+	//}
+	// else 
+		if (msg->GetMessageType() == "collision")
 	{
 		CollisionMessage* col = (CollisionMessage*)msg;
 		if (col->GetCollidee() == this ||
 			col->GetCollider() == this)
 		{
-			RenderComponent* rc = (RenderComponent*)GetComponent("render");
-			rc->ShouldDraw(false);
-			_alive = false;
-
 			// Send out death message
 			DeadObjectMessage dom(this);
 			OnMessage(&dom);
 
-			// Change game state
-			Message msg("state=dead");
-			Game::TheGame->ListenToMessage(&msg);
+			// Send increase score message
+			if (col->GetOtherCollisionObject(this)->GetType() == "bullet")
+			{
+				Message msg("scoreUp");
+				Game::TheGame->BroadcastMessage(&msg);
+			}
 		}
 	}
 
@@ -85,7 +97,7 @@ void Tank::OnMessage(Message* msg)
 
 /******************************************************************************************************************/
 
-void Tank::Reset()
+void EnemyPlayerTank::Reset()
 {
 	_alive = true;
 
@@ -97,9 +109,6 @@ void Tank::Reset()
 
 	GodModeComponent* gc = (GodModeComponent*)GetComponent("godmode");
 	gc->SetGodMode(false);
-
-	TankControllerComponent* sc = (TankControllerComponent*)GetComponent("input");
-	sc->Reset();
 
 	_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 }

@@ -5,7 +5,7 @@
 class Mesh;
 class Message;
 
-class Tank :
+class EnemyPlayerTank :
 	public GameObject
 {
 	// Constants
@@ -19,8 +19,8 @@ protected:
 
 	// Structors
 public:
-	Tank(std::string& tag, Mesh* mesh, Mesh* cannon);
-	virtual ~Tank();
+	EnemyPlayerTank(Mesh* mesh, Mesh* cannon);
+	virtual ~EnemyPlayerTank();
 
 	// Functions
 public:

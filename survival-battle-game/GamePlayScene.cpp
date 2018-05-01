@@ -1,6 +1,7 @@
 #include "GamePlayScene.h"
 #include "SceneManager.h"
 #include "Game.h"
+#include "SurvivalBattleGame.h"
 #include "RenderSystem.h"
 #include "Asteroid.h"
 #include "Message.h"
@@ -16,9 +17,9 @@
 GamePlayScene::GamePlayScene()
 	: _restartCounter(0),
 	  _ufoTimer(MAX_UFO_WAIT),
-	  _minAsteroids(NUM_ASTEROIDS)
+	  _minAsteroids(NUM_ASTEROIDS),
+	  _networkSystem("")
 {
-
 }
 
 /******************************************************************************************************************/
@@ -33,10 +34,21 @@ GamePlayScene::~GamePlayScene()
 
 void GamePlayScene::Initialise()
 {
+	std::string tag = _sceneManager->GetGame()->GetNameTag();
+
+	_networkManager = _sceneManager->GetGame()->GetNetworkManager();
+	_networkSystem.SetNetworkManager(_networkManager);
+	_networkSystem.set_tag(tag);
+	
+	std::stringstream sstm;
+	sstm << tag << "_tank";
+	tag = sstm.str();
+
 
 	////////////////
 	// Setup Objects
-	_tank = new Tank(_sceneManager->GetGame()->GetMesh("tank"), _sceneManager->GetGame()->GetMesh("tank"));
+	_tank = new Tank(tag,
+		_sceneManager->GetGame()->GetMesh("tank"), _sceneManager->GetGame()->GetMesh("tank"));
 	_gameObjects.push_back(_tank);
 
 	_ufo = new UFO(_sceneManager->GetGame()->GetMesh("ufo"));
@@ -60,16 +72,15 @@ void GamePlayScene::Initialise()
 	{
 		_gameObjects[i]->Start();
 	}
-
 }
 
 /******************************************************************************************************************/
 
 void GamePlayScene::OnKeyboard(int key, bool down)
 {
-
+	
 	if (down) return; // Ignore key down events
-
+	OutputDebugStringA("PLAY SCENE KEYBOARD");
 	// Switch key presses
 	switch (key)
 	{
@@ -88,12 +99,22 @@ void GamePlayScene::OnKeyboard(int key, bool down)
 	}
 }
 
+void GamePlayScene::HandleNetworkData(eronic::DataPackage * data)
+{
+	if (data->type == 8) {
+		GameObject * enemy_tank = new EnemyPlayerTank(_sceneManager->GetGame()->GetMesh("tank"), _sceneManager->GetGame()->GetMesh("tank"));
+		_gameObjects.push_back(enemy_tank);
+	}
+}
+
 /******************************************************************************************************************/
 
 /// Update current scene
 void GamePlayScene::Update(double deltaTime)
 {
 	Scene::Update(deltaTime);
+
+	_networkSystem.Process(_gameObjects, deltaTime);
 
 	_physicsSystem.Process(_gameObjects, deltaTime);
 	_collisionSystem.Process(_gameObjects, deltaTime);

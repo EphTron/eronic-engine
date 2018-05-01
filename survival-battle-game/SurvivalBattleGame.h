@@ -54,6 +54,8 @@ public:
 	// Keyboard input
 	virtual void OnKeyboard(int key, bool down);
 
+	virtual void HandleNetworkData(eronic::DataPackage * data);
+
 	// Render everything
 	virtual void Render();
 

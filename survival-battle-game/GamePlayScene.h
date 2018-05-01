@@ -7,9 +7,12 @@
 // Game classes
 #include "Asteroid.h"
 #include "Tank.h"
+#include "EnemyPlayerTank.h"
 #include "UFO.h"
 #include "ScoreDisplay.h"
 #include "WordDisplay.h"
+#include "NetworkSystem.h"
+#include "P2PNetworkManager.h"
 
 class GamePlayScene :
 	public Scene
@@ -25,6 +28,8 @@ public:
 protected:
 	PhysicsSystem						_physicsSystem;
 	CollisionSystem						_collisionSystem;
+	NetworkSystem						_networkSystem;
+	eronic::P2PNetworkManager*			_networkManager;
 
 	// Matrices
 	glm::mat4							_IM;  // Identity matrix
@@ -55,6 +60,10 @@ public:
 
 	/// Respond to input
 	virtual void OnKeyboard(int key, bool down);
+
+	//virtual void OnMessage(Message* msg);
+
+	virtual void HandleNetworkData(eronic::DataPackage * data);
 	
 	/// Update current scene
 	virtual void Update(double deltaTime);

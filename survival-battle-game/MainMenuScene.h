@@ -3,6 +3,8 @@
 #include "Scene.h"
 #include "WordDisplay.h"
 #include "PhysicsSystem.h"
+#include "NetworkManager.h"
+#include "P2PNetworkManager.h"
 #include "Network.h"
 
 typedef struct MenuElement {
@@ -22,6 +24,15 @@ typedef struct MenuElement {
 	WordDisplay* text_display;
 }MenuElement;
 
+enum MenuState
+{
+	Idle,
+	Searching,
+	Connecting,
+	Connected,
+	Disconnecting,
+};
+
 class MainMenuScene :
 	public Scene
 {
@@ -31,13 +42,17 @@ public:
 	// Data
 protected:
 	PhysicsSystem						_physicsSystem;
+	eronic::P2PNetworkManager*			_networkManager;
 	WordDisplay*						_title;
 	std::vector<MenuElement*>			_menu;
 	eronic::Network*					_network;
 
-	int									_menu_state;
+	MenuState							_menu_state;
 	int									_menu_selection;
 	float								_menu_scale;
+	std::thread							_search_thread;
+	std::promise<int>					_search_promise;
+	std::future<int>					_search_future;
 
 	// Structors
 public:
